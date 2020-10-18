@@ -1,0 +1,555 @@
+<ngx-loading-bar></ngx-loading-bar>
+<div class="header bg-transparent pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-dark d-inline-block mb-0">Details</h6>
+
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item">
+                                <a [routerLink]="['/dashboard']"> <i class="fas fa-home text-dark"> </i> </a>
+                            </li>
+
+                            <li class=" breadcrumb-item">
+                                <a class="text-dark" [routerLink]="['/applications']"> Applications </a>
+                            </li>
+
+                            <li aria-current="page" class=" breadcrumb-item active">
+                                Details
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <a class="btn btn-sm btn-info text-white" (click)="doOpenModal(assignEvaluator)">Assign Evaluator</a>
+                    <a class="btn btn-sm btn-success text-white" (click)="doOpenModal(approveRebate)">Approve eRebate </a>
+                    <a class="btn btn-sm btn-warning text-white" (click)="doOpenModal(rejectRebate)">Reject</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col-lg-5 col-sm-12">
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header py-2 bg-info">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="text-white text-uppercase mb-0">Application</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h6 class="text-muted text-uppercase ls-1 mb-1">Biodata</h6>
+                            <div class="form-group">
+                                <label class="form-control-label">Name</label>
+                                <input class="form-control form-control-sm" [(ngModel)]="tempApplicant.full_name"
+                                    type="text" disabled />
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-control-label">New NRIC</label>
+                                        <input class="form-control form-control-sm" [(ngModel)]="tempApplicant.new_nric"
+                                            type="text" disabled />
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Old NRIC</label>
+                                        <input class="form-control form-control-sm" [(ngModel)]="tempApplicant.old_nric"
+                                            type="text" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Occupation</label>
+                                <input class="form-control form-control-sm" [(ngModel)]="tempApplicant.occupation"
+                                    type="text" disabled />
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Applying Home Address</label>
+                                <textarea class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="tempHouse.address" disabled>
+                                </textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Assessment Tax Account Number</label>
+                                <input class="form-control form-control-sm" type="text"
+                                    [(ngModel)]="tempHouse.assessment_tax_account" disabled />
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Type of Building</label>
+                                            <input class="form-control form-control-sm"
+                                                [(ngModel)]="tempHouse.building_type" type="text" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            <label class="form-control-label">No. of Occupants</label>
+                                            <div class="input-group input-group-md">
+                                                <input class="form-control form-control-sm" type="text"
+                                                    [(ngModel)]="tempHouse.permanent_occupant" disabled />
+                                                <div class="input-group-append">
+                                                    <span class="input-group-text">
+                                                        People
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Staying duration</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group input-group-md">
+                                            <input class="form-control form-control-sm"
+                                                [(ngModel)]="tempHouse.staying_duration_years" type="text" disabled />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    Year(s)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group input-group-md">
+                                            <input class="form-control form-control-sm"
+                                                [(ngModel)]="tempHouse.staying_duration_months" type="text" disabled />
+                                            <div class="input-group-append">
+                                                <span class="input-group-text">
+                                                    Month(s)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Vehicles</label>
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="input-group  input-group-md">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class=" fas fa-car"> </i>
+                                                </span>
+                                            </div>
+
+                                            <input class="form-control form-control-sm" type="text"
+                                                [(ngModel)]="tempHouse.vehicle_car" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group  input-group-md">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class=" fas fa-motorcycle"> </i>
+                                                </span>
+                                            </div>
+
+                                            <input class="form-control form-control-sm" type="text"
+                                                [(ngModel)]="tempHouse.vehicle_motorcycle" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group  input-group-md">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class=" fas fa-bicycle"> </i>
+                                                </span>
+                                            </div>
+
+                                            <input class="form-control form-control-sm"
+                                                [(ngModel)]="tempHouse.vehicle_bicycle" type="text" disabled />
+                                        </div>
+                                    </div>
+                                    <div class="col">
+                                        <div class="input-group  input-group-md">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class=" fas fa-bolt"> </i>
+                                                </span>
+                                            </div>
+
+                                            <input class="form-control form-control-sm"
+                                                [(ngModel)]="tempHouse.vehicle_other" type="text" disabled />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Email</label>
+                                        <input class="form-control form-control-sm" [(ngModel)]="tempApplicant.email"
+                                            type="text" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Mobile No.</label>
+                                        <input class="form-control form-control-sm" [(ngModel)]="tempApplicant.phone"
+                                            type="text" disabled />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header py-2 bg-info">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="text-uppercase text-white mb-0">Evaluation</h4>
+                                </div>
+                                <div class="col-auto">
+                                    <button class="btn btn-icon btn-sm btn-2 btn-secondary text-info" type="button" (click)="editEvaluation()">
+                                        <span class="btn-inner--icon"><i class="fas fa-edit"></i> Edit</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body" *ngIf="!isEdit">
+                            <h5 class="">A1. Solar water heater</h5>
+                            <div class="form-group">
+                                <label class="form-control-label">Equipment</label>
+                                <input class="form-control" value="20" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">System</label>
+                                <input class="form-control" value="15" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Efficiency</label>
+                                <input class="form-control" value="19" disabled>
+                            </div>
+                            <h5 class="">B1. Rainwater collection system</h5>
+                            <div class="form-group">
+                                <label class="form-control-label">Equipment</label>
+                                <input class="form-control" value="18" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">System</label>
+                                <input class="form-control" value="19" disabled>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Efficiency</label>
+                                <input class="form-control" value="17" disabled>
+                            </div>
+                        </div>
+                        <div class="card-body" *ngIf="isEdit">
+                            <h5 class="">A1. Solar water heater</h5>
+                            <div class="form-group">
+                                <label class="form-control-label">Equipment</label>
+                                <input class="form-control" value="20">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">System</label>
+                                <input class="form-control" value="15">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Efficiency</label>
+                                <input class="form-control" value="19">
+                            </div>
+                            <h5 class="">B1. Rainwater collection system</h5>
+                            <div class="form-group">
+                                <label class="form-control-label">Equipment</label>
+                                <input class="form-control" value="18">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">System</label>
+                                <input class="form-control" value="19">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-control-label">Efficiency</label>
+                                <input class="form-control" value="17">
+                            </div>
+                            <button type="button" class="btn btn-info" (click)="submitEditEvaluation()">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-7 col-sm-12">
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <div class="map-leaflet" leaflet [leafletOptions]="leafletOptions">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header py-2 bg-info">
+                            <h4 class="text-uppercase text-white mb-0">Information</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label class="form-control-label">Application Status</label>
+                                <input class="form-control form-control-sm" [(ngModel)]="tempApplication.status" disabled>
+                            </div>
+                            <div *ngIf="tempEvaluator">
+                                <div class="form-group">
+                                    <label class="form-control-label">Evaluator</label>
+                                    <input class="form-control form-control-sm" [(ngModel)]="tempEvaluator.full_name" disabled>
+                                </div>
+                            </div>
+                            <div *ngIf="!tempEvaluator">
+                                <div class="form-group">
+                                    <label class="form-control-label">Evaluator</label>
+                                    <input class="form-control form-control-sm" value="Not assigned yet" disabled>
+                                </div>
+                            </div>
+                            <div *ngIf="tempEvaluationSchedule">
+                                <div class="form-group">
+                                    <label class="form-control-label">Evaluation Schedule Date</label>
+                                    <input class="form-control form-control-sm" [(ngModel)]="tempEvaluationSchedule.date" disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-control-label">Evaluation Schedule Session</label>
+                                    <input class="form-control form-control-sm" [(ngModel)]="tempEvaluationSchedule.session" disabled>
+                                </div>
+                            </div>
+                            <div *ngIf="!tempEvaluationSchedule">
+                                <div class="form-group">
+                                    <label class="form-control-label">Evaluation Schedule Date</label>
+                                    <input class="form-control form-control-sm" value="Not set yet" disabled>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header py-2 bg-info">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="text-uppercase text-white mb-0">Assessment</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <img style="width: 100%" src="assets/img/background/solar-water-heater.jpg">
+                            <h5 class="">A1. Solar water heater</h5>
+                            <img style="width: 100%" src="assets/img/background/test.jpg">
+                            <h5 class="">B1. Rainwater collection system</h5>
+                            <hr class=" my-4" />
+                            <h6 class=" heading-small text-muted mb-2">Calculation</h6>
+                            <div class="progress-wrapper">
+                                <div class="progress-info">
+                                    <div class="progress-label">
+                                        <span>A3. LED light / light saving light</span>
+                                    </div>
+                                    <div class="progress-percentage">
+                                        <span>70%</span>
+                                    </div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" aria-valuenow="70"
+                                        aria-valuemin="0" aria-valuemax="100" style="width: 70%;"></div>
+                                </div>
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-info">
+                                    <div class="progress-label">
+                                        <span>A3. Energy usage < 112kW / hour / capita / month</span>
+                                    </div>
+                                    <div class="progress-percentage">
+                                        <span>100.8kW</span>
+                                    </div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" aria-valuenow="90"
+                                        aria-valuemin="0" aria-valuemax="100" style="width: 90%;"></div>
+                                </div>
+                            </div>
+                            <div class="progress-wrapper">
+                                <div class="progress-info">
+                                    <div class="progress-label">
+                                        <span>B3. Water usage < 202 litre / capita / day</span>
+                                    </div>
+                                    <div class="progress-percentage">
+                                        <span>161.6 litre</span>
+                                    </div>
+                                </div>
+                                <div class="progress">
+                                    <div class="progress-bar bg-success" role="progressbar" aria-valuenow="80"
+                                        aria-valuemin="0" aria-valuemax="100" style="width: 80%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header py-2 bg-info">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="text-uppercase text-white mb-0">Application Carbon Emission</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <!--<div id="chartdiv" style="width: 100%; height: 500px"></div>-->
+                            <div class="row">
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-control-label">
+                                            Electricity
+                                        </label>
+                                        <input disabled value="23.9 KgCo2" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-control-label">
+                                            Water
+                                        </label>
+                                        <input disabled value="31.9 KgCo2" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="col">
+                                    <div class="form-group">
+                                        <label class="form-control-label">
+                                            Transportation
+                                        </label>
+                                        <input disabled value="11.1 KgCo2" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #approveRebate let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header bg-info">
+            <h6 class="modal-title" id="modal-title-default">Approve eRebate</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="defaultModal.hide()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="rebateForm">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label class="form-control-label">Rebate amount (RM)</label>
+                            <input class="form-control" formControlName="amount_approved" placeholder="Enter rebate amount" type="number" />
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" (click)="submitApprovedRebate()">Approve</button>
+            <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal"
+                (click)="defaultModal.hide()">Close</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #rejectRebate let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header bg-info">
+            <h6 class="modal-title" id="modal-title-default">Reject eRebate</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="defaultModal.hide()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-group">
+                        <label class="form-control-label">Comment</label>
+                        <input class="form-control" value="Comment here" type="text" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" (click)="submitRejectRebate()">Reject</button>
+            <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal"
+                (click)="defaultModal.hide()">Close</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #assignEvaluator let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header bg-info">
+            <h6 class="modal-title" id="modal-title-default">Assign evaluator and schedule</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="defaultModal.hide()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div class="row">
+                <div class="col-12">
+                    <form [formGroup]="evaluatorForm">
+                        <div class="form-group">
+                            <label class="form-control-label">Evaluator</label>
+                            <select class="custom-select" formControlName="evaluator_nominated">
+                                <option selected hidden>Select evaluator</option>
+                                <option *ngFor="let evaluator of tempEvaluatorList" [value]="evaluator.id">
+                                    {{evaluator.full_name}}</option>
+                            </select>
+                        </div>
+                    </form>
+                    <form [formGroup]="scheduleForm">
+                        <div class="form-group">
+                            <label class="form-control-label">Evaluation date</label>
+                            <input class="form-control" placeholder="Select a date" bsDatepicker
+                                [bsValue]="datePickerValue" [bsConfig]="datePickerConfig" formControlName="date">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-control-label">Session</label>
+                            <select class="custom-select" formControlName="session">
+                                <option selected hidden>Select session</option>
+                                <option value="AM">Morning</option>
+                                <option value="PM">Evening</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" (click)="doAssignEvaluator()">Submit</button>
+            <button type="button" class="btn btn-link  ml-auto" data-dismiss="modal"
+                (click)="defaultModal.hide()">Close</button>
+        </div>
+    </div>
+</ng-template>

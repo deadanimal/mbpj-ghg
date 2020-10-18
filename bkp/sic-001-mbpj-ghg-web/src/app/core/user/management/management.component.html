@@ -1,0 +1,583 @@
+<ngx-loading-bar></ngx-loading-bar>
+<div class="header bg-transparent pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-dark d-inline-block mb-0">Management</h6>
+
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item">
+                                <a [routerLink]="['/dashboard']"> <i class="fas fa-home text-dark"> </i> </a>
+                            </li>
+              
+                            <li aria-current="page" class="breadcrumb-item active">
+                                Management
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+
+                <div class="col-lg-6 col-5 text-right">
+                    <a class="btn btn-sm btn-info text-white" (click)="openModalRegister(regUser)"> 
+                        Register user 
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-info py-2">
+                    <div class="row">
+                        <div class="col my-auto">
+                            <h4 class="text-white m-0">Users list</h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="dataTables_wrapper py-4">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-6">
+                            <div class="dataTables_length" id="datatable_length">
+                                <label>
+                                    Show
+                                    <select 
+                                        name="datatable_length"
+                                        aria-controls="datatable"
+                                        class="form-control form-control-sm custom-select custom-select-sm"
+                                        (change)="entriesChange($event)"
+                                    >
+                                        <option value="5" [selected]="tableEntries==5">5</option>
+                                        <option value="10" [selected]="tableEntries==10">10</option>
+                                        <option value="15" [selected]="tableEntries==15">15</option>
+                                        <option value="-1" [selected]="tableEntries==-1">All</option>
+                                    </select>
+                                    records
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="col-sm-12 col-md-6">
+                            <div id="datatable_filter" class="dataTables_filter">
+                                <label>
+                                    <input
+                                        type="search"
+                                        class="form-control form-control-sm"
+                                        placeholder="Search records"
+                                        aria-controls="datatable"
+                                        (keyup)="filterTable($event)"
+                                    />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <ngx-datatable 
+                        class="bootstrap selection-cell"
+                        [columnMode]="'force'"
+                        [headerHeight]="50"
+                        [footerHeight]="50"
+                        [rowHeight]="'auto'"
+                        [limit]="tableEntries != -1 ? tableEntries:undefined"
+                        [rows]="tableTemp"
+                    >
+                        <ngx-datatable-column>
+                            <ng-template ngx-datatable-header-template>
+                                <span>Name</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.full_name}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column>
+                            <ng-template ngx-datatable-header-template>
+                                <span>NRIC</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.new_nric}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column>
+                            <ng-template ngx-datatable-header-template>
+                                <span>Phone</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.phone}}
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column>
+                            <ng-template ngx-datatable-header-template>
+                                <span>Status</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.is_active">
+                                    <a class="badge badge-success">Active</a>
+                                </div>
+                                <div *ngIf="!row.is_active">
+                                    <a class="badge badge-danger">Inactive</a>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        <ngx-datatable-column>
+                            <ng-template ngx-datatable-header-template>
+                                <span>User Type</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <div *ngIf="row.user_type == 'AD'">
+                                    <span>Administrator</span>
+                                </div>
+                                <div *ngIf="row.user_type == 'EV'">
+                                    <span>Evaluator</span>
+                                </div>
+                                <div *ngIf="row.user_type == 'AP'">
+                                    <span>Applicant</span>
+                                </div>
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column>
+                            <ng-template ngx-datatable-header-template>
+                                <span>Action</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <button class="btn btn-icon btn-2 btn-primary btn-sm" type="button" (click)="openModalView(viewUser, row)">
+                                    <span class="btn-inner--icon"><i class="fas fa-edit"></i></span>
+                                </button>
+                            </ng-template>
+                        </ngx-datatable-column>
+                    </ngx-datatable>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="row mb-2">
+                <div class="col">
+                    <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+                        <div class="form-group mb-0" [ngClass]="{ focused: focus === true }">
+                            <div class="input-group input-group-alternative input-group-merge">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Search" type="text" (focus)="focus = true"
+                                    (blur)="focus = false" (keyup)="filterTable($event)" />
+                            </div>
+                        </div>
+                        <button type="button" class="close" (click)="closeSearch()" data-action="search-close"
+                            data-target="#navbar-search-main" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-info py-2">
+                    <div class="row">
+                        <div class="col my-auto">
+                            <h4 class="text-white m-0">Users list</h4>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-icon btn-sm btn-2 btn-secondary text-info" type="button" (click)="refreshData()">
+                                <span class="btn-inner--icon"><i class="fas fa-sync"></i> Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="tableSource" class="table table-flush" matSort>
+
+                        <ng-container matColumnDef="full_name">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Full name </th>
+                            <td mat-cell *matCellDef="let element"> {{element.full_name}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="new_nric">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> NRIC </th>
+                            <td mat-cell *matCellDef="let element"> {{element.new_nric}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="phone">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Mobile no. </th>
+                            <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="is_active">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status</th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="element.is_active">
+                                    <a class="badge badge-success">Active</a>
+                                </div>
+                                <div *ngIf="!element.is_active">
+                                    <a class="badge badge-danger">Inactive</a>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="user_type">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> User type </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="element.user_type == 'AD'">
+                                    Administrator
+                                </div>
+                                <div *ngIf="element.user_type == 'EV'">
+                                    Evaluator
+                                </div>
+                                <div *ngIf="element.user_type == 'AP'">
+                                    Applicant
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                            <td mat-cell *matCellDef="let element" class="text-right">
+                                <button class="btn btn-icon btn-2 btn-primary btn-sm" type="button" (click)="openModalView(viewUser, element)">
+                                    <span class="btn-inner--icon"><i class="fas fa-edit"></i></span>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+-->
+<ng-template #regUser let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header bg-info">
+            <h6 class="modal-title" id="modal-title-default">Register user</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="defaultModal.hide()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="userRegistrationForm">
+                <div class="form-group mb-3" [ngClass]="{ focused: focusNRIC === true }">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-info">
+                                <i class="far fa-id-card text-white"></i>
+                            </span>
+                        </div>
+                        <input 
+                            class="form-control" 
+                            placeholder="NRIC*" 
+                            type="text" 
+                            formControlName="username"
+                            (focus)="focusNRIC = true" 
+                            (blur)="focusNRIC = false" 
+                        />
+                    </div>
+                    <ng-container *ngFor="let validation of userRegistrationValidationMessage.username">
+                        <div class="error-message" *ngIf="userRegistrationForm.get('username').hasError(validation.type) && (userRegistrationForm.get('username').dirty || userRegistrationForm.get('username').touched)">
+                          <p ><span>*{{ validation.message }}</span></p>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-group" [ngClass]="{ focused: focusPassword === true }">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-info">
+                                <i class="fas fa-key text-white"></i>
+                            </span>
+                        </div>
+                        <input 
+                            class="form-control text-dark" 
+                            placeholder="Password*" type="password1"
+                            formControlName="password1" 
+                            (focus)="focusPassword = true" 
+                            (blur)="focusPassword = false" 
+                        />
+                    </div>
+                    <ng-container *ngFor="let validation of userRegistrationValidationMessage.password1">
+                        <div class="error-message" *ngIf="userRegistrationForm.get('password1').hasError(validation.type) && (userRegistrationForm.get('password1').dirty || userRegistrationForm.get('password1').touched)">
+                          <p ><span>*{{ validation.message }}</span></p>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-group" [ngClass]="{ focused: focusConfirmPassword === true }">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-info">
+                                <i class="fas fa-key text-white"></i>
+                            </span>
+                        </div>
+                        <input 
+                            class="form-control text-dark" 
+                            placeholder="Confirm password*" 
+                            type="password2"
+                            formControlName="password2" 
+                            (focus)="focusConfirmPassword = true" 
+                            (blur)="focusConfirmPassword = false" 
+                        />
+                    </div>
+                    <ng-container *ngFor="let validation of userRegistrationValidationMessage.password2">
+                        <div class="error-message" *ngIf="userRegistrationForm.get('password2').hasError(validation.type) && (userRegistrationForm.get('password2').dirty || userRegistrationForm.get('password2').touched)">
+                          <p ><span>*{{ validation.message }}</span></p>
+                        </div>
+                    </ng-container>
+                    <ng-container *ngIf="userRegistrationForm.value.password1 != userRegistrationForm.value.password2">
+                        <p class="error-text">
+                            <span >
+                                *Password doesn't match
+                            </span>
+                        </p>
+                    </ng-container>
+                </div>
+            </form>
+            <form [formGroup]="userInformationForm">
+                <div class="form-group mb-3" [ngClass]="{ focused: focusFullName === true }">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-info">
+                                <i class="far fa-address-card text-white"></i>
+                            </span>
+                        </div>
+                        <input 
+                            class="form-control" 
+                            placeholder="Full name*" 
+                            type="email" 
+                            formControlName="full_name"
+                            (focus)="focusFullName = true" 
+                            (blur)="focusFullName = false" 
+                        />
+                    </div>
+                    <ng-container *ngFor="let validation of userInformationValidationMessage.full_name">
+                        <div class="error-message" *ngIf="userInformationForm.get('full_name').hasError(validation.type) && (userInformationForm.get('full_name').dirty || userInformationForm.get('full_name').touched)">
+                          <p ><span>*{{ validation.message }}</span></p>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-group mb-3" [ngClass]="{ focused: focusEmail === true }">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-info">
+                                <i class="far fa-envelope-open text-white"></i>
+                            </span>
+                        </div>
+                        <input 
+                            class="form-control" 
+                            placeholder="Email" 
+                            type="email" 
+                            formControlName="email"
+                            (focus)="focusEmail = true" 
+                            (blur)="focusEmail = false" 
+                        />
+                    </div>
+                    <ng-container *ngFor="let validation of userInformationValidationMessage.email">
+                        <div class="error-message" *ngIf="userInformationForm.get('email').hasError(validation.type) && (userInformationForm.get('email').dirty || userInformationForm.get('email').touched)">
+                          <p ><span>*{{ validation.message }}</span></p>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-group" [ngClass]="{ focused: focusPhone === true }">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-info">
+                                <i class="fas fa-phone-square text-white"></i>
+                            </span>
+                        </div>
+                        <input 
+                            class="form-control" 
+                            placeholder="Mobile phone*" 
+                            type="text" 
+                            formControlName="phone"
+                            (focus)="focusPhone = true" 
+                            (blur)="focusPhone = false" 
+                        />
+                    </div>
+                    <ng-container *ngFor="let validation of userInformationValidationMessage.phone">
+                        <div class="error-message" *ngIf="userInformationForm.get('phone').hasError(validation.type) && (userInformationForm.get('phone').dirty || userInformationForm.get('phone').touched)">
+                          <p ><span>*{{ validation.message }}</span></p>
+                        </div>
+                    </ng-container>
+                </div>
+                <div class="form-group" [ngClass]="{ focused: focusUserType === true }">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text bg-info">
+                                <i class="fas fa-user-shield text-white"></i>
+                            </span>
+                        </div>
+                        <select class="custom-select form-control" (focus)="focusUserType = true" (blur)="focusUserType = false" formControlName="user_type">
+                            <option selected hidden value="">User type*</option>
+                            <option value="AP">Applicant</option>
+                            <option value="EV">Evaluator</option>
+                            <option value="AD">Administrator</option>
+                        </select>
+                    </div>
+                    <ng-container *ngFor="let validation of userInformationValidationMessage.user_type">
+                        <div class="error-message" *ngIf="userInformationForm.get('user_type').hasError(validation.type) && (userInformationForm.get('user_type').dirty || userInformationForm.get('user_type').touched)">
+                          <p ><span>*{{ validation.message }}</span></p>
+                        </div>
+                    </ng-container>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" (click)="registerUser()" [disabled]="!userRegistrationForm.valid || !userInformationForm.valid">Register</button>
+            <button type="button" class="btn btn-link-info  ml-auto" data-dismiss="modal"
+                (click)="defaultModal.hide()">Close</button>
+        </div>
+    </div>
+</ng-template>
+
+<ng-template #viewUser let-c="close" let-d="dismiss">
+    <div class="modal-content">
+        <div class="modal-header bg-info">
+            <h6 class="modal-title" id="modal-title-default">Update user</h6>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="defaultModal.hide()">
+                <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <div *ngIf="tempUser">
+                <form [formGroup]="userInformationForm">
+                    <div class="form-group mb-3" [ngClass]="{ focused: focusFullName === true }">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-info">
+                                    <i class="far fa-address-card fa-fw text-white"></i>
+                                </span>
+                            </div>
+                            <input 
+                                class="form-control" 
+                                placeholder="Full name*" 
+                                type="text"
+                                [value]="tempUser.full_name"
+                                formControlName="full_name"
+                                (focus)="focusFullName = true" 
+                                (blur)="focusFullName = false" 
+                            />
+                        </div>
+                        <ng-container *ngFor="let validation of userInformationValidationMessage.full_name">
+                            <div class="error-message" *ngIf="userInformationForm.get('full_name').hasError(validation.type) && (userInformationForm.get('full_name').dirty || userInformationForm.get('full_name').touched)">
+                              <p ><span>*{{ validation.message }}</span></p>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="form-group mb-3" [ngClass]="{ focused: focusNRIC === true }">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-info">
+                                    <i class="far fa-id-card fa-fw text-white"></i>
+                                </span>
+                            </div>
+                            <input 
+                                class="form-control" 
+                                placeholder="NRIC*" 
+                                type="text"
+                                value="tempUser.new_nric"
+                                formControlName="new_nric"
+                                (focus)="focusNRIC = true" 
+                                (blur)="focusNRIC = false" 
+                            />
+                        </div>
+                        <ng-container *ngFor="let validation of userInformationValidationMessage.username">
+                            <div class="error-message" *ngIf="userInformationForm.get('username').hasError(validation.type) && (userInformationForm.get('username').dirty || userInformationForm.get('username').touched)">
+                              <p ><span>*{{ validation.message }}</span></p>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="form-group mb-3" [ngClass]="{ focused: focusEmail === true }">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-info">
+                                    <i class="far fa-envelope-open fa-fw text-white"></i>
+                                </span>
+                            </div>
+                            <input 
+                                class="form-control" 
+                                placeholder="Email" 
+                                type="email" 
+                                value="tempUser.email"
+                                formControlName="email"
+                                (focus)="focusEmail = true" 
+                                (blur)="focusEmail = false" 
+                            />
+                        </div>
+                        <ng-container *ngFor="let validation of userInformationValidationMessage.email">
+                            <div class="error-message" *ngIf="userInformationForm.get('email').hasError(validation.type) && (userInformationForm.get('email').dirty || userInformationForm.get('email').touched)">
+                              <p ><span>*{{ validation.message }}</span></p>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="form-group mb-3" [ngClass]="{ focused: focusPhone === true }">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-info">
+                                    <i class="fas fa-phone-square fa-fw text-white"></i>
+                                </span>
+                            </div>
+                            <input 
+                                class="form-control" 
+                                placeholder="Mobile phone*" 
+                                type="text" 
+                                [value]="tempUser.phone"
+                                formControlName="phone"
+                                (focus)="focusPhone = true" 
+                                (blur)="focusPhone = false" 
+                            />
+                        </div>
+                        <ng-container *ngFor="let validation of userInformationValidationMessage.phone">
+                            <div class="error-message" *ngIf="userInformationForm.get('phone').hasError(validation.type) && (userInformationForm.get('phone').dirty || userInformationForm.get('phone').touched)">
+                              <p ><span>*{{ validation.message }}</span></p>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="form-group" [ngClass]="{ focused: focusUserType === true }">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text bg-info">
+                                    <i class="fas fa-user-shield fa-fw text-white"></i>
+                                </span>
+                            </div>
+                            <select class="custom-select form-control" (focus)="focusUserType = true" (blur)="focusUserType = false" [value]="tempUser.user_type" formControlName="user_type">
+                                <option value="AP">Applicant</option>
+                                <option value="EV">Evaluator</option>
+                                <option value="AD">Administrator</option>
+                            </select>
+                        </div>
+                        <ng-container *ngFor="let validation of userInformationValidationMessage.user_type">
+                            <div class="error-message" *ngIf="userInformationForm.get('user_type').hasError(validation.type) && (userInformationForm.get('user_type').dirty || userInformationForm.get('user_type').touched)">
+                              <p ><span>*{{ validation.message }}</span></p>
+                            </div>
+                        </ng-container>
+                    </div>
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="checkboxActive" [value]="tempUser.is_active" formControlName="is_active">
+                        <label class="custom-control-label" for="checkboxActive">
+                            <div *ngIf="tempUser.is_active">
+                                Active
+                            </div>
+                            <div *ngIf="!tempUser.is_active">
+                                Inactive
+                            </div>
+                        </label>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-info" (click)="updateRegisteredUser()" [disabled]="!userInformationForm.valid">Update</button>
+            <button type="button" class="btn btn-link-info  ml-auto" data-dismiss="modal"
+                (click)="defaultModal.hide()">Close</button>
+        </div>
+    </div>
+</ng-template>

@@ -1,0 +1,96 @@
+<ngx-loading-bar></ngx-loading-bar>
+<div class="main-content auth-content">
+	<div class="container py-6">
+		<div class="row justify-content-center">
+			<div class="col-lg-5 col-md-7">
+				<div class="card bg-secondary border-0 mb-0">
+					<div class="card-body px-lg-5 py-lg-5">
+						<div class="client-logo-area">
+							<img class="client-logo" src="assets/img/logo/mbpj-logo.png">
+							<h6 class="h2 text-default d-inline-block mt-3 mb-0">
+								Skim Rebat Cukai Taksiran Rumah Mesra Alam Hijau Petaling 
+								<span (click)="debugLogin()">Jaya</span>
+							</h6>
+						</div>
+						<form [formGroup]="loginForm">
+							<div class="form-group mb-3" [ngClass]="{ focused: focusUsername === true }">
+								<div class="input-group input-group-alternative">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-info">
+											<i class="ni ni-email-83 text-white"></i>
+										</span>
+									</div>
+									<input 
+										class="form-control" 
+										placeholder="Email" 
+										type="email" 
+										formControlName="username"
+										(change)="testChange()"
+										(focus)="focusUsername = true"
+										(blur)="focusUsername = false" />
+								</div>
+								<div class="validation-errors">
+									<ng-container *ngFor="let message of loginFormMessage.username">
+										<div class="error-message"
+										  *ngIf="loginForm.get('username').hasError(message.type) && (loginForm.get('username').dirty || loginForm.get('username').touched)">
+										  {{ message.message }}
+										</div>
+									</ng-container>
+								</div>
+							</div>
+							<div class="form-group" [ngClass]="{ focused: focusPassword === true }">
+								<div class="input-group input-group-alternative">
+									<div class="input-group-prepend">
+										<span class="input-group-text bg-info">
+											<i class="ni ni-lock-circle-open text-white"></i>
+										</span>
+									</div>
+									<input 
+										class="form-control text-dark" 
+										placeholder="Password" 
+										type="password" 
+										formControlName="password"
+										(focus)="focusPassword = true"
+										(blur)="focusPassword = false" />
+								</div>
+								<div class="validation-errors">
+									<ng-container *ngFor="let message of loginFormMessage.password">
+									  <div class="error-message"
+										*ngIf="loginForm.get('password').hasError(message.type) && (loginForm.get('password').dirty || loginForm.get('password').touched)">
+										{{ message.message }}
+									  </div>
+									</ng-container>
+								</div>
+							</div>
+							
+							<div class="row">
+								<div class="col-lg-6">
+									<div class="custom-control custom-checkbox custom-checkbox-info">
+										<input class="custom-control-input" id="customCheckLogin" type="checkbox" />
+										<label class="custom-control-label" for="customCheckLogin">
+											<span>Remember me?</span>
+										</label>
+									</div>
+								</div>
+								<div class="col-lg-6 text-right">
+									<label class="text-right forgot-label" [routerLink]="['/auth/forgot']">
+										<span>Forgot password</span>
+									</label>
+								</div>
+							</div>
+							<div class="text-center">
+								<button 
+									type="button" 
+									[disabled]="!loginForm.valid"
+									class="btn btn-info my-4" 
+									(click)="login()">
+									Sign in
+								</button>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

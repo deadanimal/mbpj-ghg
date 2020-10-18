@@ -1,0 +1,142 @@
+<ngx-loading-bar></ngx-loading-bar>
+<div class="header bg-transparent pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-dark d-inline-block mb-0">Applications</h6>
+
+                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class="breadcrumb-item">
+                                <a [routerLink]="['/dashboard']"> <i class="fas fa-home text-dark"> </i> </a>
+                            </li>
+
+                            <li aria-current="page" class="breadcrumb-item active">
+                                Applications
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body p-0">
+                    <div id="chartdiv" style="width: 100%; height: 500px"></div>
+                </div>
+            </div>
+        </div>
+        <div class="col-12">
+            <div class="row mb-2">
+                <div class="col">
+                    <form class="navbar-search navbar-search-light form-inline mr-sm-3" id="navbar-search-main">
+                        <div class="form-group mb-0" [ngClass]="{ focused: focus === true }">
+                            <div class="input-group input-group-alternative input-group-merge">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                                </div>
+                                <input class="form-control" placeholder="Search" type="text" (focus)="focus = true"
+                                    (blur)="focus = false" (keyup)="doFilterTable($event.target.value)" />
+                            </div>
+                        </div>
+                        <button type="button" class="close" (click)="closeSearch()" data-action="search-close"
+                            data-target="#navbar-search-main" aria-label="Close">
+                            <span aria-hidden="true">×</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header bg-info py-2">
+                    <div class="row">
+                        <div class="col my-auto">
+                            <h4 class="text-white m-0">List</h4>
+                        </div>
+                        <div class="col-auto">
+                            <button class="btn btn-icon btn-sm btn-2 btn-secondary text-info" type="button" (click)="refreshData()">
+                                <span class="btn-inner--icon"><i class="fas fa-sync"></i> Refresh</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="tableSource" class="table table-flush" matSort>
+
+                        <ng-container matColumnDef="applicant_name">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Applicant</th>
+                            <td mat-cell *matCellDef="let element"> {{element.applicant_name}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="date_submitted">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Date submitted</th>
+                            <td mat-cell *matCellDef="let element"> {{element.date_submitted}}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="applied_house_assessment_tax_account">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header>Assessment Tax Account No.</th>
+                            <td mat-cell *matCellDef="let element"> {{element.applied_house_assessment_tax_account}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="evaluator_nominated_name">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Nominated evaluator </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="element.evaluator_nominated_name == 'Not assigned'">
+                                    <span><i class="fas fa-info-circle mr-1"></i></span>{{element.evaluator_nominated_name}}
+                                </div>
+                                <div *ngIf="element.evaluator_nominated_name != 'Not assigned'">
+                                    {{element.evaluator_nominated_name}}
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="status">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div *ngIf="element.status == 'CM'">
+                                    <span class="badge badge-lg badge-default">Completed</span>
+                                </div>
+                                <div *ngIf="element.status == 'CR'">
+                                    <span class="badge badge-lg badge-success">Created</span>
+                                </div>
+                                <div *ngIf="element.status == 'IE'">
+                                    <span class="badge badge-lg badge-primary">In evaluation</span>
+                                </div>
+                                <div *ngIf="element.status == 'IP'">
+                                    <span class="badge badge-lg badge-primary">In progress</span>
+                                </div>
+                                <div *ngIf="element.status == 'PD'">
+                                    <span class="badge badge-lg badge-default">Paid</span>
+                                </div>
+                                <div *ngIf="element.status == 'SM'">
+                                    <span class="badge badge-lg badge-success">Submitted</span>
+                                </div>
+                                <div *ngIf="element.status == 'RJ'">
+                                    <span class="badge badge-lg badge-danger">Rejected</span>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="id">
+                            <th mat-header-cell *matHeaderCellDef mat-sort-header> </th>
+                            <td mat-cell *matCellDef="let element" class="text-right">
+                                <button class="btn btn-icon btn-2 btn-primary btn-sm" type="button" (click)="doViewDetail(element)">
+                                    <span class="btn-inner--icon">View <i class="far fa-eye"></i></span>
+                                </button>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: tableColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

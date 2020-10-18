@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mbpj-ghg-api-redis-service
+spec:
+  selector:
+    pod: mbpj-ghg-api-redis
+  ports:
+  - protocol: TCP
+    port: 6379
+    targetPort: 6379

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mbpj-ghg-api-deployment
+  labels:
+    app: mbpj-ghg-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mbpj-ghg-api
+  template:
+    metadata:
+      labels:
+        app: mbpj-ghg-api
+    spec:
+      containers:
+      - name: mbpj-ghg-api
+        image: syafiqpipe/mbpj-ghg-api:1.0.5 #boleh tambah version
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 5000
+        envFrom:
+          - secretRef:
+              name: mbpj-ghg-api-secret

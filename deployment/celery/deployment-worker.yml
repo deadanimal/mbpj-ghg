@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mbpj-ghg-api-celery-worker
+  labels:
+    deployment: mbpj-ghg-api-celery-worker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: mbpj-ghg-api-celery-worker
+  template:
+    metadata:
+      labels:
+        pod: mbpj-ghg-api-celery-worker
+    spec:
+      containers:
+        - name: mbpj-ghg-api-celery-worker
+          image: syafiqpipe/mbpj-ghg-api
+          # celery -A mbpj-ghgapi worker -l debug
+          command: ['celery', '-A', 'ghg', 'worker', '-l', 'info']
+          envFrom:
+            - secretRef:
+                name: mbpj-ghg-api-secret            

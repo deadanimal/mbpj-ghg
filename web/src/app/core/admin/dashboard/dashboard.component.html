@@ -1,0 +1,208 @@
+<div class="header pb-6">
+	<div class="container-fluid">
+		<div class="header-body">
+			<div class="row align-items-center py-4">
+				<div class="col-lg-6 col-7">
+					<h6 class="h2 text-dark d-inline-block mb-0">Dashboard</h6>
+
+					<nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+						<ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+							<li class=" breadcrumb-item">
+								<a href="javascript:void(0)"> <i class="fas fa-home text-dark"> </i> </a>
+							</li>
+						</ol>
+					</nav>
+				</div>
+
+				<!-- <div class="col-lg-6 col-5 text-right">
+					<a class="btn btn-sm btn-neutral" href="javascript:void(0)"> New </a>
+
+					<a class="btn btn-sm btn-neutral" href="javascript:void(0)">
+						Filters
+					</a>
+				</div> -->
+			</div>
+
+			<div class="row">
+				<div class="col-lg-6 col-sm-12">
+					<div class="card card-stats">
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h5 class="card-title text-uppercase text-muted mb-0">
+										Total Application Approved for Current Year
+									</h5>
+
+									<span class="h2 font-weight-bold mb-0"> {{totalApplicationApprovedCurrent}} </span>
+								</div>
+
+								<div class="col-auto">
+									<div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+										<i class="fas fa-file-contract"> </i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-sm-12">
+					<div class="card card-stats">
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h5 class="card-title text-uppercase text-muted mb-0">
+										Total Application Approved Since 2011
+									</h5>
+
+									<span class="h2 font-weight-bold mb-0"> {{totalApplicationApproved}} </span>
+								</div>
+
+								<div class="col-auto">
+									<div class="icon icon-shape bg-gradient-info text-white rounded-circle shadow">
+										<i class="fas fa-file-contract"> </i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-sm-12">
+					<div class="card card-stats">
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h5 class="card-title text-uppercase text-muted mb-0">
+										Total Rebate Rewarded for Current Year
+									</h5>
+
+									<span class="h2 font-weight-bold mb-0"> {{totalRebateRewardedCurrent}} </span>
+								</div>
+
+								<div class="col-auto">
+									<div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
+										<i class="fas fa-file-invoice-dollar"> </i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-sm-12">
+					<div class="card card-stats">
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h5 class="card-title text-uppercase text-muted mb-0">
+										Total Rebate Rewarded Since 2011
+									</h5>
+
+									<span class="h2 font-weight-bold mb-0"> {{totalRebateRewarded}} </span>
+								</div>
+
+								<div class="col-auto">
+									<div class=" con icon-shape bg-gradient-green text-white rounded-circle shadow">
+										<i class="fas fa-file-invoice-dollar"> </i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-sm-12">
+					<div class="card card-stats">
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h5 class="card-title text-uppercase text-muted mb-0">
+										Total Application Received for Current Year
+									</h5>
+
+									<span class="h2 font-weight-bold mb-0"> {{totalApplicationReceivedCurrent}} </span>
+								</div>
+
+								<div class="col-auto">
+									<div class=" icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
+										<i class="fas fa-file-alt"> </i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-6 col-sm-12">
+					<div class="card card-stats">
+						<div class="card-body">
+							<div class="row">
+								<div class="col">
+									<h5 class="card-title text-uppercase text-muted mb-0">
+										Total Application Received Since 2011
+									</h5>
+
+									<span class="h2 font-weight-bold mb-0"> {{totalApplicationReceived}} </span>
+								</div>
+
+								<div class="col-auto">
+									<div class=" icon icon-shape bg-gradient-primary text-white rounded-circle shadow">
+										<i class="fas fa-file-alt"> </i>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid mt--6">
+	<div class="row">
+		<div class="col-sm-12 col-lg-4">
+			<div class="card">
+				<div class="card-header bg-secondary">
+					<h4 class="m-0">Latest Applications</h4>
+				</div>
+				<div class="card-body">
+					<div class="pt-4 text-center" *ngIf="isApplicationEmpty">
+						<img [src]="iconEmpty" class="error-icon">
+						<p>No applications found</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-12 col-lg-4">
+			<div class="card">
+				<div class="card-header bg-secondary">
+					<h4 class="m-0">Latest Evaluations</h4>
+				</div>
+				<div class="card-body">
+					<div class="pt-4 text-center" *ngIf="isEvaluationEmpty">
+						<img [src]="iconEmpty" class="error-icon">
+						<p>No evaluations found</p>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-sm-12 col-lg-4">
+			<div class="card">
+				<div class="card-header bg-secondary">
+					<h4 class="m-0">Latest Rebates</h4>
+				</div>
+				<div class="card-body">
+					<div class="pt-4 text-center" *ngIf="isRebateEmpty">
+						<img [src]="iconEmpty" class="error-icon">
+						<p>No rebates found</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>

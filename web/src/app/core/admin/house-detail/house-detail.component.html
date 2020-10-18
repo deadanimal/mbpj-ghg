@@ -1,0 +1,135 @@
+<div class="header pb-6">
+	<div class="container-fluid">
+		<div class="header-body">
+			<div class="row align-items-center py-4">
+				<div class="col-lg-6 col-7">
+					<h6 class="h2 text-dark d-inline-block mb-0">Houses</h6>
+
+					<nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+						<ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+							<li class=" breadcrumb-item">
+								<a href="javascript:void(0)"> <i class="fas fa-home text-dark"> </i> </a>
+							</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-secondary">
+                    <h4 class="m-0">House Detail</h4>
+                </div>
+
+                <div class="card-body">
+                    <div class="text-center" *ngIf="isEmpty">
+						<img [src]="iconError" class="error-icon">
+						<p>Record not found</p>
+                    </div>
+                    
+                    <div *ngIf="!isEmpty">
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Owner Name</label>
+                                    <input class="form-control" value="{{house.owner_name}}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Assessment Tax Account</label>
+                                    <input class="form-control" value="{{house.assessment_tax_account}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-7 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Address</label>
+                                    <input class="form-control" value="{{house.address}}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Area</label>
+                                    <input class="form-control" value="{{house.area}}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Postcode</label>
+                                    <input class="form-control" value="{{house.postcode}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Building Type</label>
+                                    <input class="form-control" value="{{house.building_type}}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Staying Since</label>
+                                    <input class="form-control" value="{{house.staying_since}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Total Occupants</label>
+                                    <input class="form-control" value="{{house.occupants}}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Registered On</label>
+                                    <input class="form-control" value="{{house.created_at}}" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Relationship Type</label>
+                                    <input class="form-control" value="{{house.relationship_type}}" disabled>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-sm-12">
+                                <div class="form-group">
+                                    <label class="form-control-label">Active</label>
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" class="custom-control-input" id="houseActive" disabled  value="{{house.active}}">
+                                        <label class="custom-control-label" for="houseActive">Active?</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row" *ngIf="house.assessment_tax_doc">
+                            <label class="form-control-label">Assessment Tax Document</label>
+                            <img [src]="house.assessment_tax_doc">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

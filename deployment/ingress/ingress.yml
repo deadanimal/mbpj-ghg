@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: mbpj-ghg-my-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/cluster-issuer: "mbpj-ghg-my-prod"
+spec:
+  tls:
+  - hosts:
+    - mbpj-ghg.pipe.my
+    - mbpj-ghg-api.pipe.my
+
+    secretName: mbpj-ghg-my-prod
+
+  rules:
+  - host: mbpj-ghg-api.pipe.my
+    http:
+      paths:
+      - backend:
+          serviceName: mbpj-ghg-api
+          servicePort: 5000    
+  - host: mbpj-ghg.pipe.my
+    http:
+      paths:
+      - backend:
+          serviceName: mbpj-ghg-webapp
+          servicePort: 80    

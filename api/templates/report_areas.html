@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        @charset "UTF-8";
+        @import url("https://fonts.googleapis.com/css?family=Pacifico|Source+Sans+Pro:400,700");
+
+        @page {
+            margin: 3cm;
+
+            @bottom-left {
+                color: #46a049;
+                content: 'MBPJ | eRebate';
+            }
+
+            @bottom-right {
+                color: #46a049;
+                content: 'Private & Confidential';
+                font-size: 9pt;
+            }
+        }
+
+        html {
+            font-family: Source Sans Pro !important;
+        }
+
+        html body {
+            margin: 0;
+        }
+
+        html header {
+            /*background: #55e432; */
+            padding: 15px;
+        }
+
+        html .col-2 {
+            display: flex;
+            float: left;
+            width: 12.6666%;
+        }
+
+        html .col-10 {
+            width: 83.3333%;
+            display: inline-block !important;
+            vertical-align: middle !important;
+        }
+
+        /* Clear floats after the columns */
+        html .row:after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        html .titles {
+            margin: auto !important;
+            display: inline-block !important;
+            vertical-align: middle !important;
+        }
+
+        html .mbpj-title {
+            padding: 0;
+            margin: 0;
+            color: #46a049;
+            vertical-align: middle;
+        }
+
+        html .report-title {
+            padding: 0;
+            margin: 0;
+            color: #46a049;
+            vertical-align: middle;
+        }
+
+        html img#mbpj-logo {
+            max-width: 60px;
+            vertical-align: middle;
+            margin-right: 20px;
+        }
+
+        html section {
+            padding: 15px;
+            background-color: #f3f3f3;
+            display: flex;
+        }
+
+        html section#top {
+            margin-top: 10px;
+        }
+
+        html .types {
+            color: #000;
+            font-size: 0.6rem;
+            font-weight: 300;
+        }
+
+        html .subsection {
+            width: 50%;
+            text-align: center;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin: auto;
+        }
+
+        td,
+        th {
+            border: 1px solid #dddddd;
+            text-align: center;
+            padding: 8px;
+        }
+
+        tr:nth-child(even) {
+            background-color: #dddddd;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="row">
+            <div class="col-2">
+                <img id="mbpj-logo"
+                    src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d2/Petaling_Jaya_Emblem.svg/330px-Petaling_Jaya_Emblem.svg.png">
+            </div>
+            <div class="col-10">
+                <div class="titles">
+                    <h2 class="mbpj-title">
+                        Majlis Bandaraya Petaling Jaya
+                    </h2>
+                    <h3 class="report-title"> 
+                        Laporan Sistem eRebat
+                    </h3>
+                </div>
+            </div>
+        </div>
+    </header>
+    <hr style="color: #46a049;">
+    <section style="display: block !important; margin-top: 10px; text-align: center">
+        <h4 style="display: block !important; margin: 0 0 5px 0">Jumlah Permohonan Mengikut Kawasan</h4>
+
+        <div style="margin-left: 40px; margin-right: 40px;">
+            <table>
+                <tr>
+                    <th>Kawasan</th>
+                    <th>Permohonan</th>
+                </tr>
+                <tr>
+                    <td>Aman Suria</td>
+                    <td>{{items.count_aman_suria}}</td>
+                </tr>
+                <tr>
+                    <td>Ara Damansara</td>
+                    <td>{{items.count_ara_damansara}}</td>
+                </tr>
+                <tr>
+                    <td>Asia Jaya</td>
+                    <td>{{items.count_asia_jaya}}</td>
+                </tr>
+                <tr>
+                    <td>Bandar Sri Damansara</td>
+                    <td>{{items.count_bandar_sri_damansara}}</td>
+                </tr>
+                <tr>
+                    <td>Bandar Sunway</td>
+                    <td>{{items.count_bandar_sunway}}</td>
+                </tr>
+                <tr>
+                    <td>Bandar Utama</td>
+                    <td>{{items.count_bandar_utama}}</td>
+                </tr>
+                <tr>
+                    <td>Bukit Gasing</td>
+                    <td>{{items.count_bukit_gasing}}</td>
+                </tr>
+                <tr>
+                    <td>Damansara Damai</td>
+                    <td>{{items.count_damansara_damai}}</td>
+                </tr>
+                <tr>
+                    <td>Damansara Jaya</td>
+                    <td>{{items.count_damansara_jaya}}</td>
+                </tr>
+                <tr>
+                    <td>Damansara Kim</td>
+                    <td>{{items.count_damansara_kim}}</td>
+                </tr>
+                <tr>
+                    <td>Damansara Perdana</td>
+                    <td>{{items.count_damansara_perdana}}</td>
+                </tr>
+                <tr>
+                    <td>Damansara Utama</td>
+                    <td>{{items.count_damansara_utama}}</td>
+                </tr>
+                <tr>
+                    <td>Kampung Lindungan</td>
+                    <td>{{items.count_kampung_lindungan}}</td>
+                </tr>
+                <tr>
+                    <td>Kampung Medan</td>
+                    <td>{{items.count_kampung_medan}}</td>
+                </tr>
+                <tr>
+                    <td>Kampung Sungai Kayu Ara</td>
+                    <td>{{items.count_kampung_sg_kayu_ara}}</td>
+                </tr>
+                <tr>
+                    <td>Kampung Tunku</td>
+                    <td>{{items.count_kampung_tunku}}</td>
+                </tr>
+                <tr>
+                    <td>Kelab Golf Negara Subang</td>
+                    <td>{{items.count_kelab_golf_negara_subang}}</td>
+                </tr>
+                <tr>
+                    <td>Kelana Jaya</td>
+                    <td>{{items.count_kelana_jaya}}</td>
+                </tr>
+                <tr>
+                    <td>Kota Damansara</td>
+                    <td>{{items.count_kota_damansara}}</td>
+                </tr>
+                <tr>
+                    <td>Kwasa Damansara</td>
+                    <td>{{items.count_kwasa_damansara}}</td>
+                </tr>
+                <tr>
+                    <td>Mutiara Damansara</td>
+                    <td>{{items.count_mutiara_damansara}}</td>
+                </tr>
+                <tr>
+                    <td>Petaling Utama</td>
+                    <td>{{items.count_petaling_utama}}</td>
+                </tr>
+                <tr>
+                    <td>PJ Old Town</td>
+                    <td>{{items.count_pj_old_town}}</td>
+                </tr>
+                <tr>
+                    <td>Sungai Way</td>
+                    <td>{{items.count_sg_way}}</td>
+                </tr>
+                <tr>
+                    <td>Taman Dato' Harun</td>
+                    <td>{{items.count_taman_dato_harun}}</td>
+                </tr>
+                <tr>
+                    <td>Damansara Utama</td>
+                    <td>{{items.count_damansara_utama}}</td>
+                </tr>
+                <tr>
+                    <td>Taman Desaria</td>
+                    <td>{{items.count_taman_desaria}}</td>
+                </tr>
+                <tr>
+                    <td>Taman Jaya</td>
+                    <td>{{items.count_taman_jaya}}</td>
+                </tr>
+                <tr>
+                    <td>Taman Mayang</td>
+                    <td>{{items.count_taman_mayang}}</td>
+                </tr>
+                <tr>
+                    <td>Taman Paramount</td>
+                    <td>{{items.count_taman_paramount}}</td>
+                </tr>
+                <tr>
+                    <td>Taman Perindustrian Jaya</td>
+                    <td>{{items.count_taman_perindustrian_jaya}}</td>
+                </tr>
+                <tr>
+                    <td>Taman SEA</td>
+                    <td>{{items.count_taman_sea}}</td>
+                </tr>
+                <tr>
+                    <td>Tropica</td>
+                    <td>{{items.count_tropicana}}</td>
+                </tr>
+            </table>
+        </div>
+    </section>
+
+</body>
+
+</html>

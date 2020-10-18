@@ -1,0 +1,375 @@
+<div class="header pb-6">
+	<div class="container-fluid">
+		<div class="header-body">
+			<div class="row align-items-center py-4">
+				<div class="col-lg-6 col-7">
+					<h6 class="h2 text-dark d-inline-block mb-0">Applications</h6>
+
+					<nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+						<ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+							<li class=" breadcrumb-item">
+								<a href="javascript:void(0)"> <i class="fas fa-file-alt text-dark"> </i> </a>
+							</li>
+						</ol>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid mt--6">
+    <div class="row">
+		<div class="col">
+			<div class="card">
+				<div class="card-body">
+					<div class="chart">
+						<div class="amchart" id="chart-application-summary"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+    
+    <div class="row">
+        <div class="col">
+            <tabset type="pills" class="nav-fill flex-column flex-md-row">
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="ni ni-cloud-upload-96 mr-2"></i>Submitted
+                    </ng-template>
+
+                    <div class="card mt-2">
+                        <div class="dataTables_wrapper py-4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="datatable_submitted_length">
+                                        <label>
+                                            Show
+                                            <select name="datatable_submitted_length" aria-controls="datatable" class="form-control form-control-sm"
+                                                (change)="entriesChange($event, 'SM')">
+                                                <option value="5" [selected]="tableSubmittedEntries == 5">5</option>
+                                                <option value="10" [selected]="tableSubmittedEntries == 10">10</option>
+                                                <option value="15" [selected]="tableSubmittedEntries == 15">15</option>
+                                                <option value="-1" [selected]="tableSubmittedEntries == -1">All</option>
+                                            </select>
+                                            record
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div id="datatable_filter" class="dataTables_filter">
+                                        <label>
+                                            <input 
+                                                type="search"
+                                                class="form-control form-control-sm"
+                                                placeholder="Search applicant name"
+                                                aria-controls="datatable"
+                                                (keyup)="filterTable($event, 'SM')"
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="pt-4 text-center" *ngIf="isSubmittedEmpty">
+                                <img [src]="iconEmpty" class="error-icon">
+                                <p>No records found</p>
+                            </div>
+                    
+                            <ngx-datatable 
+                                class="bootstrap selection-cell" 
+                                [columnMode]="'force'" 
+                                [headerHeight]="50" 
+                                [footerHeight]="50"
+                                [rowHeight]="'auto'"
+                                [limit]="tableSubmittedEntries != -1 ? tableSubmittedEntries : undefined" 
+                                [rows]="tableSubmittedTemp"
+                                [messages]="tableMessages"
+                                (activate)="onActivate($event, 'SM')"
+                                *ngIf="!isSubmittedEmpty"
+                            >
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Applicant</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.applicant_name}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+            
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Assessment Tax</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.applied_house_assessment_tax_account}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                    
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Status</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <span
+                                            class="badge badge-pill badge-info"
+                                        >
+                                            Submitted
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+        
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Action</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <button 
+                                            class="btn btn-icon btn-3 btn-primary"
+                                            type="button"
+                                            (click)="navigatePage('/admin/applications/detail', row)"
+                                        >
+                                            <span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
+                                            <span class="btn-inner--text">View</span>
+                                        </button>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </tab>
+
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="ni ni-bell-55 mr-2"></i>Evaluation
+                    </ng-template>
+                    
+                    <div class="card mt-2">
+                        <div class="dataTables_wrapper py-4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="datatable_evaluation_length">
+                                        <label>
+                                            Show
+                                            <select name="datatable_evaluation_length" aria-controls="datatable" class="form-control form-control-sm"
+                                                (change)="entriesChange($event, 'EV')">
+                                                <option value="5" [selected]="tableEvaluationEntries == 5">5</option>
+                                                <option value="10" [selected]="tableEvaluationEntries == 10">10</option>
+                                                <option value="15" [selected]="tableEvaluationEntries == 15">15</option>
+                                                <option value="-1" [selected]="tableEvaluationEntries == -1">All</option>
+                                            </select>
+                                            record
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div id="datatable_filter" class="dataTables_filter">
+                                        <label>
+                                            <input 
+                                                type="search"
+                                                class="form-control form-control-sm"
+                                                placeholder="Search applicant name"
+                                                aria-controls="datatable"
+                                                (keyup)="filterTable($event, 'EV')"
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="pt-4 text-center" *ngIf="isEvaluationEmpty">
+                                <img [src]="iconEmpty" class="error-icon">
+                                <p>No records found</p>
+                            </div>
+                    
+                            <ngx-datatable 
+                                class="bootstrap selection-cell" 
+                                [columnMode]="'force'" 
+                                [headerHeight]="50" 
+                                [footerHeight]="50"
+                                [rowHeight]="'auto'"
+                                [limit]="tableEvaluationEntries != -1 ? tableEvaluationEntries : undefined" 
+                                [rows]="tableEvaluationTemp"
+                                [messages]="tableMessages"
+                                (activate)="onActivate($event, 'EV')"
+                                *ngIf="!isEvaluationEmpty"
+                            >
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Applicant</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.applicant_name}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+            
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Assessment Tax</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.applied_house_assessment_tax_account}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Nominated Evaluator</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.evaluator_nominated_name}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                    
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Status</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <span
+                                            class="badge badge-pill badge-warning"
+                                        >
+                                            Evaluation
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+        
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Action</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <button 
+                                            class="btn btn-icon btn-3 btn-primary"
+                                            type="button"
+                                            (click)="navigatePage('/admin/applications/detail', row)"
+                                        >
+                                            <span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
+                                            <span class="btn-inner--text">View</span>
+                                        </button>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </tab>
+
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="ni ni-calendar-grid-58 mr-2"></i>Completed
+                    </ng-template>
+                    
+                    <div class="card mt-2">
+                        <div class="dataTables_wrapper py-4">
+                            <div class="row">
+                                <div class="col-sm-12 col-md-6">
+                                    <div class="dataTables_length" id="datatable_completed_length">
+                                        <label>
+                                            Show
+                                            <select name="datatable_completed_length" aria-controls="datatable" class="form-control form-control-sm"
+                                                (change)="entriesChange($event, 'CM')">
+                                                <option value="5" [selected]="tableCompletedEntries == 5">5</option>
+                                                <option value="10" [selected]="tableCompletedEntries == 10">10</option>
+                                                <option value="15" [selected]="tableCompletedEntries == 15">15</option>
+                                                <option value="-1" [selected]="tableCompletedEntries == -1">All</option>
+                                            </select>
+                                            record
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="col-sm-12 col-md-6">
+                                    <div id="datatable_filter" class="dataTables_filter">
+                                        <label>
+                                            <input 
+                                                type="search"
+                                                class="form-control form-control-sm"
+                                                placeholder="Search applicant name"
+                                                aria-controls="datatable"
+                                                (keyup)="filterTable($event, 'CM')"
+                                            />
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                
+                            <div class="pt-4 text-center" *ngIf="isCompletedEmpty">
+                                <img [src]="iconEmpty" class="error-icon">
+                                <p>No records found</p>
+                            </div>
+                    
+                            <ngx-datatable 
+                                class="bootstrap selection-cell" 
+                                [columnMode]="'force'" 
+                                [headerHeight]="50" 
+                                [footerHeight]="50"
+                                [rowHeight]="'auto'"
+                                [limit]="tableCompletedEntries != -1 ? tableCompletedEntries : undefined" 
+                                [rows]="tableCompletedTemp"
+                                [messages]="tableMessages"
+                                (activate)="onActivate($event, 'CM')"
+                                *ngIf="!isCompletedEmpty"
+                            >
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Applicant</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.applicant_name}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+            
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Assessment Tax</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.applied_house_assessment_tax_account}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                                
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Nominated Evaluator</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.evaluator_nominated_name}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+                    
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Status</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <span
+                                            class="badge badge-pill badge-success"
+                                        >
+                                            Completed
+                                        </span>
+                                    </ng-template>
+                                </ngx-datatable-column>
+        
+                                <ngx-datatable-column>
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Action</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        <button 
+                                            class="btn btn-icon btn-3 btn-primary"
+                                            type="button"
+                                            (click)="navigatePage('/admin/applications/detail', row)"
+                                        >
+                                            <span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
+                                            <span class="btn-inner--text">View</span>
+                                        </button>
+                                    </ng-template>
+                                </ngx-datatable-column>
+                            </ngx-datatable>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</div>

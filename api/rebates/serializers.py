@@ -1,6 +1,7 @@
+import json
+
 from datetime import datetime
 from calendar import timegm
-import json
 
 from django.contrib.auth.forms import PasswordResetForm
 from django.conf import settings

@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Form } from '@angular/forms';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { Evaluation } from './evaluations.model';
+import { Evaluation, EvaluationExtended } from './evaluations.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,57 +16,59 @@ export class EvaluationsService {
 
   // Data
   public evaluation: Evaluation
-  public evaluations: Evaluation[] = []
+  public evaluations: EvaluationExtended[] = []
   public evaluationsFiltered: Evaluation[] = []
+  public evaluationExtended: EvaluationExtended
 
   constructor(
     private http: HttpClient
   ) { }
 
-  create(body: Form): Observable<Evaluation> {
+  create(body: any): Observable<Evaluation> {
     return this.http.post<any>(this.urlEvaluations, body).pipe(
       tap((res) => {
         this.evaluation = res
-        console.log('Evaluation: ', this.evaluation)
+        // console.log('Evaluation: ', this.evaluation)
       })
     )
   }
 
-  getAll(): Observable<Evaluation[]> {
-    return this.http.get<Evaluation[]>(this.urlEvaluations).pipe(
+  getAll(): Observable<EvaluationExtended[]> {
+    let urlTemp = this.urlEvaluations + 'extended_all'
+    return this.http.get<EvaluationExtended[]>(urlTemp).pipe(
       tap((res) => {
         this.evaluations = res
-        console.log('Evaluations: ', this.evaluations)
+        // console.log('Evaluations: ', this.evaluations)
       })
     )
   }
 
-  getOne(id: String): Observable<Evaluation> {
+  getOne(id: any): Observable<EvaluationExtended> {
+    let urlTemp = this.urlEvaluations + id + '/extended'
+    return this.http.get<EvaluationExtended>(urlTemp).pipe(
+      tap((res) => {
+        this.evaluationExtended = res
+        // console.log('Evaluation: ', this.evaluationExtended)
+      })
+    )
+  }
+
+  update(id: any, body: any): Observable<Evaluation> {
     let urlTemp = this.urlEvaluations + id + '/'
-    return this.http.get<Evaluation>(urlTemp).pipe(
+    return this.http.patch<Evaluation>(urlTemp, body).pipe(
       tap((res) => {
         this.evaluation = res
-        console.log('Evaluation: ', this.evaluation)
+        // console.log('Evaluation', this.evaluation)
       })
     )
   }
 
-  update(id: String, body: Form): Observable<Evaluation> {
-    let urlTemp = this.urlEvaluations + id + '/'
-    return this.http.put<Evaluation>(urlTemp, body).pipe(
-      tap((res) => {
-        this.evaluation = res
-        console.log('Evaluation', this.evaluation)
-      })
-    )
-  }
-
-  filter(field: String): Observable<Evaluation[]> {
+  filter(field: any): Observable<Evaluation[]> {
     let urlTemp = this.urlEvaluations + '?' + field
     return this.http.get<Evaluation[]>(urlTemp).pipe(
       tap((res) => {
         this.evaluationsFiltered = res
-        console.log('Evaluations', this.evaluationsFiltered)
+        // console.log('Evaluations', this.evaluationsFiltered)
       })
     )
   }

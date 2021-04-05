@@ -25,10 +25,10 @@ export class NotificationsService {
     private http: HttpClient
   ) { }
 
-  create(body: Form) {
+  create(body: any) {
     return this.http.post<Notification>(this.urlNotifications, body).pipe(
       tap((res) => {
-        console.log('Notification: ', res)
+        // console.log('Notification: ', res)
       })
     )
   }
@@ -37,7 +37,7 @@ export class NotificationsService {
     return this.http.get<Notification[]>(this.urlNotificationsExtended).pipe(
       tap((res: Notification[]) => {
         this.notifications = res
-        console.log('Notifications: ', res)
+        // console.log('Notifications: ', res)
       })
     )
   }

@@ -1,1 +1,133 @@
-<p>settings works!</p>
+<div class="header pb-6">
+    <div class="container-fluid">
+        <div class="header-body">
+            <div class="row align-items-center py-4">
+                <div class="col-lg-6 col-7">
+                    <h6 class="h2 text-dark d-inline-block mb-0">Settings</h6>
+
+                    <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
+                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+                            <li class=" breadcrumb-item">
+                                <a href="javascript:void(0)"> <i class="fas fa-user-cog text-dark"> </i> </a>
+                            </li>
+                            <li aria-current="page" class="breadcrumb-item active">
+                                Settings
+                            </li>
+                        </ol>
+                    </nav>
+                </div>
+                <div class="col-lg-6 col-5 text-right">
+                    <!-- <a 
+                        [hidden]="editEnabled"
+                        class="btn btn-info btn-sm text-white btn-icon btn-3" 
+                        (click)="toggleEdit()"
+                    > 
+                        <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
+                        <span class="btn-inner--text">Edit profile</span>
+                    </a>
+                    <a
+                        [hidden]="!editEnabled"
+                        class="btn btn-danger btn-sm text-white btn-icon btn-3" 
+                        (click)="toggleEdit()"
+                    > 
+                        <span class="btn-inner--icon"><i class="fas fa-arrow-left"></i></span>
+                        <span class="btn-inner--text">Back</span>
+                    </a>
+                    <a 
+                        [hidden]="!editEnabled"
+                        class="btn btn-success btn-sm text-white btn-icon btn-3" 
+                        (click)="confirm()"
+                    > 
+                        <span class="btn-inner--icon"><i class="fas fa-save"></i></span>
+                        <span class="btn-inner--text">Save</span>
+                    </a> -->
+				</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid mt--6">
+    <div class="row">
+        <div class="col-lg-6 col-sm-12">
+            <div class="card">
+                <div class="card-header bg-secondary">
+                    <h4 class="m-0">Change password</h4>
+                </div>
+
+                <div class="card-body">
+					<form [formGroup]="passwordForm">
+						<div class="form-group">
+							<label class="form-control-label">New password</label>
+							<input class="form-control" formControlName="new_password1" placeholder="New password">
+
+							<ng-container *ngFor="let message of passwordFormMessages.new_password1">
+								<div 
+                                    *ngIf="passwordForm.get('new_password1').hasError(message.type) && (passwordForm.get('new_password1').dirty || passwordForm.get('new_password1').touched)"
+                                >
+									<p class="error-message"><span>{{ message.message }}</span></p>
+								</div>
+							</ng-container>
+						</div>
+
+						<div class="form-group">
+							<label class="form-control-label">Confirm new password</label>
+							<input class="form-control" formControlName="new_password2" placeholder="Confirm new password">
+
+							<ng-container *ngFor="let message of passwordFormMessages.new_password2">
+								<div 
+                                    *ngIf="passwordForm.get('new_password2').hasError(message.type) && (passwordForm.get('new_password2').dirty || passwordForm.get('new_password2').touched)"
+                                >
+									<p class="error-message"><span>{{ message.message }}</span></p>
+								</div>
+							</ng-container>
+						</div>
+
+						<div>
+							<button
+								class="btn btn-warm-blue btn-block"
+								(click)="changePassword()"
+								[disabled]="!passwordForm.valid"
+							>
+								Change password
+							</button>
+						</div>
+					</form>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-sm-12">
+            <div class="card">
+                <div class="card-header bg-secondary">
+                    <h4 class="m-0">Request reset password link</h4>
+                </div>
+
+                <div class="card-body">
+					<form [formGroup]="resetForm">
+						<div class="form-group">
+							<label class="form-control-label">Email</label>
+							<input class="form-control" formControlName="email" placeholder="Email">
+
+							<ng-container *ngFor="let message of resetFormMessages.answer">
+								<div *ngIf="resetForm.get('answer').hasError(message.type) && (resetForm.get('answer').dirty || resetForm.get('answer').touched)">
+									<p class="error-message"><span>{{ message.message }}</span></p>
+								</div>
+							</ng-container>
+						</div>
+
+						<div>
+							<button
+								class="btn btn-warm-blue btn-block"
+								(click)="reset()"
+								[disabled]="!resetForm.valid"
+							>
+								Reset password
+							</button>
+						</div>
+					</form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,8 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { HouseTemp } from 'src/app/shared/services/houses/houses.model';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HouseExtended, HouseTemp } from 'src/app/shared/services/houses/houses.model';
 
 import * as moment from 'moment';
+import { buildingTypes } from 'src/app/shared/options/building-types';
+import { relationTypes } from 'src/app/shared/options/relation-types';
+import { HousesService } from 'src/app/shared/services/houses/houses.service';
+import { Subscription } from 'rxjs';
+import { LoadingBarService } from '@ngx-loading-bar/core';
 
 @Component({
   selector: 'app-house-detail',
@@ -12,7 +17,13 @@ import * as moment from 'moment';
 export class HouseDetailComponent implements OnInit {
 
   // Data
-  house: HouseTemp
+  house: HouseExtended
+  houseID: any
+  fullAddress: string = ''
+
+  // Predefined
+  houseTypes = buildingTypes
+  relationshipTypes = relationTypes
 
   // Checker
   isEmpty: boolean = true
@@ -20,77 +31,82 @@ export class HouseDetailComponent implements OnInit {
   // Icon
   iconError = 'assets/img/icons/cancel.svg'
 
+  // Subscriber
+  subscription: Subscription
+
   constructor(
-    private router: Router
+    private loadingBar: LoadingBarService,
+    private route: ActivatedRoute,
+    private router: Router,
+    private houseService: HousesService
   ) { 
-    this.house = this.router.getCurrentNavigation().extras as HouseTemp
+    this.houseID = String(this.route.snapshot.queryParamMap.get('id'))
     // console.log(this.house.id)
-    if (!this.house) {
-      this.router.navigate(['/admin/house'])
+    if (!this.houseID) {
+      this.navigatePage('/admin/house')
+    }
+
+    if (
+      this.houseID && (
+        typeof this.houseID === 'string' || 
+        this.houseID instanceof String
+      )
+    ) {
+      this.getData()
+    }
+    else {
+      this.navigatePage('/admin/house')
     }
   }
 
   ngOnInit() {
-    this.initData()
   }
 
-  initData() {
-    if (this.house.id) {
-      console.log(this.house.created_at)
-      console.log(this.house.staying_since)
-      let dateRegistered = moment(this.house.created_at).format('DD/MM/YYYY')
-      let dateStayingSince = moment(this.house.staying_since).format('MM/YYYY')
-      let relationshipType = this.house.relationship_type
-      let buildingType = this.house.building_type
-      
-      console.log(dateRegistered)
-      console.log(dateStayingSince)
+  getData() {
+    this.loadingBar.start()
+    this.subscription = this.houseService.getOne(this.houseID).subscribe(
+      () => {
+        this.loadingBar.complete()
+      },
+      () => {
+        this.loadingBar.complete()
+        this.isEmpty = true
+      },
+      () => {
+        this.house = this.houseService.houseExtended
+        this.isEmpty = false
+        
+        this.fullAddress = this.house['address_1']
 
-      this.isEmpty = false
-      this.house.created_at = dateRegistered
-      this.house.staying_since = dateStayingSince
+        if (this.house['address_2']) {
+          this.fullAddress = this.fullAddress + this.house['address_2']
+        }
 
-      if (relationshipType == 'SL') {
-        this.house.relationship_type = 'Self'
-      }
-      else if (relationshipType == 'SP') {
-        this.house.relationship_type = 'Spouse'
-      }
-      else if (relationshipType == 'SB') {
-        this.house.relationship_type = 'Siblings'
-      }
-      else if (relationshipType == 'PR') {
-        this.house.relationship_type = 'Parents'
-      }
-      else if (relationshipType == 'CH') {
-        this.house.relationship_type = 'Children'
-      }
+        if (this.house['address_3']) {
+          this.fullAddress = this.fullAddress + this.house['address_3']
+        }
 
-      if (buildingType == 'CD') {
-        this.house.building_type = 'Condominium'
+        this.houseTypes.forEach(
+          (type) => {
+            if (type['value'] === this.house['building_type']) {
+              this.house['building_type'] = type['text']
+            }
+          }
+        )
+
+        this.relationshipTypes.forEach(
+          (type) => {
+            if (type['value'] === this.house['relationship_type']) {
+              this.house['relationship_type'] = type['text']
+            }
+          }
+        )
       }
-      else if (buildingType == 'FL') {
-        this.house.building_type = 'Flat'
-      }
-      else if (buildingType == 'TO') {
-        this.house.building_type = 'Townhouse'
-      }
-      else if (buildingType == 'TE') {
-        this.house.building_type = 'Terrace House'
-      }
-      else if (buildingType == 'BS') {
-        this.house.building_type = 'Bungalow / Semidetached'
-      }
-      else if (buildingType == 'AS') {
-        this.house.building_type = 'Apartment / Service Apartment'
-      }
-      else if (buildingType == 'OT') {
-        this.house.building_type = 'Others'
-      }
-    }
-    else {
-      this.isEmpty = true
-    }
+    )
+  }
+
+  navigatePage(path: string) {
+    return this.router.navigate([path])
   }
 
 }

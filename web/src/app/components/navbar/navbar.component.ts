@@ -12,6 +12,8 @@ import { User } from 'src/app/shared/services/users/users.model';
 import { JwtService } from 'src/app/shared/handler/jwt/jwt.service';
 import { Notification } from 'src/app/shared/services/notifications/notifications.model';
 import { NotificationsService } from 'src/app/shared/services/notifications/notifications.service';
+import { UsersService } from "src/app/shared/services/users/users.service";
+import { Subscription } from "rxjs";
 
 @Component({
   selector: "app-navbar",
@@ -39,10 +41,14 @@ export class NavbarComponent implements OnInit {
   iconEmpty = 'assets/img/icons/box.svg'
   iconNotification = 'assets/img/icons/mail.svg'
 
+  // Subscriber
+  subscription: Subscription
+
   constructor(
     location: Location,
     private authService: AuthService,
     private notificationService: NotificationsService,
+    private userService: UsersService,
     private jwtService: JwtService,
     private notifyService: NotifyService,
     private element: ElementRef,
@@ -74,16 +80,37 @@ export class NavbarComponent implements OnInit {
        }
    });
 
+   this.checkToken()
   }
 
   ngOnInit() {
     // console.log('As: ', this.user)
     this.listTitles = ROUTES.filter(listTitle => listTitle);
-    console.log('ggg', this.listTitles)
+    // console.log('Title list', this.listTitles)
     
     if (this.notifications.length != 0) {
       this.isNotificationEmpty = false
       // console.log('qheqerqw', this.notifications)
+    }
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe()
+    }
+  }
+
+  checkToken() {
+    const token = this.jwtService.getToken('accessToken');
+
+    if (token) {
+      this.subscription = this.userService.getSelf().subscribe(
+        () => {
+          this.user = this.userService.self
+        },
+        () => {},
+        () => {}
+      )
     }
   }
 
@@ -119,7 +146,7 @@ export class NavbarComponent implements OnInit {
   successMessage() {
     let title = 'Success'
     let message = 'Loging in right now'
-    this.notifyService.openToastr(title, message)
+    this.notifyService.openToastrWarning(title, message)
   }
 
   viewNotification() {

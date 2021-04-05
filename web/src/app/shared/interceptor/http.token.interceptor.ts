@@ -33,7 +33,7 @@ export class HttpTokenInterceptor implements HttpInterceptor {
                 this.handlerNotification.openToastrConnection()
             } else {
                 // Handle Http Error (error.status === 403, 404...)
-                this.handlerNotification.openToastrHttp(error.status, error.statusText)
+                this.handlerNotification.openToastrWarning(error.status, error.statusText)
             }
         } else {
             // Handle Client Error (Angular Error, ReferenceError...)     
@@ -56,13 +56,13 @@ export class HttpTokenInterceptor implements HttpInterceptor {
             // console.log(headersConfig)
         }
 
-        console.log('Intercepting...')
+        // console.log('Intercepting...')
 
         const request = req.clone({ setHeaders: headersConfig });
         return next.handle(request).pipe(
             map((event: HttpEvent<any>) => {
                 if (event instanceof HttpResponse) {
-                    console.log('Event: ', event);
+                    // console.log('Event: ', event);
                 }
                 return event;
             }),

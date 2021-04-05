@@ -16,11 +16,11 @@ export class NotifyService {
     this.toastr.info(message, title)
   }
 
-  openToastrHttp(title: any, message: string) {
+  openToastrWarning(title: any, message: string) {
     this.toastr.warning(message, title)
   }
 
-  openToastr(title: any, message: string) {
+  openToastrSuccess(title: any, message: string) {
     this.toastr.success(message, title)
   }
 

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { NotifyService } from 'src/app/shared/handler/notify/notify.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import { ApplicationsService } from 'src/app/shared/services/applications/applications.service';
 import { AspectsService } from 'src/app/shared/services/aspects/aspects.service';
 import { AssessmentsService } from 'src/app/shared/services/assessments/assessments.service';
@@ -40,30 +40,34 @@ export class LoginComponent implements OnInit {
     ]
   }
 
+  // Subscriber
+  subscription: Subscription
+
   constructor(
     private authService: AuthService,
-    private applicationService: ApplicationsService,
-    private aspectService: AspectsService,
-    private assessmentService: AssessmentsService,
-    private evaluationService: EvaluationsService,
-    private houseService: HousesService,
-    private rebateService: RebatesService,
-    private scheduleService: SchedulesService,
-    private ticketService: TicketsService,
-    private userService: UsersService,
     private notifyService: NotifyService,
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private loadingBar: LoadingBarService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.loginForm = this.formBuilder.group({
-      username: new FormControl('', Validators.compose([
+    this.initForm()
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe()
+    }
+  }
+
+  initForm() {
+    this.loginForm = this.fb.group({
+      username: new FormControl(null, Validators.compose([
         Validators.required,
         Validators.email
       ])),
-      password: new FormControl('', Validators.compose([
+      password: new FormControl(null, Validators.compose([
         Validators.required,
         Validators.minLength(8)
       ]))
@@ -73,7 +77,9 @@ export class LoginComponent implements OnInit {
   login() {
     this.loadingBar.start()
     this.authService.obtainToken(this.loginForm.value).subscribe(
-      () => {},
+      () => {
+        this.loadingBar.complete()
+      },
       () => { 
         this.loadingBar.complete()
       },
@@ -84,33 +90,41 @@ export class LoginComponent implements OnInit {
     )
   }
 
+  submitEnter(event) {
+    if (
+      event.keyCode === 13 &&
+      this.loginForm.valid
+    ) {
+      this.login()
+    }
+    else {
+      // console.log('Nothing bro')
+    }
+  }
+
   getData() {
-    forkJoin(
-      this.authService.getUserDetail(),
-      this.applicationService.getAll(),
-      this.aspectService.getAll(),
-      this.assessmentService.getAll(),
-      this.evaluationService.getAll(),
-      this.houseService.getAll(),
-      this.rebateService.getAll(),
-      this.scheduleService.getAll(),
-      // this.ticketService.getAll(),
-      this.userService.getAll()
-    ).subscribe(
+    this.subscription = forkJoin([
+      this.authService.getUserDetail()
+    ]).subscribe(
       (res) => {
         this.loadingBar.complete()
       },
       (err) => {
         this.loadingBar.complete()
+        let titleError = 'Error'
+        let messageError = 'Please try again'
+        this.notifyService.openToastrWarning(titleError, messageError)
       },
       () => {
-        this.successMessage()
+        let titleSuccess = 'Success'
+        let messageSuccess = 'Logging in right now'
+        this.notifyService.openToastrSuccess(titleSuccess, messageSuccess)
         this.navigatePage('dashboard-admin')
       }
     )
   }
 
-  navigatePage(path: String) {
+  navigatePage(path: string) {
     if (path == 'login') {
       return this.router.navigate(['/auth/login'])
     }
@@ -122,10 +136,14 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  successMessage() {
-    let title = 'Success'
-    let message = 'Logging in right now'
-    this.notifyService.openToastr(title, message)
+  cheat() {
+    let uname = 'syafiqbasri@pipeline.com.my'
+    let pwd = 'PabloEscobar'
+
+    this.loginForm.controls['username'].patchValue(uname)
+    this.loginForm.controls['password'].patchValue(pwd)
+
+    this.login()
   }
 
 }

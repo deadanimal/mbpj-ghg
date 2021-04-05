@@ -1,16 +1,20 @@
 import { Component, OnInit, OnDestroy, NgZone, TemplateRef } from '@angular/core';
-import { User } from 'src/assets/mock/admin-user/users.model'
-import { MocksService } from 'src/app/shared/services/mocks/mocks.service';
+import { Router } from '@angular/router';
+
+import { User } from 'src/app/shared/services/users/users.model';
+import { UsersService } from 'src/app/shared/services/users/users.service';
 
 import * as moment from 'moment';
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import * as am4core from '@amcharts/amcharts4/core';
+import * as am4charts from '@amcharts/amcharts4/charts';
+import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap';
 am4core.useTheme(am4themes_animated);
 
 import swal from 'sweetalert2';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { forkJoin, Subscription } from 'rxjs';
 
 export enum SelectionType {
   single = 'single',
@@ -27,10 +31,13 @@ export enum SelectionType {
 })
 export class ManagementUserComponent implements OnInit, OnDestroy {
 
+  // Data
+  users: User[] = []
+
   // Table
   tableEntries: number = 5;
   tableSelected: any[] = [];
-  tableTemp = [];
+  tableTemp: User[] = [];
   tableActiveRow: any;
   tableRows: User[] = []
   SelectionType = SelectionType;
@@ -54,7 +61,7 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
   modal: BsModalRef;
   modalConfig = {
     keyboard: true,
-    class: "modal-dialog-centered"
+    class: 'modal-dialog-centered'
   };
 
   // Form
@@ -69,16 +76,37 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
     ]
   }
 
+  // Subscriber
+  subscription: Subscription
+
   constructor(
-    private mockService: MocksService,
+    private userService: UsersService,
+    private loadingBar: LoadingBarService,
     private modalService: BsModalService,
     private formBuilder: FormBuilder,
+    private router: Router,
     private zone: NgZone
   ) {
     this.getData()
   }
 
   ngOnInit() {
+    this.initForm()
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe
+    }
+
+    this.zone.runOutsideAngular(() => {
+      if (this.chart) {
+        this.chart.dispose()
+      }
+    })
+  }
+
+  initForm() {
     this.registerForm = this.formBuilder.group({
       name: new FormControl('', Validators.compose([
         Validators.required
@@ -90,36 +118,82 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy() {
-    this.zone.runOutsideAngular(() => {
-      if (this.chart) {
-        this.chart.dispose()
-      }
-    })
-  }
-
   getData() {
-    this.mockService.getAll('admin-user/users.data.json').subscribe(
+    this.loadingBar.start()
+
+    this.subscription = forkJoin([
+      this.userService.getAll(),
+      this.userService.getStatistics()
+    ]).subscribe(
       (res) => {
-        // Success
-        this.tableRows = [...res]
-        this.tableTemp = this.tableRows.map((prop, key) => {
-          return {
-            ...prop,
-            id: key
-          };
-        });
-        // console.log('Svc: ', this.tableTemp)
-        this.calculateCharts()
+        this.users = this.userService.users
+        this.loadingBar.complete()
+      },
+      (err) => {
+        this.loadingBar.complete()
       },
       () => {
-        // Unsuccess
-      },
-      () => {
-        // After
+        this.loadTable()
         this.getCharts()
       }
     )
+  }
+
+  loadTable() {
+    this.users.forEach(
+      (user: User) => {
+        user['date_joined'] = moment(user['date_joined']).format('DD/MM/YYYY HH:mm')
+
+        if (user['user_type'] == 'SA') {
+          user['user_type_mapped'] = 'Super Admin'
+        }
+        else if (user['user_type'] == 'AD') {
+          user['user_type_mapped'] = 'Admin'
+        }
+        else if (user['user_type'] == 'AP') {
+          user['user_type_mapped'] = 'Applicant'
+        }
+        else if (user['user_type'] == 'EV') {
+          user['user_type_mapped'] = 'Evaluator'
+        }
+
+        if (user['is_active']) {
+          user['is_active_mapped'] = 'Active'
+        }
+        else {
+          user['is_active_mapped'] = 'Inactive'
+        }
+      }
+    )
+
+    this.tableRows = [...this.users]
+    this.tableTemp = this.tableRows.map((prop, key) => {
+      return {
+        ...prop
+      };
+    });
+  }
+
+  entriesChange($event) {
+    this.tableEntries = $event.target.value;
+  }
+
+  filterTable($event) {
+    let val = $event.target.value.toLowerCase();
+    this.tableTemp = this.tableRows.filter(function (d) {
+      if (d.full_name) {
+        return d.full_name.toLowerCase().indexOf(val) !== -1 || !val;
+      }
+    });
+  }
+
+  onSelect({ selected }) {
+    this.tableSelected.splice(0, this.tableSelected.length);
+    this.tableSelected.push(...selected);
+  }
+
+  onActivate(event) {
+    this.tableActiveRow = event.row;
   }
 
   getCharts() {
@@ -129,56 +203,68 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
   }
 
   getChart() {
-    let chart = am4core.create("chartdiv", am4charts.XYChart);
+    let chart = am4core.create('chart-user-month', am4charts.XYChart);
 
     // Add data
-    chart.data = [{
-      "month": "Jan",
-      "count": this.chartJan
-    }, {
-      "month": "Feb",
-      "count": this.chartFeb
-    }, {
-      "month": "Mar",
-      "count": this.chartMar
-    }, {
-      "month": "Apr",
-      "count": this.chartApr
-    }, {
-      "month": "May",
-      "count": this.chartMar
-    }, {
-      "month": "Jun",
-      "count": this.chartJun
-    }, {
-      "month": "Jul",
-      "count": this.chartJul
-    }, {
-      "month": "Aug",
-      "count": this.chartAug
-    }, {
-      "month": "Sep",
-      "count": this.chartSep
-    }, {
-      "month": "Oct",
-      "count": this.chartOct
-    }, {
-      "month": "Nov",
-      "count": this.chartNov
-    }, {
-      "month": "Dec",
-      "count": this.chartDec
-    }
+    chart.data = [
+      {
+        'month': 'Jan',
+        'count': this.userService.userStatistics['total_current_jan']
+      }, 
+      {
+        'month': 'Feb',
+        'count': this.userService.userStatistics['total_current_feb']
+      }, 
+      {
+        'month': 'Mar',
+        'count': this.userService.userStatistics['total_current_mar']
+      }, 
+      {
+        'month': 'Apr',
+        'count': this.userService.userStatistics['total_current_apr']
+      }, 
+      {
+        'month': 'May',
+        'count': this.userService.userStatistics['total_current_may']
+      }, 
+      {
+        'month': 'Jun',
+        'count': this.userService.userStatistics['total_current_jun']
+      }, 
+      {
+        'month': 'Jul',
+        'count': this.userService.userStatistics['total_current_jul']
+      }, 
+      {
+        'month': 'Aug',
+        'count': this.userService.userStatistics['total_current_aug']
+      }, 
+      {
+        'month': 'Sep',
+        'count': this.userService.userStatistics['total_current_sep']
+      }, 
+      {
+        'month': 'Oct',
+        'count': this.userService.userStatistics['total_current_oct']
+      }, 
+      {
+        'month': 'Nov',
+        'count': this.userService.userStatistics['total_current_nov']
+      }, 
+      {
+        'month': 'Dec',
+        'count': this.userService.userStatistics['total_current_dec']
+      }
   ];
 
     // Create axes
 
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
-    categoryAxis.dataFields.category = "month";
+    categoryAxis.dataFields.category = 'month';
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.minGridDistance = 30;
 
-    categoryAxis.renderer.labels.template.adapter.add("dy", function (dy, target) {
+    categoryAxis.renderer.labels.template.adapter.add('dy', function (dy, target) {
       if (target.dataItem && target.dataItem.index && 2 == 2) {
         return dy + 25;
       }
@@ -186,13 +272,14 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
     });
 
     let valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.min = 0;
 
     // Create series
     let series = chart.series.push(new am4charts.ColumnSeries());
-    series.dataFields.valueY = "count";
-    series.dataFields.categoryX = "month";
-    series.name = "count";
-    series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+    series.dataFields.valueY = 'count';
+    series.dataFields.categoryX = 'month';
+    series.name = 'count';
+    series.columns.template.tooltipText = '{categoryX}: [bold]{valueY}[/]';
     series.columns.template.fillOpacity = .8;
 
     let columnTemplate = series.columns.template;
@@ -200,63 +287,6 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
     columnTemplate.strokeOpacity = 1;
 
     this.chart = chart
-  }
-
-  calculateCharts() {
-    this.chartJan = 0
-    this.chartFeb = 0
-    this.chartMar = 0
-    this.chartApr = 0
-    this.chartMay = 0
-    this.chartJun = 0
-    this.chartJul = 0
-    this.chartAug = 0
-    this.chartSep = 0
-    this.chartOct = 0
-    this.chartNov = 0
-    this.chartDec = 0
-    this.tableRows.forEach(
-      ((row) => {
-        let checkerDate = moment(row.joined_at)
-        let checkerDateMonth = checkerDate.month()
-        if (checkerDateMonth == 0) {
-          this.chartJan += 1
-        }
-        else if (checkerDateMonth == 1) {
-          this.chartFeb += 1
-        }
-        else if (checkerDateMonth == 2) {
-          this.chartMar += 1
-        }
-        else if (checkerDateMonth == 3) {
-          this.chartApr += 1
-        }
-        else if (checkerDateMonth == 4) {
-          this.chartMay += 1
-        }
-        else if (checkerDateMonth == 5) {
-          this.chartJun += 1
-        }
-        else if (checkerDateMonth == 6) {
-          this.chartJul += 1
-        }
-        else if (checkerDateMonth == 7) {
-          this.chartAug += 1
-        }
-        else if (checkerDateMonth == 8) {
-          this.chartSep += 1
-        }
-        else if (checkerDateMonth == 9) {
-          this.chartOct += 1
-        }
-        else if (checkerDateMonth == 10) {
-          this.chartNov += 1
-        }
-        else if (checkerDateMonth == 11) {
-          this.chartDec += 1
-        }
-      })
-    )
   }
 
   openModal(modalRef: TemplateRef<any>) {
@@ -270,15 +300,15 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
 
   confirm() {
     swal.fire({
-      title: "Confirmation",
-      text: "Are you sure to create this new user?",
-      type: "info",
+      title: 'Confirmation',
+      text: 'Are you sure to create this new user?',
+      type: 'info',
       buttonsStyling: false,
-      confirmButtonClass: "btn btn-info",
-      confirmButtonText: "Confirm",
+      confirmButtonClass: 'btn btn-info',
+      confirmButtonText: 'Confirm',
       showCancelButton: true,
-      cancelButtonClass: "btn btn-danger",
-      cancelButtonText: "Cancel"
+      cancelButtonClass: 'btn btn-danger',
+      cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.value) {
         this.register()
@@ -288,18 +318,30 @@ export class ManagementUserComponent implements OnInit, OnDestroy {
 
   register() {
     swal.fire({
-      title: "Success",
-      text: "A new user has been created!",
-      type: "success",
+      title: 'Success',
+      text: 'A new user has been created!',
+      type: 'success',
       buttonsStyling: false,
-      confirmButtonClass: "btn btn-success",
-      confirmButtonText: "Close"
+      confirmButtonClass: 'btn btn-success',
+      confirmButtonText: 'Close'
     }).then((result) => {
       if (result.value) {
         this.modal.hide()
         this.registerForm.reset()
       }
     })
+  }
+
+  view(selected) {
+    let path = '/admin/management/users/detail'
+    let extras = selected['id']
+    let queryParams = {
+      queryParams: {
+        id: extras
+      }
+    }
+
+    return this.router.navigate([path], queryParams)
   }
 
 }

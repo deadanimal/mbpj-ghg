@@ -8,7 +8,7 @@
                     <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class=" breadcrumb-item">
-                                <a href="javascript:void(0)"> <i class="fas fa-chart-bar text-dark"> </i> </a>
+                                <a href="javascript:void(0)"> <i class="fas fa-user text-dark"> </i> </a>
                             </li>
                             <li aria-current="page" class="breadcrumb-item active">
                                 Profile
@@ -18,15 +18,15 @@
                 </div>
                 <div class="col-lg-6 col-5 text-right">
                     <a 
-                        *ngIf="!editEnabled"
-                        class="btn btn-default btn-sm text-white btn-icon btn-3" 
+                        [hidden]="editEnabled"
+                        class="btn btn-info btn-sm text-white btn-icon btn-3" 
                         (click)="toggleEdit()"
                     > 
                         <span class="btn-inner--icon"><i class="fas fa-user-edit"></i></span>
                         <span class="btn-inner--text">Edit profile</span>
                     </a>
                     <a
-                        *ngIf="editEnabled"
+                        [hidden]="!editEnabled"
                         class="btn btn-danger btn-sm text-white btn-icon btn-3" 
                         (click)="toggleEdit()"
                     > 
@@ -34,7 +34,7 @@
                         <span class="btn-inner--text">Back</span>
                     </a>
                     <a 
-                        *ngIf="editEnabled"
+                        [hidden]="!editEnabled"
                         class="btn btn-success btn-sm text-white btn-icon btn-3" 
                         (click)="confirm()"
                     > 
@@ -65,13 +65,13 @@
 
                 <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                     <div class="d-flex justify-content-between">
-                        <a class="btn btn-sm btn-info mr-4" href="javascript:void(0)">
+                        <!-- <a class="btn btn-sm btn-info mr-4" href="javascript:void(0)">
                             Connect
                         </a>
 
                         <a class="btn btn-sm btn-default float-right" href="javascript:void(0)">
                             Message
-                        </a>
+                        </a> -->
                     </div>
                 </div>
 
@@ -79,7 +79,7 @@
                     <div class="row">
                         <div class="col">
                             <div class="card-profile-stats d-flex justify-content-center">
-                                <div>
+                                <!-- <div>
                                     <span class="heading"> 22 </span>
 
                                     <span class="description"> Friends </span>
@@ -95,22 +95,22 @@
                                     <span class="heading"> 89 </span>
 
                                     <span class="description"> Comments </span>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
 
                     <div class="text-center">
                         <h5 class="h3">
-                            Ali Imran<span class=" font-weight-light"> , 27 </span>
+                            {{user?.full_name}}<span class="font-weight-light"> </span>
                         </h5>
 
                         <div class="h5 font-weight-300">
-                            <i class="fas fa-location-arrow mr-2"> </i> Ampang, Kuala Lumpur
+                            <i class="fas fa-location-arrow mr-2"> </i> 
                         </div>
 
                         <div class="h5 mt-4">
-                            <i class="fas fa-briefcase mr-2"> </i> IT Manager
+                            <i class="fas fa-briefcase mr-2"> </i> 
                         </div>
                     </div>
                 </div>
@@ -122,12 +122,17 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col-8">
-                            <h3 *ngIf="!editEnabled" class="mb-0">Profile</h3>
-                            <h3 *ngIf="editEnabled" class="mb-0"> Edit Profile</h3>
+                            <h3 [hidden]="editEnabled" class="mb-0">Profile</h3>
+                            <h3 [hidden]="!editEnabled" class="mb-0"> Edit Profile</h3>
                         </div>
 
                         <div class="col-4 text-right">
-                            <a  *ngIf="!editEnabled"  class="btn btn-sm btn-primary" href="javascript:void(0)">
+                            <a  
+                                [hidden]="editEnabled" 
+                                class="btn btn-sm btn-primary" 
+                                href="javascript:void(0)"
+                                (click)="navigatePage('/global/settings')"
+                            >
                                 Settings
                             </a>
                         </div>
@@ -135,7 +140,7 @@
                 </div>
 
                 <div class="card-body">
-                    <form  *ngIf="!editEnabled">
+                    <form [formGroup]="editForm">
                         <h6 class="heading-small text-muted mb-4">User information</h6>
 
                         <div class="pl-lg-4">
@@ -151,8 +156,7 @@
                                             id="input-username" 
                                             placeholder="Name"
                                             type="text" 
-                                            value="Ali Imran"
-                                            disabled 
+                                            formControlName="full_name" 
                                         />
                                     </div>
                                 </div>
@@ -168,126 +172,6 @@
                                             id="input-email" 
                                             placeholder="Email address"
                                             type="email"
-                                            value="imran@prototype.com.my"
-                                            disabled
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <hr class="my-4" />
-
-                        <h6 class="heading-small text-muted mb-4">Contact information</h6>
-
-                        <div class="pl-lg-4">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-address">
-                                            Address
-                                        </label>
-
-                                        <input 
-                                            class="form-control"
-                                            id="input-address"
-                                            placeholder="Home Address"
-                                            type="text" 
-                                            value="No. 199, Lorong Esplanade 91/8A"
-                                            disabled
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-city">
-                                            City
-                                        </label>
-
-                                        <input 
-                                            class="form-control"
-                                            id="input-city" 
-                                            placeholder="City" 
-                                            type="text"
-                                            value="Petaling Jaya" 
-                                            disabled
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-country">
-                                            Country
-                                        </label>
-
-                                        <input 
-                                            class="form-control"
-                                            id="input-country"
-                                            placeholder="Country"
-                                            type="text"
-                                            value="Malaysia" 
-                                            disabled
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class=" col-lg-4">
-                                    <div class=" form-group">
-                                        <label class=" form-control-label" for="input-country">
-                                            Postal code
-                                        </label>
-
-                                        <input 
-                                            class=" form-control"
-                                            id="input-postal-code"
-                                            placeholder="Postal code"
-                                            type="number"
-                                            value="41240"
-                                            disabled
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </form>
-                    <form [formGroup]="editForm" *ngIf="editEnabled">
-                        <h6 class="heading-small text-muted mb-4">User information</h6>
-
-                        <div class="pl-lg-4">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-username">
-                                            Name
-                                        </label>
-
-                                        <input 
-                                            class="form-control"
-                                            id="input-username" 
-                                            placeholder="Name"
-                                            type="text" 
-                                            value="Ali Imran"
-                                            formControlName="name" 
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-email">
-                                            Email address
-                                        </label>
-
-                                        <input 
-                                            class="form-control"
-                                            id="input-email" 
-                                            placeholder="Email address"
-                                            type="email"
-                                            value="imran@prototype.com.my"
                                             formControlName="email"
                                         />
                                     </div>
@@ -301,72 +185,34 @@
 
                         <div class="pl-lg-4">
                             <div class="row">
-                                <div class="col-md-12">
+                                <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-address">
-                                            Address
+                                        <label class="form-control-label" for="input-mobile">
+                                            Mobile
                                         </label>
 
                                         <input 
                                             class="form-control"
-                                            id="input-address"
-                                            placeholder="Home Address"
-                                            type="text" 
-                                            value="No. 199, Lorong Esplanade 91/8A"
-                                            formControlName="address"
-                                        />
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-4">
-                                    <div class="form-group">
-                                        <label class="form-control-label" for="input-city">
-                                            City
-                                        </label>
-
-                                        <input 
-                                            class="form-control"
-                                            id="input-city" 
-                                            placeholder="City" 
+                                            id="input-mobile" 
+                                            placeholder="Mobile" 
                                             type="text"
-                                            value="Petaling Jaya" 
-                                            formControlName="city"
+                                            formControlName="mobile"
                                         />
                                     </div>
                                 </div>
 
-                                <div class="col-lg-4">
+                                <div class="col-lg-6">
                                     <div class="form-group">
-                                        <label class="form-control-label" for="input-country">
-                                            Country
+                                        <label class="form-control-label" for="input-phone">
+                                            Phone
                                         </label>
 
                                         <input 
                                             class="form-control"
-                                            id="input-country"
-                                            placeholder="Country"
+                                            id="input-phone"
+                                            placeholder="Phone"
                                             type="text"
-                                            value="Malaysia" 
-                                            formControlName="country"
-                                        />
-                                    </div>
-                                </div>
-
-                                <div class=" col-lg-4">
-                                    <div class=" form-group">
-                                        <label class=" form-control-label" for="input-country">
-                                            Postal code
-                                        </label>
-
-                                        <input 
-                                            class=" form-control"
-                                            id="input-postal-code"
-                                            placeholder="Postal code"
-                                            type="number"
-                                            value="41240"
-                                            formControlName="postcode"
+                                            formControlName="phone"
                                         />
                                     </div>
                                 </div>

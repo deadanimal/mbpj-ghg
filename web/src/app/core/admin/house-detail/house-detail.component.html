@@ -37,14 +37,14 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Owner Name</label>
-                                    <input class="form-control" value="{{house.owner_name}}" disabled>
+                                    <input class="form-control" value="{{house?.owner?.full_name}}" disabled>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Assessment Tax Account</label>
-                                    <input class="form-control" value="{{house.assessment_tax_account}}" disabled>
+                                    <input class="form-control" value="{{house?.assessment_tax_account}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -53,21 +53,21 @@
                             <div class="col-lg-7 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Address</label>
-                                    <input class="form-control" value="{{house.address}}" disabled>
+                                    <input class="form-control" value="{{fullAddress}}" disabled>
                                 </div>
                             </div>
 
                             <div class="col-lg-3 col-sm-12">
                                 <div class="form-group">
-                                    <label class="form-control-label">Area</label>
-                                    <input class="form-control" value="{{house.area}}" disabled>
+                                    <label class="form-control-label">Town</label>
+                                    <input class="form-control" value="{{house?.town}}" disabled>
                                 </div>
                             </div>
 
                             <div class="col-lg-2 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Postcode</label>
-                                    <input class="form-control" value="{{house.postcode}}" disabled>
+                                    <input class="form-control" value="{{house?.postcode}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -76,14 +76,14 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Building Type</label>
-                                    <input class="form-control" value="{{house.building_type}}" disabled>
+                                    <input class="form-control" value="{{house?.building_type}}" disabled>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Staying Since</label>
-                                    <input class="form-control" value="{{house.staying_since}}" disabled>
+                                    <input class="form-control" value="{{house?.staying_since | date: 'd/M/y'}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -92,14 +92,14 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Total Occupants</label>
-                                    <input class="form-control" value="{{house.occupants}}" disabled>
+                                    <input class="form-control" value="{{house?.occupants}}" disabled>
                                 </div>
                             </div>
 
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Registered On</label>
-                                    <input class="form-control" value="{{house.created_at}}" disabled>
+                                    <input class="form-control" value="{{house?.created_at | date: 'd/M/y'}}" disabled>
                                 </div>
                             </div>
                         </div>
@@ -108,7 +108,7 @@
                             <div class="col-lg-6 col-sm-12">
                                 <div class="form-group">
                                     <label class="form-control-label">Relationship Type</label>
-                                    <input class="form-control" value="{{house.relationship_type}}" disabled>
+                                    <input class="form-control" value="{{house?.relationship_type}}" disabled>
                                 </div>
                             </div>
 
@@ -116,16 +116,20 @@
                                 <div class="form-group">
                                     <label class="form-control-label">Active</label>
                                     <div class="custom-control custom-checkbox">
-                                        <input type="checkbox" class="custom-control-input" id="houseActive" disabled  value="{{house.active}}">
+                                        <input type="checkbox" class="custom-control-input" id="houseActive" disabled checked="{{house?.active}}">
                                         <label class="custom-control-label" for="houseActive">Active?</label>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="row" *ngIf="house.assessment_tax_doc">
-                            <label class="form-control-label">Assessment Tax Document</label>
-                            <img [src]="house.assessment_tax_doc">
+                        <div class="row">
+                            <div class="col-sm-12 col-lg-4">
+                                <div [hidden]="!house?.assessment_tax_doc">
+                                    <label class="form-control-label">Assessment Tax Document</label>
+                                    <img [src]="house?.assessment_tax_doc?.document" class="w-100">
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -1,30 +1,27 @@
-export class Evaluation {
-    public id: string
-    public application_assessment: string
-    public equipment: number
-    public system: number
-    public efficiency: number
-    public remarks: string
-    public created_at: string
-    public modified_at: string
+import { AssessmentExtended } from '../assessments/assessments.model';
 
+export class Evaluation {
     constructor(
-        id: string,
-        application_assessment: string,
-        equipment: number,
-        system: number,
-        efficiency: number,
-        remarks: string,
-        created_at: string,
-        modified_at: string
-    ) {
-        this.id = id
-        this.application_assessment = application_assessment
-        this.equipment = equipment
-        this.system = system
-        this.efficiency = efficiency
-        this.remarks = remarks
-        this.created_at = created_at
-        this.modified_at = modified_at
-    }
+        public id: number,
+        public application_assessment: string,
+        public equipment: number,
+        public system: number,
+        public efficiency: number,
+        public remarks: string,
+        public created_at: string,
+        public modified_at: string
+    ) {}
+}
+
+export class EvaluationExtended {
+    constructor(
+        public id: number,
+        public application_assessment: AssessmentExtended,
+        public equipment: number,
+        public system: number,
+        public efficiency: number,
+        public remarks: string,
+        public created_at: string,
+        public modified_at: string
+    ) {}
 }

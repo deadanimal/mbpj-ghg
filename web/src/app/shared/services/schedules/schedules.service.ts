@@ -23,11 +23,11 @@ export class SchedulesService {
     private http: HttpClient
   ) { }
 
-  create(body: Form): Observable<Schedule> {
+  create(body: any): Observable<Schedule> {
     return this.http.post<any>(this.urlSchedules, body).pipe(
       tap((res) => {
         this.schedule = res
-        console.log('Schedule: ', this.schedule)
+        // console.log('Schedule: ', this.schedule)
       })
     )
   }
@@ -36,37 +36,37 @@ export class SchedulesService {
     return this.http.get<Schedule[]>(this.urlSchedules).pipe(
       tap((res) => {
         this.schedules = res
-        console.log('Schedules: ', this.schedules)
+        // console.log('Schedules: ', this.schedules)
       })
     )
   }
 
-  getOne(id: String): Observable<Schedule> {
+  getOne(id: any): Observable<Schedule> {
     let urlTemp = this.urlSchedules + id + '/'
     return this.http.get<Schedule>(urlTemp).pipe(
       tap((res) => {
         this.schedule = res
-        console.log('Schedule: ', this.schedule)
+        // console.log('Schedule: ', this.schedule)
       })
     )
   }
 
-  update(id: String, body: Form): Observable<Schedule> {
+  update(id: any, body: any): Observable<Schedule> {
     let urlTemp = this.urlSchedules + id + '/'
     return this.http.put<Schedule>(urlTemp, body).pipe(
       tap((res) => {
         this.schedule = res
-        console.log('Schedule', this.schedule)
+        // console.log('Schedule', this.schedule)
       })
     )
   }
 
-  filter(field: String): Observable<Schedule[]> {
+  filter(field: any): Observable<Schedule[]> {
     let urlTemp = this.urlSchedules + '?' + field
     return this.http.get<Schedule[]>(urlTemp).pipe(
       tap((res) => {
         this.schedulesFiltered = res
-        console.log('Schedules', this.schedulesFiltered)
+        // console.log('Schedules', this.schedulesFiltered)
       })
     )
   }

@@ -15,9 +15,10 @@ from houses.models import (
 )
 
 class Aspect(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True, editable=False)
     name = models.CharField(max_length=100, default='NA')
-
+    active = models.BooleanField(default=True)
+    
     ASPECT_TYPE = [
         ('EN', 'Energy'),
         ('WA', 'Water'),
@@ -27,8 +28,8 @@ class Aspect(models.Model):
         ('NA', 'Not Available')
     ]
     aspect_type = models.CharField(max_length=2, choices=ASPECT_TYPE, default='NA')
-    description_en = models.CharField(max_length=100, default='NA')
-    description_ms = models.CharField(max_length=100, default='NA')
+    description_en = models.CharField(max_length=100, null=True)
+    description_ms = models.CharField(max_length=100, null=True)
     incentive = models.IntegerField(default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)

@@ -14,8 +14,13 @@ from .models import (
     CustomUser
 )
 
+from medias.serializers import (
+    MediaSerializer
+)
+
 class CustomUserSerializer(serializers.ModelSerializer):
-    nric_doc = Base64ImageField()
+    # nric_doc = MediaSerializer()
+    
     class Meta:
         model = CustomUser
         fields = [
@@ -31,6 +36,34 @@ class CustomUserSerializer(serializers.ModelSerializer):
             'occupation',
             'user_type',
             'gender',
+            'is_active',
+            'date_joined'
+        ]
+        read_only_fields = [
+            'username',
+            'id'
+        ]
+
+
+class CustomUserExtendedSerializer(serializers.ModelSerializer):
+    nric_doc = MediaSerializer(read_only=True)
+    
+    class Meta:
+        model = CustomUser
+        fields = [
+            'username',
+            'id',
+            'full_name',
+            'email',
+            'nric_old',
+            'nric_new',
+            'nric_doc',
+            'mobile',
+            'phone',
+            'occupation',
+            'user_type',
+            'gender',
+            'is_active',
             'date_joined'
         ]
         read_only_fields = [

@@ -1,5 +1,5 @@
 export class Schedule {
-    public id: string
+    public id: number
     public application: string
     public date: string
     public session: string
@@ -7,7 +7,7 @@ export class Schedule {
     public modified_at: string
 
     constructor(
-        id: string,
+        id: number,
         application: string,
         date: string,
         session: string,

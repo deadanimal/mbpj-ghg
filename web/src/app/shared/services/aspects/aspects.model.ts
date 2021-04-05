@@ -1,5 +1,5 @@
 export class Aspect {
-    public id: string
+    public id: number
     public name: string
     public aspect_type: string
     public description_en: string
@@ -9,7 +9,7 @@ export class Aspect {
     public modified_at: string
 
     constructor(
-        id: string,
+        id: number,
         name: string,
         aspect_type: string,
         description_en: string,

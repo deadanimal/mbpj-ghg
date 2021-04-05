@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Form } from '@angular/forms';
 import { tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { House } from './houses.model';
+import { House, HouseExtended } from './houses.model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,15 +16,17 @@ export class HousesService {
 
   // Data
   public house: House
-  public houses: House[] = []
+  public houses: HouseExtended[] = []
   public housesFiltered: House[] = []
   public houseStatistics: any
+
+  public houseExtended: HouseExtended
 
   constructor(
     private http: HttpClient
   ) { }
 
-  create(body: Form): Observable<House> {
+  create(body: any): Observable<House> {
     return this.http.post<any>(this.urlHouses, body).pipe(
       tap((res) => {
         this.house = res
@@ -33,8 +35,9 @@ export class HousesService {
     )
   }
 
-  getAll(): Observable<House[]> {
-    return this.http.get<House[]>(this.urlHouses).pipe(
+  getAll(): Observable<HouseExtended[]> {
+    let urlTemp = this.urlHouses + 'extended_all/'
+    return this.http.get<HouseExtended[]>(urlTemp).pipe(
       tap((res) => {
         this.houses = res
         console.log('Houses: ', this.houses)
@@ -42,17 +45,17 @@ export class HousesService {
     )
   }
 
-  getOne(id: String): Observable<House> {
-    let urlTemp = this.urlHouses + id + '/'
-    return this.http.get<House>(urlTemp).pipe(
+  getOne(id: any): Observable<HouseExtended> {
+    let urlTemp = this.urlHouses + id + '/extended'
+    return this.http.get<HouseExtended>(urlTemp).pipe(
       tap((res) => {
-        this.house = res
-        console.log('House: ', this.house)
+        this.houseExtended = res
+        // console.log('House: ', this.houseExtended)
       })
     )
   }
 
-  update(id: String, body: Form): Observable<House> {
+  update(id: any, body: any): Observable<House> {
     let urlTemp = this.urlHouses + id + '/'
     return this.http.put<House>(urlTemp, body).pipe(
       tap((res) => {
@@ -62,7 +65,7 @@ export class HousesService {
     )
   }
 
-  filter(field: String): Observable<House[]> {
+  filter(field: any): Observable<House[]> {
     let urlTemp = this.urlHouses + '?' + field
     return this.http.get<House[]>(urlTemp).pipe(
       tap((res) => {
@@ -72,22 +75,22 @@ export class HousesService {
     )
   }
 
-  activate(id: String): Observable<House> {
+  activate(id: any): Observable<HouseExtended> {
     let urlTemp = this.urlHouses + id + '/activate/'
-    return this.http.get<House>(urlTemp).pipe(
+    return this.http.get<HouseExtended>(urlTemp).pipe(
       tap((res) => {
-        this.house = res
-        console.log('House: ', this.house)
+        this.houseExtended = res
+        console.log('House: ', this.houseExtended)
       })
     )
   }
 
-  deactivate(id: String): Observable<House> {
+  deactivate(id: any): Observable<HouseExtended> {
     let urlTemp = this.urlHouses + id + '/deactivate/'
-    return this.http.get<House>(urlTemp).pipe(
+    return this.http.get<HouseExtended>(urlTemp).pipe(
       tap((res) => {
-        this.house = res
-        console.log('House: ', this.house)
+        this.houseExtended = res
+        console.log('House: ', this.houseExtended)
       })
     )
   }
@@ -97,7 +100,17 @@ export class HousesService {
     return this.http.get<House>(urlTemp).pipe(
       tap((res) => {
         this.houseStatistics = res
-        console.log('House: ', this.houseStatistics)
+        // console.log('House: ', this.houseStatistics)
+      })
+    )
+  }
+  
+  getOwnerHouses(body: any): Observable<any> {
+    let urlTemp = this.urlHouses + 'get_owner_houses/'
+    return this.http.post<House>(urlTemp, body).pipe(
+      tap((res) => {
+        this.houses = res
+        // console.log('House: ', this.houseStatistics)
       })
     )
   }

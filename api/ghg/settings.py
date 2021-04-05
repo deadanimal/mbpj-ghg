@@ -30,6 +30,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
     'mbpj-ghg-api.pipe.my',
+    'ghg-api.mbpj.gov.my',
     '127.0.0.1',
     'localhost'
 ]
@@ -49,6 +50,8 @@ INSTALLED_APPS = [
     'applications',
     'aspects',
     'houses',
+    'medias',
+    'notifications',
     'tickets',
     'rebates',
     'users',
@@ -56,9 +59,11 @@ INSTALLED_APPS = [
     'anymail',
     'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'background_task', 
     'corsheaders',
     'django_filters',
+    'drf_yasg',
     'mail_templated',
     'phonenumber_field',
     'rest_auth.registration',
@@ -116,7 +121,7 @@ DATABASES = {
 }
 
 import dj_database_url
-db_from_env = dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=500)
+db_from_env = dj_database_url.config(default=config('DATABASE_URL'), conn_max_age=0)
 DATABASES['default'].update(db_from_env)
 
 if any(db_from_env):
@@ -175,27 +180,29 @@ AWS_DEFAULT_ACL = 'public-read'
 #AUTH_USER_MODEL = 'users.CustomUser'
 
 ANYMAIL = {
-    "SENDGRID_API_KEY": config('SENDGRID_API_KEY'),
+    'SENDGRID_API_KEY': config('SENDGRID_API_KEY'),
 }
 EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
-DEFAULT_FROM_EMAIL = "noreply@pipeline.com.my"  # if you don't already have this in settings
-
+DEFAULT_FROM_EMAIL = "ghg@mbpj.gov.my"  # if you don't already have this in settings
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHITELIST = [
     'http://mbpj-ghg-api.pipe.my',
+    'http://ghg-api.mbpj.gov.my',
     'http://127.0.0.1',
     'http://localhost'
 ]
 CORS_ORIGIN_REGEX_WHITELIST = [
     'http://mbpj-ghg-api.pipe.my',
+    'http://ghg-api.mbpj.gov.my',
     'http://127.0.0.1',
     'http://localhost'
 ]
 
-AUTH_USER_MODEL = "users.CustomUser" 
-ACCOUNT_EMAIL_VERIFICATION = "none"
+AUTH_USER_MODEL = 'users.CustomUser' 
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MBPJ eRebat] '
 SITE_ID = 1
 
 REST_USE_JWT = True
@@ -208,6 +215,10 @@ REST_FRAMEWORK = {
     # 'PASSWORD_RESET_SERIALIZER': (
     #     'users.serializers.PasswordResetSerializer'
     # )
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
     
 }
 

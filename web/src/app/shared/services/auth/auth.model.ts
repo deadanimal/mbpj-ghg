@@ -1,5 +1,5 @@
 export class User {
-    public id: string
+    public id: number
     public full_name: string
     public new_nric: string
     public old_nric: string
@@ -16,7 +16,7 @@ export class User {
     public date_joined: string
 
     constructor(
-        id: string,
+        id: number,
         full_name: string,
         new_nric: string,
         old_nric: string,

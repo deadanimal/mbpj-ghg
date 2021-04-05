@@ -1,11 +1,11 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import * as moment from 'moment';
 import swal from 'sweetalert2';
 
 import { User } from 'src/app/shared/services/users/users.model';
-import { HouseTemp, House } from 'src/app/shared/services/houses/houses.model';
+import { HouseTemp, House, HouseExtended } from 'src/app/shared/services/houses/houses.model';
 import { HousesService } from 'src/app/shared/services/houses/houses.service';
 import { UsersService } from 'src/app/shared/services/users/users.service';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
@@ -13,17 +13,18 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { Router, NavigationExtras } from '@angular/router';
 
-import * as am4core from "@amcharts/amcharts4/core";
-import * as am4charts from "@amcharts/amcharts4/charts";
-import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import * as am4core from '@amcharts/amcharts4/core';
+import * as am4charts from '@amcharts/amcharts4/charts';
+import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import { buildingTypes } from 'src/app/shared/options/building-types';
 am4core.useTheme(am4themes_animated);
 
 export enum SelectionType {
-  single = "single",
-  multi = "multi",
-  multiClick = "multiClick",
-  cell = "cell",
-  checkbox = "checkbox"
+  single = 'single',
+  multi = 'multi',
+  multiClick = 'multiClick',
+  cell = 'cell',
+  checkbox = 'checkbox'
 }
 
 @Component({
@@ -34,9 +35,12 @@ export enum SelectionType {
 export class HousesComponent implements OnInit {
 
   // Data
-  houses: HouseTemp[] = []
+  houses: HouseExtended[] = []
   houseStatistics: any
   selectedHouses: HouseTemp
+
+  // Predefined
+  houseTypes = buildingTypes
 
   // Table
   tableEntries: number = 5
@@ -59,6 +63,9 @@ export class HousesComponent implements OnInit {
   // Chart
   chart: any
 
+  // Subscriber
+  subscription: Subscription
+
   constructor(
     private authService: AuthService,
     private houseService: HousesService,
@@ -74,6 +81,9 @@ export class HousesComponent implements OnInit {
   }
 
   ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe()
+    }
     this.zone.runOutsideAngular(() => {
       if (this.chart) {
         this.chart.dispose()
@@ -82,67 +92,21 @@ export class HousesComponent implements OnInit {
   }
 
   getData() {
-    forkJoin([
+    this.loadingBar.start()
+    this.subscription = forkJoin([
       this.houseService.getAll(),
       this.userService.getAll(),
       this.houseService.getStatistics()
     ]).subscribe(
       (res) => {
-        this.filterData()
-      }
-    )
-  }
-
-  filterData() {
-    let filtering = new Promise(
-      (resolve, reject) => {
-        this.houseStatistics = this.houseService.houseStatistics
-        this.houseService.houses.forEach(
-          (house: House, index, array) => {
-            this.userService.users.forEach(
-              (user: User) => {
-                if (house.owner == user.id) {
-                  let house_type = ''
-
-                  if (house.building_type == 'CD') house_type = 'Condominium'
-                  else if (house.building_type == 'FL') house_type = 'Flat'
-                  else if (house.building_type == 'TO') house_type = 'Townhouse'
-                  else if (house.building_type == 'TE') house_type = 'Terrace House'
-                  else if (house.building_type == 'BS') house_type = 'Bungalow / Semidetached'
-                  else if (house.building_type == 'AS') house_type = 'Apartment / Service Apartment'
-                  else if (house.building_type == 'OT') house_type = 'Other'
-
-                  this.houses.push({
-                    id: house.id,
-                    owner: house.owner,
-                    owner_name: user.full_name,
-                    location: house.location,
-                    address: house.address,
-                    postcode: house.postcode,
-                    area: house.area,
-                    building_type: house_type,
-                    assessment_tax_account: house.assessment_tax_account,
-                    assessment_tax_doc: house.assessment_tax_doc,
-                    staying_since: house.staying_since,
-                    relationship_type: house.relationship_type,
-                    occupants: house.occupants,
-                    active: house.active,
-                    created_at: house.created_at,
-                    modified_at: house.modified_at
-                  })
-                }
-              }
-            )
-            // console.log('index', index)
-            // console.log('arr', array.length)
-            if (index == array.length - 1) resolve();
-          }
-        )
-      }
-    )
-
-    filtering.then(
+        this.loadingBar.complete()
+      },
+      (err) => {
+        this.loadingBar.complete()
+      },
       () => {
+        this.houses = this.houseService.houses
+        this.houseStatistics = this.houseService.houseStatistics
         this.tableRows = this.houses
         this.tableTemp = this.tableRows.map((prop, key) => {
           return {
@@ -170,7 +134,7 @@ export class HousesComponent implements OnInit {
   filterTable($event) {
     let val = $event.target.value.toLowerCase();
     this.tableTemp = this.tableRows.filter(function (d) {
-      return d.staff_name.toLowerCase().indexOf(val)!== -1 || !val;
+      return d.owner?.full_name.toLowerCase().indexOf(val)!== -1 || !val;
     });
   }
 
@@ -184,37 +148,37 @@ export class HousesComponent implements OnInit {
   }
 
   getChart() {
-    let chart = am4core.create("chart-house-summary", am4charts.PieChart);
+    let chart = am4core.create('chart-house-summary', am4charts.PieChart);
 
     // Add data
     chart.data = [
       {
-        "building": "Condominium",
-        "amount": this.houseStatistics.total_all
+        'building': 'Condominium',
+        'amount': this.houseStatistics.total_all
       }, 
       {
-        "building": "Apartment / Service Apartment",
-        "amount": this.houseStatistics.total_apartment
+        'building': 'Apartment / Service Apartment',
+        'amount': this.houseStatistics.total_apartment
       }, 
       {
-        "building": "Flat",
-        "amount": this.houseStatistics.total_flat
+        'building': 'Flat',
+        'amount': this.houseStatistics.total_flat
       }, 
       {
-        "building": "Bungalow / Semidetached",
-        "amount": this.houseStatistics.total_bungalow
+        'building': 'Bungalow / Semidetached',
+        'amount': this.houseStatistics.total_bungalow
       }, 
       {
-        "building": "Terrace House",
-        "amount": this.houseStatistics.total_terrace
+        'building': 'Terrace House',
+        'amount': this.houseStatistics.total_terrace
       }, 
       {
-        "building": "Townhouse",
-        "amount": this.houseStatistics.total_town
+        'building': 'Townhouse',
+        'amount': this.houseStatistics.total_town
       }, 
       {
-        "building": "Other",
-        "amount": this.houseStatistics.total_other
+        'building': 'Other',
+        'amount': this.houseStatistics.total_other
       }
     ];
 
@@ -223,9 +187,9 @@ export class HousesComponent implements OnInit {
 
     // Add and configure Series
     let pieSeries = chart.series.push(new am4charts.PieSeries());
-    pieSeries.dataFields.value = "amount";
-    pieSeries.dataFields.category = "building";
-    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.dataFields.value = 'amount';
+    pieSeries.dataFields.category = 'building';
+    pieSeries.slices.template.stroke = am4core.color('#fff');
     pieSeries.slices.template.strokeWidth = 2;
     pieSeries.slices.template.strokeOpacity = 1;
 
@@ -237,9 +201,15 @@ export class HousesComponent implements OnInit {
     this.chart = chart
   }
 
-  navigatePage(path: string, selectedHouse) {
-    let extras = selectedHouse
-    this.router.navigate([path], extras)
+  view(selected) {
+    let path = '/admin/houses/detail'
+    let extras = selected['id']
+    let queryParams = {
+      queryParams: {
+        id: extras
+      }
+    }
+    return this.router.navigate([path], queryParams)
   }
 
 }

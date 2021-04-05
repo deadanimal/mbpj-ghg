@@ -2,7 +2,7 @@
     <div class="container-fluid">
         <div class="header-body">
             <div class="row align-items-center py-4">
-                <div class="col-lg-6 col-7">
+                <div class="col-lg-6 col-sm-12">
                     <h6 class="h2 text-dark d-inline-block mb-0">Applications</h6>
 
                     <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
@@ -13,9 +13,11 @@
                         </ol>
                     </nav>
                 </div>
-                <div class="col-lg-6 col-5 text-right">
-                    <button class="btn btn-sm btn-success"> Approve eRebate </button>
-                    <button class="btn btn-sm btn-warning"> Reject </button>
+                <div class="col-lg-6 col-sm-12 text-right">
+                    <button class="btn btn-sm btn-success" (click)="openModal(approveRebate)" [hidden]="!canApprove"> Approve rebate </button>
+                    <button class="btn btn-sm btn-warning" (click)="confirm('reject')" [hidden]="!canReject"> Reject </button>
+                    <button class="btn btn-sm btn-primary" (click)="openModal(assignEvaluator)" [hidden]="!canInProgress"> Assign evaluator </button>
+
                     <!-- <a class="btn btn-sm btn-neutral"> </a> -->
                 </div>
             </div>
@@ -26,19 +28,671 @@
 <div class="container-fluid mt--6">
     <div class="row">
         <div class="col">
-            <div class="card">
-                <div class="card-header bg-secondary">
-                    <h4 class="m-0">Application Detail</h4>
-                </div>
+            <tabset type="pills" class="nav-fill flex-column flex-md-row">
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="fas fa-file-alt mr-2"></i> Application
+                    </ng-template>
 
-                <div class="card-body" *ngIf="isCompleted || !isEmpty">
-                    
-                </div>
+                    <div class="card mt-2">
+                        <div class="card-body" [hidden]="isApplicationEmpty">
+                            <!-- Application -->
+                            <h6 class=" heading-small text-muted mb-4">Application information</h6>
 
-                <div class="card-body" *ngIf="!isCompleted || isEmpty">
-                    
-                </div>
-            </div>
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Reference no.</label>
+                                        <input class="form-control" value="{{application?.reference_no}}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Created on</label>
+                                        <input class="form-control" value="{{application?.created_at | date: 'd/M/y'}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Total lamp</label>
+                                        <input class="form-control" value="{{application?.total_lamp}}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Total LED</label>
+                                        <input class="form-control" value="{{application?.total_led}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Total no. of car(s)</label>
+                                        <input class="form-control" value="{{application?.vehicle_car}}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Total no. of motorcycle(s)</label>
+                                        <input class="form-control" value="{{application?.vehicle_motorcycle}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Total no. of bicycle(s)</label>
+                                        <input class="form-control" value="{{application?.vehicle_bicycle}}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Total no. of other(s)</label>
+                                        <input class="form-control" value="{{application?.vehicle_other}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bill information -->
+                            <hr class=" my-4" />
+                            <h6 class=" heading-small text-muted mb-4">Bills information</h6>
+                            
+                            <!-- Electricity bill -->
+                            <div class="row">
+                                <!-- Electricity bill 1 -->
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill month #1</label>
+                                                <input class="form-control" value="{{application?.electricity_bill_1_month | date: 'M/y'}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill usage #1</label>
+                                                <input class="form-control" value="{{application?.electricity_bill_1_usage / 1000}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill document #1</label>
+                                                <img [src]="application?.electricity_bill_1_doc?.document" class="w-100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Electricity bill 2 -->
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill month #2</label>
+                                                <input class="form-control" value="{{application?.electricity_bill_2_month | date: 'M/y'}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill usage #2</label>
+                                                <input class="form-control" value="{{application?.electricity_bill_2_usage / 1000}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill document #2</label>
+                                                <img [src]="application?.electricity_bill_2_doc?.document" class="w-100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Electricity bill 3 -->
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill month #3</label>
+                                                <input class="form-control" value="{{application?.electricity_bill_3_month | date: 'M/y'}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill usage #3</label>
+                                                <input class="form-control" value="{{application?.electricity_bill_3_usage / 1000}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Electricity bill document #3</label>
+                                                <img [src]="application?.electricity_bill_3_doc?.document" class="w-100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Water bill -->
+                            <div class="row">
+                                <!-- Water bill 1 -->
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill month #1</label>
+                                                <input class="form-control" value="{{application?.water_bill_1_month | date: 'M/y'}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill usage #1</label>
+                                                <input class="form-control" value="{{application?.water_bill_1_usage / 1000}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill document #1</label>
+                                                <img [src]="application?.water_bill_1_doc?.document" class="w-100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Water bill 2 -->
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill month #2</label>
+                                                <input class="form-control" value="{{application?.water_bill_2_month | date: 'M/y'}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill usage #2</label>
+                                                <input class="form-control" value="{{application?.water_bill_2_usage / 1000}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill document #2</label>
+                                                <img [src]="application?.water_bill_2_doc?.document" class="w-100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Water bill 3 -->
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill month #3</label>
+                                                <input class="form-control" value="{{application?.water_bill_3_month | date: 'M/y'}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill usage #3</label>
+                                                <input class="form-control" value="{{application?.water_bill_3_usage / 1000}}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+                                                <label class="form-control-label">Water bill document #3</label>
+                                                <img [src]="application?.water_bill_3_doc?.document" class="w-100">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Applicant -->
+                            <div [hidden]="isApplicantEmpty">
+                                <hr class=" my-4" />
+                                <h6 class=" heading-small text-muted mb-4">Applicant information</h6>
+
+                                <div class="form-group">
+                                    <label class="form-control-label">Applicant name</label>
+                                    <input class="form-control" value="{{application?.applicant?.full_name}}" disabled>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.applicant?.nric_old">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Old NRIC</label>
+                                            <input class="form-control" value="{{application?.applicant?.nric_old}}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.applicant?.nric_new">
+                                        <div class="form-group">
+                                            <label class="form-control-label">New NRIC</label>
+                                            <input class="form-control" value="{{application?.applicant?.nric_new}}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.applicant?.mobile">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Mobile no.</label>
+                                            <input class="form-control" value="{{application?.applicant?.mobile}}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.applicant?.phone">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Phone no.</label>
+                                            <input class="form-control" value="{{application?.applicant?.phone}}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.applicant?.email">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Email</label>
+                                            <input class="form-control" value="{{application?.applicant?.email}}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.applicant?.occupation">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Occupation</label>
+                                            <input class="form-control" value="{{application?.applicant?.occupation}}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Evaluator -->
+                            <div [hidden]="isEvaluatorEmpty">
+                                <hr class=" my-4" />
+                                <h6 class=" heading-small text-muted mb-4">Evaluator information</h6>
+
+                                <div class="form-group">
+                                    <label class="form-control-label">Evaluator name</label>
+                                    <input class="form-control" value="{{application?.evaluator_nominated?.full_name}}" disabled>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.evaluator_nominated?.mobile">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Mobile no.</label>
+                                            <input class="form-control" value="{{application?.evaluator_nominated?.mobile}}" disabled>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-12 col-lg-6" [hidden]="application?.evaluator_nominated?.phone">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Phone no.</label>
+                                            <input class="form-control" value="{{application?.evaluator_nominated?.phone}}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 text-center" [hidden]="!isApplicationEmpty">
+                            <img [src]="iconEmpty" class="error-icon">
+                            <p>No application found</p>
+                        </div>
+                    </div>
+                </tab>
+
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="fas fa-home mr-2"></i> Applied house
+                    </ng-template>
+
+                    <div class="card mt-2">
+                        <div class="card-body" [hidden]="isHouseEmpty">
+                            <!-- House -->
+                            <h6 class=" heading-small text-muted mb-4">House information</h6>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Assessment tax account no.</label>
+                                        <input class="form-control" value="{{application?.applied_house?.assessment_tax_account}}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Staying since</label>
+                                        <input class="form-control" value="{{application?.applied_house?.staying_since | date: 'M/y'}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-control-label">Address 1</label>
+                                <input class="form-control" value="{{application?.applied_house?.address_1}}" disabled>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Address 2</label>
+                                        <input class="form-control" value="{{application?.applied_house?.address_2}}" [hidden]="!application?.applied_house?.address_2" disabled>
+                                        <input class="form-control" value="" [hidden]="application?.applied_house?.address_2" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Address 3</label>
+                                        <input class="form-control" value="{{application?.applied_house?.address_3}}" [hidden]="!application?.applied_house?.address_3" disabled>
+                                        <input class="form-control" value="" [hidden]="application?.applied_house?.address_3" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-8">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Relationship type</label>
+                                        <input class="form-control" value="{{application?.applied_house?.relationship_type}}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-4">
+                                    <div class="form-group">
+                                        <label class="form-control-label">No. of occupant(s)</label>
+                                        <input class="form-control" value="{{application?.applied_house?.occupants}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Assessment tax document</label>
+                                        <img [src]="application?.applied_house?.assessment_tax_doc?.document" class="w-100">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="pt-4 text-center" [hidden]="!isHouseEmpty">
+                            <img [src]="iconEmpty" class="error-icon">
+                            <p>No house found</p>
+                        </div>
+                    </div>
+                </tab>
+
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="far fa-calendar-alt mr-2"></i> Evaluation schedule
+                    </ng-template>
+
+                    <div class="card mt-2">
+                        <div class="card-body" [hidden]="isScheduleEmpty">
+                            <div class="row">
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Scheduled date</label>
+                                        <input class="form-control" value="{{application?.evaluation_schedule_application?.date | date: 'd/M/y'}}" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-sm-12 col-lg-6">
+                                    <div class="form-group">
+                                        <label class="form-control-label">Session</label>
+                                        <input class="form-control" value="{{application?.evaluation_schedule_application?.session}}" disabled>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 text-center" [hidden]="!isScheduleEmpty">
+                            <img [src]="iconEmpty" class="error-icon">
+                            <p>No schedule found</p>
+                        </div>
+                    </div>
+                </tab>
+
+                <tab>
+                    <ng-template tabHeading>
+                        <i class="fas fa-poll-h mr-2"></i> Assessments & Evaluations
+                    </ng-template>
+
+                    <div class="card mt-2">
+                        <div class="card-body" [hidden]="isEvaluationEmpty">
+                            <accordion [isAnimated]="true" class="text-left">
+                                <ng-template *ngFor="let assessment of application?.application_assessment_application">
+                                    <accordion-group>
+                                        <h5 class="mb-0" accordion-heading>
+                                            <span *ngFor="let aspect of aspectTypes">
+                                                <span *ngIf="aspect.value === assessment?.assessment_aspect?.aspect_type">
+                                                    [{{aspect.text}}]
+                                                </span>
+                                            </span>
+                                            {{assessment?.assessment_aspect?.name}}
+                                            <i class="ni ni-bold-down float-right pt-1"> </i>
+                                        </h5>
+                                        
+                                        <h6 class="heading-small text-muted mb-4">Assessment</h6>
+
+                                        <div class="form-group">
+                                            <label class="form-control-label">Remarks</label>
+                                            <textarea class="form-control" value="{{assessment?.remarks}}" disabled></textarea>
+                                        </div>
+
+                                        <div [hidden]="assessment?.supporting_doc">
+                                            <label class="form-control-label">Supporting document</label>
+                                            <img [src]="assessment?.supporting_doc?.document" class="w-100">
+                                        </div>
+
+                                        <div [hidden]="assessment?.application_application_assessment">
+                                            <hr class="my-4" />
+                                            <h6 class="heading-small text-muted mb-4">Evaluation</h6>
+
+                                            <div class="row">
+                                                <div class="col-sm-12 col-lg-4">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">Equipment</label>
+                                                        <input class="form-control" value="{{assessment?.application_application_assessment?.equipment}}" disabled>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-12 col-lg-4">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">System</label>
+                                                        <input class="form-control" value="{{assessment?.application_application_assessment?.system}}" disabled>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-sm-12 col-lg-4">
+                                                    <div class="form-group">
+                                                        <label class="form-control-label">Efficiency</label>
+                                                        <input class="form-control" value="{{assessment?.application_application_assessment?.efficiency}}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      </accordion-group>
+                                </ng-template>
+                            </accordion>
+                        </div>
+                        <div class="pt-4 text-center" [hidden]="!isEvaluationEmpty">
+                            <img [src]="iconEmpty" class="error-icon">
+                            <p>No assessment & evaluation found</p>
+                        </div>
+                    </div>
+                </tab>
+            </tabset>
         </div>
     </div>
 </div>
+
+<ng-template #approveRebate>
+    <div class="modal-header bg-default">
+        <h6 class="modal-title text-white my-auto" id="modal-title-default">
+            Approve rebate
+        </h6>
+
+        <button
+            aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+            (click)="closeModal()"
+        >
+            <span aria-hidden="true" class="text-white my-auto"> × </span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="rebateForm">
+            <div class="form-group">
+                <label class="form-control-label">Amount approved</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-secondary">
+                            RM
+                        </span>
+                    </div>
+                    <input 
+                        type="text"
+                        placeholder="10.00"
+                        class="form-control"
+                        formControlName="amount_approved"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-control-label">Remarks</label>
+                <textarea class="form-control" formControlName="remarks" placeholder="Remarks"></textarea>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button 
+            class="btn btn-success"
+            type="button"
+            (click)="confirm('approve')"
+            [disabled]="!rebateForm.valid"
+        >
+            Create
+        </button>
+
+        <button
+            class="btn btn-outline-danger ml-auto"
+            data-dismiss="modal"
+            type="button"
+            (click)="closeModal()"
+        >
+            Close
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #assignEvaluator>
+    <div class="modal-header bg-default">
+        <h6 class="modal-title text-white my-auto" id="modal-title-default">
+            Assign evaluator and set schedule
+        </h6>
+
+        <button
+            aria-label="Close"
+            class="close"
+            data-dismiss="modal"
+            type="button"
+            (click)="closeModal()"
+        >
+            <span aria-hidden="true" class="text-white my-auto"> × </span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <form [formGroup]="evaluatorForm">
+            <div class="form-group">
+                <label class="form-control-label">Evaluator</label>
+                <select class="form-control custom-select" formControlName="evaluator_nominated">
+                    <ng-template *ngFor="let evaluator of evaluators">
+                        <select value="{{evaluator?.id}}">{{evaluator?.full_name}}</select>
+                    </ng-template>
+                </select>
+            </div>
+        </form>
+
+        <form [formGroup]="scheduleForm">
+            <div class="form-group">
+                <label class="form-control-label">Date</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text bg-secondary">
+                            <i class="far fa-calendar-alt"></i>
+                        </span>
+                    </div>
+                    <input 
+                        type="text"
+                        placeholder="12/12/2020"
+                        class="form-control"
+                        bsDatepicker
+                        formControlName="date"
+                        [bsValue]="dateStart"
+                        [bsConfig]="dateConfig"
+                    >
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-control-label">Session</label>
+                <select 
+                  class="form-control custom-select"
+                  formControlName="session"
+                >  
+                    <option value="AM">Morning (before 12.00 PM)</option>
+                    <option value="PM">Evening (after 12.00 PM)</option>
+                </select>
+            </div>
+        </form>
+    </div>
+
+    <div class="modal-footer">
+        <button 
+            class="btn btn-success"
+            type="button"
+            (click)="confirm('assign')"
+            [disabled]="!evaluatorForm.valid && !scheduleForm.valid"
+        >
+            Create
+        </button>
+
+        <button
+            class="btn btn-outline-danger ml-auto"
+            data-dismiss="modal"
+            type="button"
+            (click)="closeModal()"
+        >
+            Close
+        </button>
+    </div>
+</ng-template>

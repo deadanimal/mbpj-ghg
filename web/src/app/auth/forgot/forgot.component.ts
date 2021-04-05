@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { NotifyService } from 'src/app/shared/handler/notify/notify.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-forgot',
@@ -25,17 +26,30 @@ export class ForgotComponent implements OnInit {
     ]
   }
 
+  // Subscriber
+  subscription: Subscription
+
   constructor(
     private authService: AuthService,
     private notifyService: NotifyService,
-    private formBuilder: FormBuilder,
+    private fb: FormBuilder,
     private loadingBar: LoadingBarService,
     private router: Router
   ) { }
 
   ngOnInit() {
-    this.resetForm = this.formBuilder.group({
-      email: new FormControl('', Validators.compose([
+    this.initForm()
+  }
+
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe()
+    }
+  }
+
+  initForm() {
+    this.resetForm = this.fb.group({
+      email: new FormControl(null, Validators.compose([
         Validators.required,
         Validators.email
       ]))
@@ -44,20 +58,28 @@ export class ForgotComponent implements OnInit {
 
   reset() {
     this.loadingBar.start()
-    this.loadingBar.complete()
-    this.successMessage()
+    this.subscription = this.authService.resetPassword(this.resetForm.value).subscribe(
+      () => {
+        this.loadingBar.complete()
+      },
+      () => {
+        this.loadingBar.complete()
+        let titleError = 'Error'
+        let messageError = 'Please try again'
+        this.notifyService.openToastrWarning(titleError, messageError)
+      },
+      () => {
+        let titleSuccess = 'Success'
+        let messageSuccess = 'A reset link has been sent to your email'
+        this.notifyService.openToastrSuccess(titleSuccess, messageSuccess)
+      }
+    )
   }
 
   navigatePage(path: String) {
     if (path == 'login') {
       return this.router.navigate(['/auth/login'])
     }
-  }
-
-  successMessage() {
-    let title = 'Success'
-    let message = 'A reset link has been sent to your email'
-    this.notifyService.openToastr(title, message)
   }
 
 }

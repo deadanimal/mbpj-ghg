@@ -6,23 +6,33 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from ghg.helpers import PathAndRename
 
+from medias.models import (
+    Media
+)
+
 class CustomUser(AbstractUser):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    full_name = models.CharField(blank=True, max_length=255)
+    id = models.AutoField(primary_key=True, editable=False)
+    full_name = models.CharField(null=True, max_length=255)
 
-    nric_old = models.CharField(blank=True, max_length=12)
-    nric_new = models.CharField(blank=True, max_length=12)
-    nric_doc = models.ImageField(null=True, upload_to=PathAndRename('images'))
+    nric_old = models.CharField(null=True, max_length=12)
+    nric_new = models.CharField(null=True, max_length=12)
+    nric_doc = models.ForeignKey(
+        Media, 
+        null=True, 
+        on_delete=models.SET_NULL, 
+        related_name='user_nric'
+    )
 
-    mobile = models.CharField(blank=True, max_length=12)
-    phone = models.CharField(blank=True, max_length=12)
-    email = models.CharField(blank=True, max_length=50)
-    occupation = models.CharField(blank=True, max_length=50)
+    mobile = models.CharField(null=True, max_length=12)
+    phone = models.CharField(null=True, max_length=12)
+    email = models.CharField(null=True, max_length=50)
+    occupation = models.CharField(null=True, max_length=50)
 
     USER_TYPE = [
         ('AD', 'Admin'),
         ('AP', 'Applicant'),
         ('EV', 'Evaluator'),
+        ('SA', 'Super Admin'),
         ('NA', 'Not Available')
     ]
 
@@ -43,7 +53,9 @@ class CustomUser(AbstractUser):
         choices=GENDER,
         default='NA'
     )
-   
+
+    class Meta:
+        ordering = ['id']
+    
     def __str__(self):
         return self.full_name
-

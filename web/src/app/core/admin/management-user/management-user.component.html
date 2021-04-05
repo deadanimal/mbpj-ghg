@@ -3,18 +3,18 @@
         <div class="header-body">
             <div class="row align-items-center py-4">
                 <div class="col-lg-6 col-7">
-                    <h6 class="h2 text-dark d-inline-block mb-0">User</h6>
+                    <h6 class="h2 text-dark d-inline-block mb-0">Users</h6>
 
                     <nav aria-label="breadcrumb" class=" d-none d-md-inline-block ml-md-4">
                         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
                             <li class=" breadcrumb-item">
-                                <a href="javascript:void(0)"> <i class="fas fa-file-invoice text-dark"> </i> </a>
+                                <a href="javascript:void(0)"> <i class="fas fa-tasks text-dark"> </i> </a>
                             </li>
                             <li class="breadcrumb-item">
                                 <a href="javascript:void(0)" class="text-dark"> Management </a>
                             </li>
                             <li aria-current="page" class="breadcrumb-item active">
-                                User
+                                Users
                             </li>
                         </ol>
                     </nav>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="card-body">
                     <div class="chart">
-                        <div class="amchart" id="chartdiv"></div>
+                        <div class="amchart" id="chart-user-month"></div>
                     </div>
                 </div>
             </div>
@@ -61,13 +61,13 @@
                                     <select 
                                         name="datatable_length"
                                         aria-controls="datatable"
-                                        class="form-control form-control-sm"
+                                        class="form-control form-control-sm custom-select custom-select-sm"
                                         (change)="entriesChange($event)"
                                     >
-                                        <option value="10" [selected]="entries==5">5</option>
-                                        <option value="25" [selected]="entries==10">10</option>
-                                        <option value="50" [selected]="entries==15">15</option>
-                                        <option value="-1" [selected]="entries==-1">All</option>
+                                        <option value="10" [selected]="tableEntries==5">5</option>
+                                        <option value="25" [selected]="tableEntries==10">10</option>
+                                        <option value="50" [selected]="tableEntries==15">15</option>
+                                        <option value="-1" [selected]="tableEntries==-1">All</option>
                                     </select>
                                     records
                                 </label>
@@ -96,42 +96,110 @@
                         [rowHeight]="'auto'"
                         [limit]="tableEntries != -1 ? tableEntries:undefined"
                         [rows]="tableTemp" 
-                        (activate)="onActivate($event)"
                     >
 
-                        <ngx-datatable-column>
+                        <ngx-datatable-column
+                            [sortable]="true"
+                            [resizeable]="false"
+                            [width]="5"
+                            prop="id"
+                        >
                             <ng-template ngx-datatable-header-template>
-                                <span>User ID</span>
+                                <span>ID</span>
                             </ng-template>
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                {{row.user_id}}
+                                {{row.id}}
                             </ng-template>
                         </ngx-datatable-column>
-                        <ngx-datatable-column name="Name"></ngx-datatable-column>
-                        <ngx-datatable-column name="Email"></ngx-datatable-column>
-                        <ngx-datatable-column>
+
+                        <ngx-datatable-column
+                            [sortable]="true"
+                            [resizeable]="false"
+                            prop="full_name"
+                        >
                             <ng-template ngx-datatable-header-template>
-                                <span>Joined At</span>
+                                <span>Name</span>
                             </ng-template>
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                {{row.joined_at}}
+                                {{row.full_name}}
                             </ng-template>
                         </ngx-datatable-column>
-                        <ngx-datatable-column>
+
+                        <ngx-datatable-column
+                            [sortable]="true"
+                            [resizeable]="false"
+                            prop="email"
+                        >
+                            <ng-template ngx-datatable-header-template>
+                                <span>Email</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.email}}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column
+                            [sortable]="true"
+                            [resizeable]="false"
+                            [width]="50"
+                            prop="date_joined"
+                        >
+                            <ng-template ngx-datatable-header-template>
+                                <span>Date Joined</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                {{row.date_joined}}
+                            </ng-template>
+                        </ngx-datatable-column>
+
+                        <ngx-datatable-column
+                            [sortable]="true"
+                            [resizeable]="false"
+                            [width]="50"
+                            prop="user_type_mapped"
+                        >
                             <ng-template ngx-datatable-header-template>
                                 <span>User Type</span>
                             </ng-template>
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                {{row.user_type}}
+                                {{row.user_type_mapped}}
                             </ng-template>
                         </ngx-datatable-column>
-                        <ngx-datatable-column>
+
+                        <ngx-datatable-column
+                            [sortable]="true"
+                            [resizeable]="false"
+                            [width]="50"
+                            prop="is_active_mapped"
+                        >
                             <ng-template ngx-datatable-header-template>
                                 <span>Status</span>
                             </ng-template>
                             <ng-template let-row="row" ngx-datatable-cell-template>
-                                <span *ngIf="row.is_active == 'Active'" class="badge badge-pill badge-success">Active</span>
-                                <span *ngIf="row.is_active == 'Inactive'" class="badge badge-pill badge-warning">Inactive</span>
+                                <span *ngIf="row.is_active_mapped == 'Active'" class="badge badge-pill badge-success">Active</span>
+                                <span *ngIf="row.is_active_mapped == 'Inactive'" class="badge badge-pill badge-warning">Inactive</span>
+                            </ng-template>
+                        </ngx-datatable-column>
+                        
+                        <ngx-datatable-column
+                            [sortable]="false"
+                            [resizeable]="false"
+                            [width]="50"
+                        >
+                            <ng-template ngx-datatable-header-template>
+                                <span>Action</span>
+                            </ng-template>
+                            <ng-template let-row="row" ngx-datatable-cell-template>
+                                <button 
+                                    class="btn btn-icon btn-2 btn-info btn-sm" 
+                                    tooltip="View user detail"
+                                    placement="top"
+                                    type="button"
+                                    (click)="view(row)"
+                                >
+                                    <span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
+                                    <span class="btn-inner--text">View</span>
+                                </button>
                             </ng-template>
                         </ngx-datatable-column>
                     </ngx-datatable>

@@ -1,3 +1,4 @@
+<ngx-loading-bar height="6px" color="#2dce89"></ngx-loading-bar>
 <div class="header pb-6">
 	<div class="container-fluid">
 		<div class="header-body">
@@ -13,14 +14,6 @@
 						</ol>
 					</nav>
 				</div>
-
-				<!-- <div class="col-lg-6 col-5 text-right">
-					<a class="btn btn-sm btn-neutral" href="javascript:void(0)"> New </a>
-
-					<a class="btn btn-sm btn-neutral" href="javascript:void(0)">
-						Filters
-					</a>
-				</div> -->
 			</div>
 
 			<div class="row">
@@ -103,7 +96,7 @@
 								</div>
 
 								<div class="col-auto">
-									<div class=" con icon-shape bg-gradient-green text-white rounded-circle shadow">
+									<div class="icon icon-shape bg-gradient-green text-white rounded-circle shadow">
 										<i class="fas fa-file-invoice-dollar"> </i>
 									</div>
 								</div>
@@ -168,10 +161,41 @@
 					<h4 class="m-0">Latest Applications</h4>
 				</div>
 				<div class="card-body">
-					<div class="pt-4 text-center" *ngIf="isApplicationEmpty">
+					<div class="pt-4 text-center" *ngIf="isApplicationEmpty; else elseApplication">
 						<img [src]="iconEmpty" class="error-icon">
 						<p>No applications found</p>
 					</div>
+
+					<ng-template #elseApplication>
+						<ul class="list-group list-group-flush list">
+							<li class="list-group-item px-0" *ngFor="let application of applications">
+								<div class="row align-items-center">
+									<div class="col-auto">
+										<img alt="img" src="assets/img/icons/application.svg" class="avatar bg-white">
+									</div>
+
+									<div class="col">
+										<div class="d-flex justify-content-between align-items-center">
+											<div>
+												<h4 class="mb-0 text-sm">{{application?.reference_no}}</h4>
+												<span class="badge badge-primary mr-2">{{application?.created_at | date: 'd/M/y'}}</span>
+											</div>
+
+											<div class="text-right text-muted">
+												<button 
+													type="button" 
+													class="btn btn-sm btn-outline-info"
+													(click)="view(application)"
+												>
+													View
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</ng-template>
 				</div>
 			</div>
 		</div>
@@ -182,10 +206,41 @@
 					<h4 class="m-0">Latest Evaluations</h4>
 				</div>
 				<div class="card-body">
-					<div class="pt-4 text-center" *ngIf="isEvaluationEmpty">
+					<div class="pt-4 text-center" *ngIf="isEvaluationEmpty; else elseEvaluation">
 						<img [src]="iconEmpty" class="error-icon">
 						<p>No evaluations found</p>
 					</div>
+
+					<ng-template #elseEvaluation>
+						<ul class="list-group list-group-flush list">
+							<li class="list-group-item px-0" *ngFor="let evaluation of evaluations">
+								<div class="row align-items-center">
+									<div class="col-auto">
+										<img alt="img" src="assets/img/icons/evaluation.svg" class="avatar bg-white">
+									</div>
+
+									<div class="col">
+										<div class="d-flex justify-content-between align-items-center">
+											<div>
+												<h4 class="mb-0 text-sm">{{evaluation?.application_assessment?.application?.reference_no}}</h4>
+												<span class="badge badge-primary mr-2">{{evaluation.created_at | date: 'd/M/y'}}</span>
+											</div>
+
+											<div class="text-right text-muted">
+												<button 
+													type="button" 
+													class="btn btn-sm btn-outline-info"
+													(click)="view(evaluation?.application_assessment?.application)"
+												>
+													View
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</ng-template>
 				</div>
 			</div>
 		</div>
@@ -196,10 +251,41 @@
 					<h4 class="m-0">Latest Rebates</h4>
 				</div>
 				<div class="card-body">
-					<div class="pt-4 text-center" *ngIf="isRebateEmpty">
+					<div class="pt-4 text-center" *ngIf="isRebateEmpty; else elseRebate">
 						<img [src]="iconEmpty" class="error-icon">
 						<p>No rebates found</p>
 					</div>
+
+					<ng-template #elseRebate>
+						<ul class="list-group list-group-flush list">
+							<li class="list-group-item px-0" *ngFor="let rebate of rebates">
+								<div class="row align-items-center">
+									<div class="col-auto">
+										<img alt="img" src="assets/img/icons/rebate.svg" class="avatar bg-white">
+									</div>
+
+									<div class="col">
+										<div class="d-flex justify-content-between align-items-center">
+											<div>
+												<h4 class="mb-0 text-sm">{{rebate?.reference_no}}</h4>
+												<span class="badge badge-primary mr-2">{{rebate?.created_at | date: 'd/M/y'}}</span>
+											</div>
+
+											<div class="text-right text-muted">
+												<button 
+													type="button" 
+													class="btn btn-sm btn-outline-info"
+													(click)="view(rebate?.application)"
+												>
+													View
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</ng-template>
 				</div>
 			</div>
 		</div>

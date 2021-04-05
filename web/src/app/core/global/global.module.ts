@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { 
   AccordionModule,
   BsDropdownModule,
+  CollapseModule,
   ModalModule,
   ProgressbarModule, 
   TabsModule,
@@ -18,18 +19,21 @@ import { GlobalRoutes } from './global.routing';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { ProfileComponent } from './profile/profile.component';
 import { SettingsComponent } from './settings/settings.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 @NgModule({
   declarations: [
     NotificationsComponent,
     ProfileComponent,
-    SettingsComponent
+    SettingsComponent,
+    NotFoundComponent
   ],
   imports: [
     CommonModule,
     AccordionModule.forRoot(),
     BsDatepickerModule.forRoot(),
     BsDropdownModule.forRoot(),
+    CollapseModule.forRoot(),
     ModalModule.forRoot(),
     ProgressbarModule.forRoot(),
     TabsModule.forRoot(),

@@ -62,7 +62,7 @@ export const ROUTES: RouteInfo[] = [
     icontype: 'fas fa-chart-bar text-info'
   },
   {
-    path: '/management',
+    path: '/admin/management',
     title: 'Management',
     type: 'sub',
     icontype: 'fas fa-tasks text-info',

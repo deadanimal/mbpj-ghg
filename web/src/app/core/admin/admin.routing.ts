@@ -9,6 +9,7 @@ import { ManagementAuditComponent } from './management-audit/management-audit.co
 import { ManagementUserComponent } from './management-user/management-user.component';
 import { RebatesComponent } from './rebates/rebates.component';
 import { ReportComponent } from './report/report.component';
+import { UserDetailsComponent } from './user-details/user-details.component';
 
 export const AdminRoutes: Routes = [
     {
@@ -57,7 +58,16 @@ export const AdminRoutes: Routes = [
                     },
                     {
                         path: 'users',
-                        component: ManagementUserComponent
+                        children: [
+                            {
+                                path: '',
+                                component: ManagementUserComponent
+                            },
+                            {
+                                path: 'detail',
+                                component: UserDetailsComponent
+                            }
+                        ]
                     }
                 ]
             },
@@ -70,5 +80,9 @@ export const AdminRoutes: Routes = [
                 component: ReportComponent
             }
         ]
+    },
+    {
+        path: '**',
+        redirectTo: '/global/not-found'
     }
 ]

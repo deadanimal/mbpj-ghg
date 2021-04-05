@@ -10,8 +10,12 @@ from users.models import (
     CustomUser
 )
 
+from medias.models import (
+    Media
+)
+
 class House(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True, editable=False)
     owner = models.ForeignKey(
         CustomUser, 
         on_delete=models.CASCADE,
@@ -20,10 +24,13 @@ class House(models.Model):
             'user_type': 'AP'
         }
     )
-    location = models.CharField(blank=True, max_length=255)
-    address = models.CharField(blank=True, max_length=255)
-    postcode = models.CharField(blank=True, max_length=5)
-    area = models.CharField(blank=True, max_length=100)
+    location = models.CharField(null=True, max_length=255)
+    address_1 = models.CharField(null=True, max_length=100)
+    address_2 = models.CharField(null=True, max_length=100)
+    address_3 = models.CharField(null=True, max_length=100)
+    postcode = models.CharField(null=True, max_length=5)
+    town = models.CharField(null=True, max_length=100)
+    state = models.CharField(default='SELANGOR', max_length=100)
 
     BUILDING_TYPE = [
         ('CD', 'Condominium'),
@@ -34,10 +41,19 @@ class House(models.Model):
         ('AS', 'Apartment / Service Apartment'),
         ('OT', 'Other')
     ]
-    building_type = models.CharField(max_length=2, choices=BUILDING_TYPE, default='BG')
+    building_type = models.CharField(
+        max_length=2, 
+        choices=BUILDING_TYPE, 
+        default='BG'
+    )
 
-    assessment_tax_account = models.CharField(blank=True, max_length=100)
-    assessment_tax_doc = models.ImageField(null=True, upload_to=PathAndRename('assessment_tax'))
+    assessment_tax_account = models.CharField(null=True, max_length=100)
+    assessment_tax_doc = models.ForeignKey(
+        Media, 
+        on_delete=models.SET_NULL, 
+        null=True,
+        related_name='house_assessment_tax_doc'
+    )
 
     staying_since = models.DateField(null=True)
     occupants = models.IntegerField(default=1)
@@ -50,7 +66,11 @@ class House(models.Model):
         ('CH', 'Children'),
         ('OT', 'Others')
     ]
-    relationship_type = models.CharField(max_length=2, choices=RELATIONSHIP_TYPE, default='SL')
+    relationship_type = models.CharField(
+        max_length=2, 
+        choices=RELATIONSHIP_TYPE, 
+        default='SL'
+    )
 
     active = models.BooleanField(default=True)
 

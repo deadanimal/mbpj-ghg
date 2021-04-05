@@ -19,7 +19,7 @@ export class SidebarComponent implements OnInit {
   public menu;
 
   // Image
-  imgLogo = 'assets/img/logo/mbpj-logo.png'
+  imgLogo = 'assets/img/logo/logo-erebat.png'
 
   constructor(
     private authService: AuthService,
@@ -37,6 +37,10 @@ export class SidebarComponent implements OnInit {
     this.router.events.subscribe(event => {
       this.isCollapsed = true;
     });
+  }
+
+  ngOnDestroy() {
+    
   }
 
   onMouseEnterSidenav() {

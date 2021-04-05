@@ -32,7 +32,10 @@
 							<div class="dataTables_length" id="datatable_length">
 								<label>
 									Show
-									<select name="datatable_length" aria-controls="datatable" class="form-control form-control-sm"
+									<select 
+										name="datatable_length" 
+										aria-controls="datatable" 
+										class="form-control form-control-sm custom-select custom-select-sm"
 										(change)="entriesChange($event)">
 										<option value="5" [selected]="tableEntries == 5">5</option>
 										<option value="10" [selected]="tableEntries == 10">10</option>
@@ -75,30 +78,47 @@
 						(activate)="onActivate($event)"
 						*ngIf="!isEmpty"
 					>
-						<ngx-datatable-column>
+						<ngx-datatable-column
+							prop="application.reference_no"
+						>
 							<ng-template ngx-datatable-header-template>
 								<span>Applicant</span>
 							</ng-template>
 							<ng-template let-row="row" ngx-datatable-cell-template>
-								{{row.applicant}}
+								{{row.application?.reference_no}}
+							</ng-template>
+						</ngx-datatable-column>
+
+						<ngx-datatable-column
+							prop="applicant.full_name"
+						>
+							<ng-template ngx-datatable-header-template>
+								<span>Applicant</span>
+							</ng-template>
+							<ng-template let-row="row" ngx-datatable-cell-template>
+								{{row.applicant?.full_name}}
 							</ng-template>
 						</ngx-datatable-column>
 	
-						<ngx-datatable-column>
+						<ngx-datatable-column
+							prop="amount_approved"
+						>
 							<ng-template ngx-datatable-header-template>
 								<span>Amount Approved</span>
 							</ng-template>
 							<ng-template let-row="row" ngx-datatable-cell-template>
-								RM{{row.amount_approved}}
+								RM{{row.amount_approved / 1000 | number : '1.2-2'}}
 							</ng-template>
 						</ngx-datatable-column>
 			
-						<ngx-datatable-column>
+						<ngx-datatable-column
+							prop="created_at"
+						>
 							<ng-template ngx-datatable-header-template>
 								<span>Approved Date</span>
 							</ng-template>
 							<ng-template let-row="row" ngx-datatable-cell-template>
-								{{row.created_at}}
+								{{row.created_at | date: 'd/M/y'}}
 							</ng-template>
 						</ngx-datatable-column>
 
@@ -110,9 +130,9 @@
                                 <button 
                                     class="btn btn-primary"
                                     type="button"
-                                    (click)="navigatePage('/admin/applications/detail', row)"
+                                    (click)="view(row)"
                                 >
-                                    View
+                                    View application
                                 </button>
 							</ng-template>
 						</ngx-datatable-column>

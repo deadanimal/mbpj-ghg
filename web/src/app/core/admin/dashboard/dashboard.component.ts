@@ -1,14 +1,14 @@
 import { Component, OnInit, NgZone, OnDestroy } from "@angular/core";
 import { Router } from '@angular/router';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { ApplicationsService } from 'src/app/shared/services/applications/applications.service';
 import { EvaluationsService } from 'src/app/shared/services/evaluations/evaluations.service';
 import { RebatesService } from 'src/app/shared/services/rebates/rebates.service';
-import { Application } from 'src/app/shared/services/applications/applications.model';
-import { Evaluation } from 'src/app/shared/services/evaluations/evaluations.model';
-import { Rebate } from 'src/app/shared/services/rebates/rebates.model';
+import { Application, ApplicationExtended } from 'src/app/shared/services/applications/applications.model';
+import { Evaluation, EvaluationExtended } from 'src/app/shared/services/evaluations/evaluations.model';
+import { Rebate, RebateExtended } from 'src/app/shared/services/rebates/rebates.model';
 
 import * as moment from 'moment';
 import * as am4core from "@amcharts/amcharts4/core";
@@ -16,6 +16,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import * as am4maps from "@amcharts/amcharts4/maps";
 import am4geodata_continentsLow from "@amcharts/amcharts4-geodata/continentsLow";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
+import { LoadingBarService } from "@ngx-loading-bar/core";
 
 @Component({
   selector: 'app-dashboard',
@@ -23,6 +24,19 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit, OnDestroy {
+
+  // Data
+  applications: ApplicationExtended[] = []
+  evaluations: EvaluationExtended[] = []
+  rebates: RebateExtended[] = []
+  
+  // Stats
+  totalApplicationApproved: number = 0
+  totalApplicationApprovedCurrent: number = 0
+  totalRebateRewarded: number = 0
+  totalRebateRewardedCurrent: number = 0
+  totalApplicationReceived: number = 0
+  totalApplicationReceivedCurrent: number = 0
 
   // Chart
   private chart: any
@@ -36,25 +50,19 @@ export class DashboardComponent implements OnInit, OnDestroy {
   isEvaluationEmpty: boolean = true
   isRebateEmpty: boolean = true
 
-  // Data
-  applications: Application[] = []
-  evaluations: Evaluation[] = []
-  rebates: Rebate[] = []
-  totalApplicationApproved: number = 0
-  totalApplicationApprovedCurrent: number = 0
-  totalRebateRewarded: number = 0
-  totalRebateRewardedCurrent: number = 0
-  totalApplicationReceived: number = 0
-  totalApplicationReceivedCurrent: number = 0
-
   // Icon
   iconEmpty = 'assets/img/icons/box.svg'
+
+  // Subscriber
+  subscription: Subscription
 
   constructor(
     private authService: AuthService,
     private applicationService: ApplicationsService,
     private evaluationService: EvaluationsService,
     private rebateService: RebatesService,
+    private loadingBar: LoadingBarService,
+    private router: Router,
     private zone: NgZone
   ) { }
 
@@ -63,6 +71,10 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe()
+    }
+    
     this.zone.runOutsideAngular(
       () => {
         if (this.chart) {
@@ -78,17 +90,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getData() {
-    let applicationFilter = 'ordering=-created_at'
-    let evaluationFilter = 'ordering=-created_at'
-    let rebateFilter = 'ordering=-created_at'
-    forkJoin([
-      this.applicationService.filter(applicationFilter),
-      this.evaluationService.filter(evaluationFilter),
-      this.rebateService.filter(rebateFilter),
+    this.loadingBar.start()
+
+    this.subscription = forkJoin([
+      this.applicationService.getAll(),
+      this.evaluationService.getAll(),
+      this.rebateService.getAll(),
       this.applicationService.getStatistics()
     ]).subscribe(
-      (res) => {},
-      (err) => {},
+      (res) => {
+        this.loadingBar.complete()
+      },
+      (err) => {
+        this.loadingBar.complete()
+      },
       () => {
         this.filterData()
       }
@@ -110,7 +125,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     }
 
     tempApplications.forEach(
-      (application: Application) => {
+      (application: ApplicationExtended) => {
         if (this.applications.length < 5) {
           this.applications.push(application)
         }
@@ -122,7 +137,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     )
 
     tempEvaluations.forEach(
-      (evaluation: Evaluation) => {
+      (evaluation: EvaluationExtended) => {
         if (this.evaluations.length < 5) {
           this.evaluations.push(evaluation)
         }
@@ -134,7 +149,7 @@ export class DashboardComponent implements OnInit, OnDestroy {
     )
 
     tempRebates.forEach(
-      (rebate: Rebate) => {
+      (rebate: RebateExtended) => {
         if (this.rebates.length < 5) {
           this.rebates.push(rebate)
         }
@@ -157,6 +172,18 @@ export class DashboardComponent implements OnInit, OnDestroy {
   }
 
   getChart1() {
+  }
+
+  view(selected) {
+    let path = '/admin/applications/detail'
+    let extras = selected['id']
+    let queryParams = {
+      queryParams: {
+        id: extras
+      }
+    }
+
+    return this.router.navigate([path], queryParams)
   }
 
 }

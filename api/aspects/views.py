@@ -32,13 +32,13 @@ class AspectViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     ]
 
     def get_permissions(self):
-        permission_classes = [AllowAny]#[IsAuthenticated]
-        """
+        permission_classes = [AllowAny] #[IsAuthenticated]
+
         if self.action == 'list':
-            permission_classes = [IsAuthenticated]
+            permission_classes = [AllowAny]
         else:
             permission_classes = [IsAuthenticated]
-        """
+
         return [permission() for permission in permission_classes]    
 
     
@@ -47,3 +47,32 @@ class AspectViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         queryset = Aspect.objects.all()
         return queryset  
 
+
+    @action(methods=['GET'], detail=True)
+    def activate(self, request, *args, **kwargs):
+        user = request.user
+        aspect = self.get_object()
+        
+        if user.user_type == 'AD' or user.user_type == 'SA':
+            aspect.active = True
+            aspect.save()
+        else:
+            pass
+
+        serializer = AspectExtendedSerializer(aspect)
+        return Response(serializer.data)
+
+
+    @action(methods=['GET'], detail=True)
+    def deactivate(self, request, *args, **kwargs):
+        user = request.user
+        aspect = self.get_object()
+        
+        if user.user_type == 'AD' or user.user_type == 'SA':
+            aspect.active = False
+            aspect.save()
+        else:
+            pass
+
+        serializer = AspectExtendedSerializer(aspect)
+        return Response(serializer.data)

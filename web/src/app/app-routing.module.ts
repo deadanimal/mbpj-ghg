@@ -5,73 +5,46 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { AuthLayoutComponent } from './layouts/auth-layout/auth-layout.component';
-import { PresentationComponent } from './examples/presentation/presentation.component';
+import { AuthGuard } from './shared/guard/auth.guard';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'auth/login',
+    redirectTo: '/home',
     pathMatch: 'full'
   },
-  {
-    path: 'presentation',
-    component: PresentationComponent
-  },
+  // Admin
   {
     path: '',
     component: AdminLayoutComponent,
     children: [
       {
         path: 'admin',
-        loadChildren: './core/admin/admin.module#AdminModule'
+        loadChildren: './core/admin/admin.module#AdminModule',
+        canActivate: [AuthGuard],
+        data: {
+          role: ['AD', 'SA']
+        }
       },
       {
         path: 'user',
-        loadChildren: './core/user/user.module#UserModule'
+        loadChildren: './core/user/user.module#UserModule',
+        canActivate: [AuthGuard],
+        data: {
+          role: ['AD', 'SA', 'EV', 'AP']
+        }
       },
       {
         path: 'global',
-        loadChildren: './core/global/global.module#GlobalModule'
-      },
-      // Example
-      {
-        path: 'dashboards',
-        loadChildren: './examples/dashboards/dashboards.module#DashboardsModule'
-      },
-      {
-        path: 'components',
-        loadChildren: './examples/components/components.module#ComponentsModule'
-      },
-      {
-        path: 'forms',
-        loadChildren: './examples/forms/forms.module#FormsModules'
-      },
-      {
-        path: 'tables',
-        loadChildren: './examples/tables/tables.module#TablesModule'
-      },
-      {
-        path: 'maps',
-        loadChildren: './examples/maps/maps.module#MapsModule'
-      },
-      {
-        path: 'widgets',
-        loadChildren: './examples/widgets/widgets.module#WidgetsModule'
-      },
-      {
-        path: 'charts',
-        loadChildren: './examples/charts/charts.module#ChartsModule'
-      },
-      {
-        path: 'calendar',
-        loadChildren: './examples/calendar/calendar.module#CalendarModule'
-      },
-      {
-        path: 'examples',
-        loadChildren: './examples/examples/examples.module#ExamplesModule'
+        loadChildren: './core/global/global.module#GlobalModule',
+        canActivate: [AuthGuard],
+        data: {
+          role: ['AD', 'SA', 'EV', 'AP']
+        }
       }
-    ]
+    ],
   },
+  // Authentication
   {
     path: '',
     component: AuthLayoutComponent,
@@ -79,16 +52,17 @@ const routes: Routes = [
       {
         path: 'auth',
         loadChildren: './auth/auth.module#AuthModule'
-      },
-      {
-        path: 'examples',
-        loadChildren: './layouts/auth-layout/auth-layout.module#AuthLayoutModule'
       }
     ]
   },
+  // Public
+  {
+    path: '',
+    loadChildren: './public/public.module#PublicModule'
+  },
   {
     path: '**',
-    redirectTo: 'dashboard'
+    redirectTo: '/home'
   }
 ];
 

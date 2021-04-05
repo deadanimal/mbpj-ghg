@@ -1,0 +1,15 @@
+<div class="container-fluid not-found">
+    <div class="text-center">
+        <img [src]="iconError" class="not-found-icon">
+        <p>Page not found</p>
+
+        <button 
+            class="btn btn-icon btn-3 btn-sm btn-info"
+            type="button"
+            (click)="navigatePage('/admin/dashboard')"
+        >
+            <span class="btn-inner--icon"><i class="fas fa-angle-left"></i></span>
+            <span class="btn-inner--text">Back to dashboard</span>
+        </button>
+    </div>
+</div>

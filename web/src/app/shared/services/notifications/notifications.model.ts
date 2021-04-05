@@ -1,5 +1,5 @@
 export class Notification {
-    public id: string
+    public id: number
     public title: string
     public message: string
     public recipient: string
@@ -7,7 +7,7 @@ export class Notification {
     public modified_at: string
 
     constructor(
-        id: string,
+        id: number,
         title: string,
         message: string,
         recipient: string,

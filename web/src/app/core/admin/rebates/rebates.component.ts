@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
-import { forkJoin } from 'rxjs';
+import { forkJoin, Subscription } from 'rxjs';
 import * as moment from 'moment';
 import swal from 'sweetalert2';
 
@@ -14,7 +14,7 @@ import { LoadingBarService } from '@ngx-loading-bar/core';
 import { Router } from '@angular/router';
 import { ApplicationsService } from 'src/app/shared/services/applications/applications.service';
 import { RebatesService } from 'src/app/shared/services/rebates/rebates.service';
-import { Rebate, RebateTemp } from 'src/app/shared/services/rebates/rebates.model';
+import { Rebate, RebateExtended, RebateTemp } from 'src/app/shared/services/rebates/rebates.model';
 import { Application } from 'src/app/shared/services/applications/applications.model';
 
 export enum SelectionType {
@@ -32,8 +32,8 @@ export enum SelectionType {
 export class RebatesComponent implements OnInit {
 
   // Data
-  rebates: RebateTemp[] = []
-  selectedRebate: RebateTemp
+  rebates: RebateExtended[] = []
+  selectedRebate: RebateExtended
 
   // Table
   tableEntries: number = 5
@@ -53,11 +53,11 @@ export class RebatesComponent implements OnInit {
   // Icon
   iconEmpty = 'assets/img/icons/box.svg'
 
+  // Subscriber
+  subscription: Subscription
+
   constructor(
-    private authService: AuthService,
-    private applicationService: ApplicationsService,
     private rebateService: RebatesService,
-    private userService: UsersService,
     private loadingBar: LoadingBarService,
     private router: Router
   ) { 
@@ -67,62 +67,30 @@ export class RebatesComponent implements OnInit {
   ngOnInit() {
   }
 
+  ngOnDestroy() {
+    if (this.subscription) {
+      this.subscription.unsubscribe()
+    }
+  }
+
   getData() {
     this.loadingBar.start()
-    forkJoin(
-      this.applicationService.getAll(),
-      this.rebateService.getAll(),
-      this.userService.getAll()
-    ).subscribe(
+    this.subscription = forkJoin([
+      this.rebateService.getAll()
+    ]).subscribe(
       (res) => {
         this.loadingBar.complete()
-        this.filterData()
+        // this.filterData()
       },
       (err) => {
         this.loadingBar.complete()
-      }
-    )
-  }
-
-  filterData() {
-    let filtering = new Promise(
-      (resolve, reject) => {
-        this.rebateService.rebates.forEach(
-          (rebate: Rebate, index, array) => {
-            this.applicationService.applications.forEach(
-              (application: Application) => {
-                if (rebate.application == application.id) {
-                  this.userService.users.forEach(
-                    (user: User) => {
-                      if (application.applicant == user.id) {
-                        let created = moment(rebate.created_at).format('DD/MM/YYYY')
-                        this.rebates.push({
-                          id: rebate.id,
-                          application: rebate.application,
-                          applicant: user.full_name,
-                          amount_approved: rebate.amount_approved,
-                          created_at: created,
-                          modified_at: rebate.modified_at
-                        })
-                      }
-                    }
-                  )
-                }
-              }
-            )
-            if (index == array.length - 1) resolve();
-          }
-        )
-      }
-    )
-
-    filtering.then(
+      },
       () => {
-        this.tableRows = this.rebates
+        this.rebates = this.rebateService.rebates
+        this.tableRows = [...this.rebates]
         this.tableTemp = this.tableRows.map((prop, key) => {
           return {
-            ...prop,
-            id_index: key + 1
+            ...prop
           };
         });
 
@@ -143,7 +111,7 @@ export class RebatesComponent implements OnInit {
   filterTable($event) {
     let val = $event.target.value.toLowerCase();
     this.tableTemp = this.tableRows.filter(function (d) {
-      return d.applicant.toLowerCase().indexOf(val)!== -1 || !val;
+      return d.applicant?.full_name.toLowerCase().indexOf(val)!== -1 || !val;
     });
   }
 
@@ -156,7 +124,19 @@ export class RebatesComponent implements OnInit {
     this.tableActiveRow = event.row;
   }
 
-  navigatePage(path: string, extras) {
+  view(selected) {
+    let path = '/admin/applications/detail'
+    let extras = selected['application']['id']
+    let queryParams = {
+      queryParams: {
+        id: extras
+      }
+    }
+
+    return this.router.navigate([path], queryParams)
+  }
+
+  navigatePage(path: string) {
     this.router.navigate([path])
   }
 

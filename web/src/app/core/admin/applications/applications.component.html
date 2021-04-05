@@ -46,7 +46,10 @@
                                     <div class="dataTables_length" id="datatable_submitted_length">
                                         <label>
                                             Show
-                                            <select name="datatable_submitted_length" aria-controls="datatable" class="form-control form-control-sm"
+                                            <select 
+                                                name="datatable_submitted_length" 
+                                                aria-controls="datatable" 
+                                                class="form-control form-control-sm custom-select custom-select-sm"
                                                 (change)="entriesChange($event, 'SM')">
                                                 <option value="5" [selected]="tableSubmittedEntries == 5">5</option>
                                                 <option value="10" [selected]="tableSubmittedEntries == 10">10</option>
@@ -89,21 +92,36 @@
                                 (activate)="onActivate($event, 'SM')"
                                 *ngIf="!isSubmittedEmpty"
                             >
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="reference_no"
+                                >
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Reference no.</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.reference_no}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column
+                                    prop="applicant.full_name"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Applicant</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.applicant_name}}
+                                        {{row.applicant?.full_name}}
                                     </ng-template>
                                 </ngx-datatable-column>
             
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="applied_house.assessment_tax_account"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Assessment Tax</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.applied_house_assessment_tax_account}}
+                                        {{row.applied_house?.assessment_tax_account}}
                                     </ng-template>
                                 </ngx-datatable-column>
                     
@@ -128,7 +146,7 @@
                                         <button 
                                             class="btn btn-icon btn-3 btn-primary"
                                             type="button"
-                                            (click)="navigatePage('/admin/applications/detail', row)"
+                                            (click)="view(row)"
                                         >
                                             <span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
                                             <span class="btn-inner--text">View</span>
@@ -152,7 +170,10 @@
                                     <div class="dataTables_length" id="datatable_evaluation_length">
                                         <label>
                                             Show
-                                            <select name="datatable_evaluation_length" aria-controls="datatable" class="form-control form-control-sm"
+                                            <select 
+                                                name="datatable_evaluation_length" 
+                                                aria-controls="datatable" 
+                                                class="form-control form-control-sm custom-select custom-select-sm"
                                                 (change)="entriesChange($event, 'EV')">
                                                 <option value="5" [selected]="tableEvaluationEntries == 5">5</option>
                                                 <option value="10" [selected]="tableEvaluationEntries == 10">10</option>
@@ -195,34 +216,53 @@
                                 (activate)="onActivate($event, 'EV')"
                                 *ngIf="!isEvaluationEmpty"
                             >
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="reference_no"
+                                >
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Reference no.</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.reference_no}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column
+                                    prop="applicant.full_name"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Applicant</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.applicant_name}}
+                                        {{row.applicant?.full_name}}
                                     </ng-template>
                                 </ngx-datatable-column>
             
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="applied_house.assessment_tax_account"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Assessment Tax</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.applied_house_assessment_tax_account}}
+                                        {{row.applied_house?.assessment_tax_account}}
                                     </ng-template>
                                 </ngx-datatable-column>
                                 
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="evaluator_nominated.full_name"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Nominated Evaluator</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.evaluator_nominated_name}}
+                                        {{row.evaluator_nominated?.full_name}}
                                     </ng-template>
                                 </ngx-datatable-column>
                     
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Status</span>
                                     </ng-template>
@@ -243,7 +283,7 @@
                                         <button 
                                             class="btn btn-icon btn-3 btn-primary"
                                             type="button"
-                                            (click)="navigatePage('/admin/applications/detail', row)"
+                                            (click)="view(row)"
                                         >
                                             <span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
                                             <span class="btn-inner--text">View</span>
@@ -257,7 +297,7 @@
 
                 <tab>
                     <ng-template tabHeading>
-                        <i class="ni ni-calendar-grid-58 mr-2"></i>Completed
+                        <i class="ni ni-calendar-grid-58 mr-2"></i>Others
                     </ng-template>
                     
                     <div class="card mt-2">
@@ -267,12 +307,15 @@
                                     <div class="dataTables_length" id="datatable_completed_length">
                                         <label>
                                             Show
-                                            <select name="datatable_completed_length" aria-controls="datatable" class="form-control form-control-sm"
-                                                (change)="entriesChange($event, 'CM')">
-                                                <option value="5" [selected]="tableCompletedEntries == 5">5</option>
-                                                <option value="10" [selected]="tableCompletedEntries == 10">10</option>
-                                                <option value="15" [selected]="tableCompletedEntries == 15">15</option>
-                                                <option value="-1" [selected]="tableCompletedEntries == -1">All</option>
+                                            <select 
+                                                name="datatable_completed_length" 
+                                                aria-controls="datatable" 
+                                                class="form-control form-control-sm custom-select custom-select-sm"
+                                                (change)="entriesChange($event, 'OT')">
+                                                <option value="5" [selected]="tableOtherEntries == 5">5</option>
+                                                <option value="10" [selected]="tableOtherEntries == 10">10</option>
+                                                <option value="15" [selected]="tableOtherEntries == 15">15</option>
+                                                <option value="-1" [selected]="tableOtherEntries == -1">All</option>
                                             </select>
                                             record
                                         </label>
@@ -286,14 +329,14 @@
                                                 class="form-control form-control-sm"
                                                 placeholder="Search applicant name"
                                                 aria-controls="datatable"
-                                                (keyup)="filterTable($event, 'CM')"
+                                                (keyup)="filterTable($event, 'OT')"
                                             />
                                         </label>
                                     </div>
                                 </div>
                             </div>
                 
-                            <div class="pt-4 text-center" *ngIf="isCompletedEmpty">
+                            <div class="pt-4 text-center" *ngIf="isOtherEmpty">
                                 <img [src]="iconEmpty" class="error-icon">
                                 <p>No records found</p>
                             </div>
@@ -304,36 +347,53 @@
                                 [headerHeight]="50" 
                                 [footerHeight]="50"
                                 [rowHeight]="'auto'"
-                                [limit]="tableCompletedEntries != -1 ? tableCompletedEntries : undefined" 
-                                [rows]="tableCompletedTemp"
+                                [limit]="tableOtherEntries != -1 ? tableOtherEntries : undefined" 
+                                [rows]="tableOtherTemp"
                                 [messages]="tableMessages"
-                                (activate)="onActivate($event, 'CM')"
-                                *ngIf="!isCompletedEmpty"
+                                (activate)="onActivate($event, 'OT')"
+                                *ngIf="!isOtherEmpty"
                             >
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="reference_no"
+                                >
+                                    <ng-template ngx-datatable-header-template>
+                                        <span>Reference no.</span>
+                                    </ng-template>
+                                    <ng-template let-row="row" ngx-datatable-cell-template>
+                                        {{row.reference_no}}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column
+                                    prop="applicant.full_name"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Applicant</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.applicant_name}}
+                                        {{row.applicant?.full_name}}
                                     </ng-template>
                                 </ngx-datatable-column>
             
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="applied_house.assessment_tax_account"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Assessment Tax</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.applied_house_assessment_tax_account}}
+                                        {{row.applied_house?.assessment_tax_account}}
                                     </ng-template>
                                 </ngx-datatable-column>
                                 
-                                <ngx-datatable-column>
+                                <ngx-datatable-column
+                                    prop="evaluator_nominated.full_name"
+                                >
                                     <ng-template ngx-datatable-header-template>
                                         <span>Nominated Evaluator</span>
                                     </ng-template>
                                     <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.evaluator_nominated_name}}
+                                        {{row.evaluator_nominated?.full_name}}
                                     </ng-template>
                                 </ngx-datatable-column>
                     
@@ -358,7 +418,7 @@
                                         <button 
                                             class="btn btn-icon btn-3 btn-primary"
                                             type="button"
-                                            (click)="navigatePage('/admin/applications/detail', row)"
+                                            (click)="view(row)"
                                         >
                                             <span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
                                             <span class="btn-inner--text">View</span>

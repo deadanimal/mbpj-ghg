@@ -30,91 +30,71 @@
                 </div>
                 <div class="card-body">
                     <div class="row">
-                        <div class="col-md-12 col-lg-5">
+                        <div class="col-md-12 col-lg-12">
                             <div class="form-group">
                                 <label class="form-control-label">Report type</label>
-                                <select class="form-control custom-select">
+                                <select class="form-control custom-select" [(ngModel)]="reportType">
                                     <option hidden selected>Please pick</option>
-                                    <option>Report 1</option>
-                                    <option>Report 2</option>
-                                    <option>Report 3</option>
-                                    <option>Report 4</option>
+                                    <option value="application">Application report</option>
+                                    <option value="approved">Approved report</option>
+                                    <option value="building">Building report</option>
+                                    <option value="town">Town report</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-12 col-lg-5">
-                            <div class="form-group">
-                                <label class="form-control-label">Date range</label>
-                                <div class="input-group">
-                                    <div class="input-group-prepend">
-                                      <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
-                                    </div>
-                                    <input 
-                                        type="text"
-                                        class="form-control"
-                                        bsDaterangepicker
-                                        [bsConfig]="bsDPConfig"
-                                        placeholder="Date range"
-                                        name="bsDaterangepicker"
-                                    >
-                                  </div>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-2 d-flex align-items-center">
-                            <button class="btn btn-default" type="button">Search</button>
+
+                            <button 
+                                class="btn btn-info" 
+                                type="button"
+                                (click)="generateReport()"
+                                [disabled]="!reportType"
+                            >
+                                Generate
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="row">
         <div class="col-md-12 col-lg-6">
             <div class="card">
                 <div class="card-header bg-secondary">
-                    <h3 class="m-0">Report 1</h3>
+                    <h3 class="m-0">Status Statistics</h3>
                 </div>
+
                 <div class="card-body">
                     <div class="chart">
-                        <div class="amchart" id="chartdiv"></div>
+                        <div class="amchart" id="adminReportStatus"></div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="col-md-12 col-lg-6">
             <div class="card">
                 <div class="card-header bg-secondary">
-                    <h3 class="m-0">Report 2</h3>
+                    <h3 class="m-0">Category Statistics</h3>
                 </div>
                 <div class="card-body">
                     <div class="chart">
-                        <div class="amchart" id="chartdiv1"></div>
+                        <div class="amchart" id="adminReportCategory"></div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
     <div class="row">
-        <div class="col-md-12 col-lg-6">
+        <div class="col-md-12 col-lg-12">
             <div class="card">
                 <div class="card-header bg-secondary">
-                    <h3 class="m-0">Report 3</h3>
+                    <h3 class="m-0">Application by Year Statistics</h3>
                 </div>
                 <div class="card-body">
                     <div class="chart">
-                        <div class="amchart" id="chartdiv2"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-12 col-lg-6">
-            <div class="card">
-                <div class="card-header bg-secondary">
-                    <h3 class="m-0">Report 4</h3>
-                </div>
-                <div class="card-body">
-                    <div class="chart">
-                        <div class="amchart" id="chartdiv3"></div>
+                        <div class="amchart" id="adminReportApp"></div>
                     </div>
                 </div>
             </div>

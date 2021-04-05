@@ -23,11 +23,11 @@ export class AspectsService {
     private http: HttpClient
   ) { }
 
-  create(body: Form): Observable<Aspect> {
+  create(body: any): Observable<Aspect> {
     return this.http.post<any>(this.urlAspects, body).pipe(
       tap((res) => {
         this.aspect = res
-        console.log('Aspect: ', this.aspect)
+        // console.log('Aspect: ', this.aspect)
       })
     )
   }
@@ -36,37 +36,37 @@ export class AspectsService {
     return this.http.get<Aspect[]>(this.urlAspects).pipe(
       tap((res) => {
         this.aspects = res
-        console.log('Aspects: ', this.aspects)
+        // console.log('Aspects: ', this.aspects)
       })
     )
   }
 
-  getOne(id: String): Observable<Aspect> {
+  getOne(id: any): Observable<Aspect> {
     let urlTemp = this.urlAspects + id + '/'
     return this.http.get<Aspect>(urlTemp).pipe(
       tap((res) => {
         this.aspect = res
-        console.log('Aspect: ', this.aspect)
+        // console.log('Aspect: ', this.aspect)
       })
     )
   }
 
-  update(id: String, body: Form): Observable<Aspect> {
+  update(id: any, body: any): Observable<Aspect> {
     let urlTemp = this.urlAspects + id + '/'
     return this.http.put<Aspect>(urlTemp, body).pipe(
       tap((res) => {
         this.aspect = res
-        console.log('Aspect', this.aspect)
+        // console.log('Aspect', this.aspect)
       })
     )
   }
 
-  filter(field: String): Observable<Aspect[]> {
+  filter(field: any): Observable<Aspect[]> {
     let urlTemp = this.urlAspects + '?' + field
     return this.http.get<Aspect[]>(urlTemp).pipe(
       tap((res) => {
         this.aspectsFiltered = res
-        console.log('Aspects', this.aspectsFiltered)
+        // console.log('Aspects', this.aspectsFiltered)
       })
     )
   }

@@ -43,7 +43,10 @@
 							<div class="dataTables_length" id="datatable_length">
 								<label>
 									Show
-									<select name="datatable_length" aria-controls="datatable" class="form-control form-control-sm"
+									<select 
+										name="datatable_length" 
+										aria-controls="datatable" 
+										class="form-control form-control-sm custom-select custom-select-sm"
 										(change)="entriesChange($event)">
 										<option value="5" [selected]="tableEntries == 5">5</option>
 										<option value="10" [selected]="tableEntries == 10">10</option>
@@ -91,7 +94,9 @@
 								<span>Building Type</span>
 							</ng-template>
 							<ng-template let-row="row" ngx-datatable-cell-template>
-								{{row.building_type}}
+								<ng-container *ngFor="let houseType of houseTypes">
+									<span *ngIf="row.building_type === houseType.value">{{houseType.text}}</span>
+								</ng-container>
 							</ng-template>
 						</ngx-datatable-column>
 	
@@ -100,16 +105,16 @@
 								<span>Owner</span>
 							</ng-template>
 							<ng-template let-row="row" ngx-datatable-cell-template>
-								{{row.owner_name}}
+								{{row.owner?.full_name}}
 							</ng-template>
 						</ngx-datatable-column>
 	
 						<ngx-datatable-column>
 							<ng-template ngx-datatable-header-template>
-								<span>Area</span>
+								<span>Town</span>
 							</ng-template>
 							<ng-template let-row="row" ngx-datatable-cell-template>
-								{{row.area}}
+								{{row.town}}
 							</ng-template>
 						</ngx-datatable-column>
 			
@@ -148,9 +153,9 @@
 							</ng-template>
 							<ng-template let-row="row" ngx-datatable-cell-template>
 								<button 
-									class="btn btn-icon btn-3 btn-sm btn-primary"
+									class="btn btn-icon btn-3 btn-sm btn-info"
 									type="button"
-									(click)="navigatePage('/admin/houses/detail', row)"
+									(click)="view(row)"
 								>
 									<span class="btn-inner--icon"><i class="fas fa-eye"></i></span>
 									<span class="btn-inner--text">View</span>

@@ -13,6 +13,10 @@ from .models import (
     House
 )
 
+from medias.serializers import (
+    MediaSerializer
+)
+
 from users.serializers import (
     CustomUserSerializer
 )
@@ -26,7 +30,8 @@ class HouseSerializer(serializers.ModelSerializer):
 
 class HouseExtendedSerializer(serializers.ModelSerializer):
     owner = CustomUserSerializer(read_only=True)
-
+    assessment_tax_doc = MediaSerializer(read_only=True)
+    
     class Meta:
         model = House
         fields = '__all__'

@@ -8,17 +8,29 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 from ghg.helpers import PathAndRename
 
-from users.models import CustomUser
+from users.models import (
+    CustomUser
+)
 
 class Ticket(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField(blank=False, max_length=255)
+    id = models.AutoField(primary_key=True, editable=False)
+    name = models.CharField(null=False, max_length=255)
 
     active = models.BooleanField(default=True)
     solved = models.BooleanField(default=False)
 
-    sender = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='ticket_sender')
-    receiver = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='ticket_receiver')
+    sender = models.ForeignKey(
+        CustomUser, 
+        null=True, 
+        on_delete=models.CASCADE, 
+        related_name='ticket_sender'
+    )
+    receiver = models.ForeignKey(
+        CustomUser, 
+        null=True, 
+        on_delete=models.CASCADE, 
+        related_name='ticket_receiver'
+    )
 
     TICKET_TYPE = [
         ('AR', 'Architect'),  
@@ -40,7 +52,7 @@ class Ticket(models.Model):
 class TicketMessage(models.Model):
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, null=True)
 
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.AutoField(primary_key=True, editable=False)
     message = models.TextField(default='NA')
 
     sent = models.BooleanField(default=False)
@@ -51,8 +63,18 @@ class TicketMessage(models.Model):
     received_datetime = models.DateTimeField(null=True)
     read_datetime = models.DateTimeField(null=True)
 
-    sender = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='ticket_message_sender')
-    receiver = models.ForeignKey(CustomUser, null=True, on_delete=models.CASCADE, related_name='ticket_message_receiver')
+    sender = models.ForeignKey(
+        CustomUser, 
+        null=True, 
+        on_delete=models.CASCADE, 
+        related_name='ticket_message_sender'
+    )
+    receiver = models.ForeignKey(
+        CustomUser, 
+        null=True, 
+        on_delete=models.CASCADE, 
+        related_name='ticket_message_receiver'
+    )
 
     def __str__(self):
         return self.ticket

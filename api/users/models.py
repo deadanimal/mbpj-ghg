@@ -14,8 +14,8 @@ class CustomUser(AbstractUser):
     id = models.AutoField(primary_key=True, editable=False)
     full_name = models.CharField(null=True, max_length=255)
 
-    nric_old = models.CharField(null=True, max_length=12)
-    nric_new = models.CharField(null=True, max_length=12)
+    nric_old = models.CharField(null=True, max_length=20)
+    nric_new = models.CharField(null=True, max_length=20)
     nric_doc = models.ForeignKey(
         Media, 
         null=True, 
@@ -23,8 +23,8 @@ class CustomUser(AbstractUser):
         related_name='user_nric'
     )
 
-    mobile = models.CharField(null=True, max_length=12)
-    phone = models.CharField(null=True, max_length=12)
+    mobile = models.CharField(null=True, max_length=20)
+    phone = models.CharField(null=True, max_length=20)
     email = models.CharField(null=True, max_length=50)
     occupation = models.CharField(null=True, max_length=50)
 

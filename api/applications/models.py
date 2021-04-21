@@ -121,6 +121,7 @@ class Application(models.Model):
         on_delete=models.SET_NULL, 
         related_name='application_water_bill_3'
     )
+    rebate_year = models.CharField(max_length=4, default='2021')
 
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)

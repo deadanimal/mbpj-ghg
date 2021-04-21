@@ -19,7 +19,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 from django_filters.rest_framework import DjangoFilterBackend
 
 from django.template.loader import render_to_string
-from weasyprint import HTML
+# from weasyprint import HTML
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 
@@ -114,13 +114,15 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         elif self.action == 'report_application':
             permission_classes = [AllowAny]
         elif self.action == 'list':
-            permission_classes = [IsAuthenticated]
+            permission_classes = [AllowAny]
         else:
-            permission_classes = [IsAuthenticated]
+            permission_classes = [AllowAny]
         
         return [permission() for permission in permission_classes]    
 
     def get_queryset(self):
+        queryset = Application.objects.all()
+        return queryset
         user = self.request.user
         applications = Application.objects.all()
         

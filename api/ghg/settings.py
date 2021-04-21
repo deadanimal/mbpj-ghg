@@ -114,7 +114,7 @@ WSGI_APPLICATION = 'ghg.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',#'django_multitenant.backends.postgresql',#'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql',#'django_multitenant.backends.postgresql',#'django.contrib.gis.db.backends.postgis',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         'DISABLE_SERVER_SIDE_CURSORS': True
     }
@@ -125,7 +125,7 @@ db_from_env = dj_database_url.config(default=config('DATABASE_URL'), conn_max_ag
 DATABASES['default'].update(db_from_env)
 
 if any(db_from_env):
-    DATABASES['default']['ENGINE'] = 'django.contrib.gis.db.backends.postgis'
+    DATABASES['default']['ENGINE'] = 'django.db.backends.postgresql'
 
 
 # Password validation

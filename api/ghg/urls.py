@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 
 from django.conf import settings
 from django.conf.urls import include, url
-from django.contrib.gis import admin
+# from django.contrib.gis import admin
 
 from rest_framework import routers
 from rest_framework_extensions.routers import NestedRouterMixin

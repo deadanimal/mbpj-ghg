@@ -19,7 +19,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 from django_filters.rest_framework import DjangoFilterBackend
 
 from django.template.loader import render_to_string
-# from weasyprint import HTML
+from weasyprint import HTML
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 
@@ -114,15 +114,13 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         elif self.action == 'report_application':
             permission_classes = [AllowAny]
         elif self.action == 'list':
-            permission_classes = [AllowAny]
+            permission_classes = [IsAuthenticated]
         else:
-            permission_classes = [AllowAny]
+            permission_classes = [IsAuthenticated]
         
         return [permission() for permission in permission_classes]    
 
     def get_queryset(self):
-        queryset = Application.objects.all()
-        return queryset
         user = self.request.user
         applications = Application.objects.all()
         
@@ -1087,6 +1085,26 @@ class ApplicationEvaluationScheduleViewSet(NestedViewSetMixin, viewsets.ModelVie
                 )
             else:
                 evaluations = evaluations.all()
+
+        serializer_class = ApplicationEvaluationScheduleExtendedSerializer(evaluations, many=True)
+        
+        return Response(serializer_class.data)
+    
+    @action(methods=['GET'], detail=False)
+    def pending_evaluation(self, request, *args, **kwargs):
+        user = request.user
+        evaluations = ApplicationEvaluationSchedule.objects.all()
+
+        if user.is_anonymous:
+            evaluations = evaluations.none()
+        else:
+            if user.user_type == 'EV':
+                evaluations = evaluations.filter(
+                    application__evaluator_nominated=user,
+                    application__status='EV'
+                )
+            else:
+                pass
 
         serializer_class = ApplicationEvaluationScheduleExtendedSerializer(evaluations, many=True)
         

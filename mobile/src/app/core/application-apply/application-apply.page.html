@@ -1,0 +1,322 @@
+<ion-header [translucent]="true" mode="ios" class="ion-no-border">
+	<ion-toolbar mode="ios">
+		<ion-buttons slot="start">
+			<ion-back-button
+				text=""
+				defaultHref="/application/select-house"
+				routerLink="/application/select-house"
+				routerDirection="back"
+				text=""
+			>
+			</ion-back-button>
+    </ion-buttons>
+	<ion-title>Apply eRebate</ion-title>
+	<!-- <ion-button
+		slot="end"
+		color="warning"
+		size="small"
+		mode="ios"
+		fill="outline"
+		(click)="draft()"
+	>
+		Save as draft
+	</ion-button> -->
+
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-list class="ion-no-margin list-core" mode="ios">
+		<form [formGroup]="applicationForm">
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">No. of lamp in house</ion-label>
+				<ion-input placeholder="1" mode="ios" formControlName="total_lamp"></ion-input>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">No. of LED lamp in house</ion-label>
+				<ion-input placeholder="1" mode="ios" formControlName="total_led"></ion-input>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">No. of car(s)</ion-label>
+				<ion-select placeholder="1" mode="ios" formControlName="vehicle_car">
+					<ion-select-option *ngFor="let vehicle of vehicleOptions" value="{{vehicle.value}}">{{vehicle.value}}</ion-select-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">No. of motorcycle(s)</ion-label>
+				<ion-select placeholder="1" mode="ios" formControlName="vehicle_motorcycle">
+					<ion-select-option *ngFor="let vehicle of vehicleOptions" value="{{vehicle.value}}">{{vehicle.value}}</ion-select-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">No. of bicycle(s)</ion-label>
+				<ion-select placeholder="1" mode="ios" formControlName="vehicle_bicycle">
+					<ion-select-option *ngFor="let vehicle of vehicleOptions" value="{{vehicle.value}}">{{vehicle.value}}</ion-select-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">No. of other vehicle(s)</ion-label>
+				<ion-select placeholder="1" mode="ios" formControlName="vehicle_other">
+					<ion-select-option *ngFor="let vehicle of vehicleOptions" value="{{vehicle.value}}">{{vehicle.value}}</ion-select-option>
+				</ion-select>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill month #1</ion-label>
+				<ion-datetime class="input-append"  placeholder="March 2020" mode="ios" displayFormat="MMMM YYYY" formControlName="electricity_bill_1_month"></ion-datetime>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill usage #1</ion-label>
+				<div class="input-group">
+					<ion-input class="input-append" placeholder="1" mode="ios" formControlName="electricity_bill_1_usage">
+					</ion-input>
+					<div class="input-group-append">
+						<span>kWh</span>
+					</div>
+				</div>
+			</ion-item>
+
+			<ion-item  class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill document #1</ion-label>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					(click)="openUploadSheet(1)"
+					*ngIf="!isUploading1"
+				> 
+					Upload
+				</ion-button>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					*ngIf="isUploading1"
+				> 
+					<ion-spinner name="bubbles"></ion-spinner>
+				</ion-button>
+				<ion-img [src]="imageSelectedPreview1" *ngIf="imageSelectedPreview1"></ion-img>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill month #2</ion-label>
+				<ion-datetime  placeholder="March 2020" mode="ios" displayFormat="MMMM YYYY" formControlName="electricity_bill_2_month"></ion-datetime>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill usage #2</ion-label>
+				<div class="input-group">
+					<ion-input class="electricity input-append" placeholder="1" mode="ios" formControlName="electricity_bill_2_usage">
+					</ion-input>
+					<div class="input-group-append">
+						<span>kWh</span>
+					</div>
+				</div>
+			</ion-item>
+
+			<ion-item  class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill document #2</ion-label>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					(click)="openUploadSheet(2)"
+					*ngIf="!isUploading2"
+				> 
+					Upload
+				</ion-button>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					*ngIf="isUploading2"
+				> 
+					<ion-spinner name="bubbles"></ion-spinner>
+				</ion-button>
+				<ion-img [src]="imageSelectedPreview2" *ngIf="imageSelectedPreview2"></ion-img>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill month #3</ion-label>
+				<ion-datetime  placeholder="March 2020" mode="ios" displayFormat="MMMM YYYY" formControlName="electricity_bill_3_month"></ion-datetime>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill usage #3</ion-label>
+				<div class="input-group">
+					<ion-input class="electricity input-append" placeholder="1" mode="ios" formControlName="electricity_bill_3_usage">
+					</ion-input>
+					<div class="input-group-append">
+						<span>kWh</span>
+					</div>
+				</div>
+			</ion-item>
+
+			<ion-item  class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Electricity bill document #3</ion-label>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					(click)="openUploadSheet(3)"
+					*ngIf="!isUploading3"
+				> 
+					Upload
+				</ion-button>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					*ngIf="isUploading3"
+				> 
+					<ion-spinner name="bubbles"></ion-spinner>
+				</ion-button>
+				<ion-img [src]="imageSelectedPreview3" *ngIf="imageSelectedPreview3"></ion-img>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill month #1</ion-label>
+				<ion-datetime  placeholder="March 2020" mode="ios" displayFormat="MMMM YYYY" formControlName="water_bill_1_month"></ion-datetime>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill usage #1</ion-label>
+				<div class="input-group">
+					<ion-input class="electricity input-append" placeholder="1" mode="ios" formControlName="water_bill_1_usage">
+					</ion-input>
+					<div class="input-group-append">
+						<span>m<sup>3</sup></span>
+					</div>
+				</div>
+			</ion-item>
+
+			<ion-item  class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill document #1</ion-label>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					(click)="openUploadSheet(4)"
+					*ngIf="!isUploading4"
+				> 
+					Upload
+				</ion-button>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					*ngIf="isUploading4"
+				> 
+					<ion-spinner name="bubbles"></ion-spinner>
+				</ion-button>
+				<ion-img [src]="imageSelectedPreview4" *ngIf="imageSelectedPreview4"></ion-img>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill month #2</ion-label>
+				<ion-datetime  placeholder="March 2020" mode="ios" displayFormat="MMMM YYYY" formControlName="water_bill_2_month"></ion-datetime>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill usage #2</ion-label>
+				<div class="input-group">
+					<ion-input class="electricity input-append" placeholder="1" mode="ios" formControlName="water_bill_2_usage">
+					</ion-input>
+					<div class="input-group-append">
+						<span>m<sup>3</sup></span>
+					</div>
+				</div>
+			</ion-item>
+
+			<ion-item  class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill document #2</ion-label>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					(click)="openUploadSheet(5)"
+					*ngIf="!isUploading5"
+				> 
+					Upload
+				</ion-button>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					*ngIf="isUploading5"
+				> 
+					<ion-spinner name="bubbles"></ion-spinner>
+				</ion-button>
+				<ion-img [src]="imageSelectedPreview5" *ngIf="imageSelectedPreview5"></ion-img>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill month #3</ion-label>
+				<ion-datetime  placeholder="March 2020" mode="ios" displayFormat="MMMM YYYY" formControlName="water_bill_3_month"></ion-datetime>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill usage #3</ion-label>
+				<div class="input-group">
+					<ion-input class="electricity input-append" placeholder="1" mode="ios" formControlName="water_bill_3_usage">
+					</ion-input>
+					<div class="input-group-append">
+						<span>m<sup>3</sup></span>
+					</div>
+				</div>
+			</ion-item>
+
+			<ion-item  class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Water bill document #3</ion-label>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					(click)="openUploadSheet(6)"
+					*ngIf="!isUploading6"
+				> 
+					Upload
+				</ion-button>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					*ngIf="isUploading6"
+				> 
+					<ion-spinner name="bubbles"></ion-spinner>
+				</ion-button>
+				<ion-img [src]="imageSelectedPreview6" *ngIf="imageSelectedPreview6"></ion-img>
+			</ion-item>
+		</form>
+	</ion-list>
+</ion-content>
+
+<ion-footer class="ion-no-border ion-padding" mode="ios">
+	<ion-button 
+		*ngIf="!isLoading" 
+		expand="block" 
+		mode="ios" 
+		shape="round" 
+		color="primary" 
+		type="submit"
+		[disabled]="!applicationForm.valid"
+		(click)="submit()"
+	>
+		Submit
+	</ion-button>
+	<ion-button 
+		*ngIf="isLoading" 
+		expand="block" 
+		mode="ios"
+		shape="round"
+		color="primary"
+	>
+		<ion-spinner name="bubbles"></ion-spinner>
+	</ion-button>
+</ion-footer>

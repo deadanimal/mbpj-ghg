@@ -1,0 +1,205 @@
+<ion-header [translucent]="true" mode="ios" class="ion-no-border">
+	<ion-toolbar mode="ios">
+		<ion-buttons slot="start">
+			<ion-back-button 
+				defaultHref="/core/my-home"
+				routerLink="/core/my-home"
+				routerDirection="back"
+				text=""
+			>
+			</ion-back-button>
+		</ion-buttons>
+		<ion-title>Register new home</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+	<ion-list class="ion-no-margin list-core" mode="ios">
+		<form 
+			class="form"
+			[formGroup]="houseForm"
+		>
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Address 1 <span class="error-text">*</span></ion-label>
+				<ion-textarea placeholder="No. 23, Jalan PJU 9/1" mode="ios" formControlName="address_1" type="text" maxlength="100"></ion-textarea>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.address_1">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('address_1').hasError(message.type) && (houseForm.get('address_1').dirty || houseForm.get('address_1').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Address 2</ion-label>
+				<ion-textarea placeholder="No. 23, Jalan PJU 9/1" mode="ios" formControlName="address_2" type="text" maxlength="100"></ion-textarea>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Address 3</ion-label>
+				<ion-textarea placeholder="No. 23, Jalan PJU 9/1" mode="ios" formControlName="address_3" type="text" maxlength="100"></ion-textarea>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Postcode <span class="error-text">*</span></ion-label>
+				<ion-input placeholder="40150" mode="ios" formControlName="postcode" type="number" maxLength="5"></ion-input>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.postcode">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('postcode').hasError(message.type) && (houseForm.get('postcode').dirty || houseForm.get('postcode').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Town <span class="error-text">*</span></ion-label>
+				<ion-select placeholder="Damansara Perdana" mode="ios" formControlName="town">
+					<ion-select-option *ngFor="let town of townOptions" value="{{town.value}}">{{town.value}}</ion-select-option>
+				</ion-select>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.town">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('town').hasError(message.type) && (houseForm.get('town').dirty || houseForm.get('town').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Building Type <span class="error-text">*</span></ion-label>
+				<ion-select placeholder="Condominium" mode="ios" formControlName="building_type">
+					<ion-select-option *ngFor="let house of houseOptions" value="{{house.value}}">{{house.text}}</ion-select-option>
+				</ion-select>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.building_type">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('building_type').hasError(message.type) && (houseForm.get('building_type').dirty || houseForm.get('building_type').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Assessment Tax Account No. <span class="error-text">*</span></ion-label>
+				<ion-input placeholder="T10918210010010" mode="ios" formControlName="assessment_tax_account" type="text">
+				</ion-input>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.assessment_tax_account">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('assessment_tax_account').hasError(message.type) && (houseForm.get('assessment_tax_account').dirty || houseForm.get('assessment_tax_account').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Staying Since <span class="error-text">*</span></ion-label>
+				<ion-datetime placeholder="March 2010" mode="ios" formControlName="staying_since" displayFormat="MMMM YYYY">
+				</ion-datetime>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.staying_since">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('staying_since').hasError(message.type) && (houseForm.get('staying_since').dirty || houseForm.get('staying_since').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">No. of Occupants <span class="error-text">*</span></ion-label>
+				<ion-select placeholder="1" mode="ios" formControlName="occupants">
+					<ion-select-option *ngFor="let occupant of occupantOptions" value="{{occupant.value}}">{{occupant.value}}</ion-select-option>
+				</ion-select>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.occupants">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('occupants').hasError(message.type) && (houseForm.get('occupants').dirty || houseForm.get('occupants').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item  class="item-form" lines="none">
+				<ion-label position="stacked" mode="ios">Assessment Tax Document <span class="error-text">*</span></ion-label>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					(click)="openUploadSheet()"
+					*ngIf="!isUploading"
+				> 
+					Upload
+				</ion-button>
+				<ion-button 
+					mode="ios" 
+					color="primary" 
+					expand="block" 
+					*ngIf="isUploading"
+				> 
+					<ion-spinner name="bubbles"></ion-spinner>
+				</ion-button>
+				<div class="validation-errors">
+					<ng-container *ngFor="let message of houseFormMessages.assessment_tax_doc">
+						<div 
+							class="error-message"
+							*ngIf="houseForm.get('assessment_tax_doc').hasError(message.type) && (houseForm.get('assessment_tax_doc').dirty || houseForm.get('assessment_tax_doc').touched)"
+						>
+							{{ message.message }}
+						</div>
+					</ng-container>
+				</div>
+			</ion-item>
+
+			<ion-item class="item-form" lines="none" *ngIf="imageSelectedPreview">
+				<ion-img [src]="imageSelectedPreview"></ion-img>
+			</ion-item>
+		</form>
+	</ion-list>
+</ion-content>
+
+<ion-footer class="ion-no-border ion-padding" mode="ios">
+	<ion-button 
+		*ngIf="!isLoading" 
+		expand="block" 
+		mode="ios" 
+		shape="round" 
+		color="primary"
+		type="submit"
+		(click)="submit()"
+		[disabled]="!houseForm.valid"
+	>
+		Register
+	</ion-button>
+	<ion-button 
+		*ngIf="isLoading" 
+		expand="block" 
+		mode="ios"
+		shape="round"
+		color="primary"
+	>
+		<ion-spinner name="bubbles"></ion-spinner>
+	</ion-button>
+</ion-footer>

@@ -1,0 +1,122 @@
+<ion-header mode="ios" class="ion-no-border">
+	<ion-toolbar mode="ios">
+		<ion-buttons slot="start">
+			<ion-back-button 
+				defaultHref="/auth/login"
+				routerLink="/auth/login"
+				routerDirection="back"
+				text=""
+			>
+			</ion-back-button>
+		</ion-buttons>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+	<div class="main-content">
+		<ion-grid>
+			<ion-row class="ion-justify-content-center">
+				<ion-col>
+					<img [src]="imgMBPJ">
+				</ion-col>
+				<ion-col>
+					<img [src]="imgSmartPJ">
+				</ion-col>
+			</ion-row>
+			<ion-row>
+				<ion-col>
+					<form
+						class="form"
+						[formGroup]="registerForm"
+					>
+						<p class="ion-text-center ion-padding-bottom">Please enter your data</p>
+						<ion-item lines="none" class="ion-no-padding ion-no-margin">
+							<ion-label position="stacked">NRIC / Passport</ion-label>
+							<ion-input type="text" formControlName="username" placeholder="900520115069 / A123456"></ion-input>
+						</ion-item>
+		
+						<div class="validation-errors">
+							<ng-container *ngFor="let message of registerFormMessages.username">
+								<div 
+									class="error-message"
+									*ngIf="registerForm.get('username').hasError(message.type) && (registerForm.get('username').dirty || registerForm.get('username').touched)"
+								>
+									{{ message.message }}
+								</div>
+							</ng-container>
+						</div>
+		
+						<ion-item lines="none" class="ion-no-padding ion-no-margin">
+							<ion-label position="stacked">Password</ion-label>
+							<ion-input type="password" formControlName="password1" placeholder="Password"></ion-input>
+						</ion-item>
+		
+						<div class="validation-errors">
+							<ng-container *ngFor="let message of registerFormMessages.password1">
+								<div 
+									class="error-message"
+									*ngIf="registerForm.get('password1').hasError(message.type) && (registerForm.get('password1').dirty || registerForm.get('password1').touched)"
+								>
+									{{ message.message }}
+								</div>
+							</ng-container>
+						</div>
+		
+						<ion-item lines="none" class="ion-no-padding ion-no-margin">
+							<ion-label position="stacked">Confirm Password</ion-label>
+							<ion-input type="password" formControlName="password2" placeholder="Password"></ion-input>
+						</ion-item>
+		
+						<div class="validation-errors">
+							<ng-container *ngFor="let message of registerFormMessages.password2">
+								<div 
+									class="error-message"
+									*ngIf="registerForm.get('password2').hasError(message.type) && (registerForm.get('password2').dirty || registerForm.get('password2').touched)">
+									{{ message.message }}
+								</div>
+							</ng-container>
+						</div>
+		
+						<div class="ion-text-center">
+							<ion-button 
+								type="submit"
+								[disabled]="!registerForm.valid"
+								*ngIf="!isLoading"
+								shape="round"
+								color="primary"
+								mode="ios"
+								(click)="register()"
+							>
+								Register
+							</ion-button>
+							<ion-button 
+								type="submit"
+								disabled
+								*ngIf="isLoading"
+								shape="round"
+								color="primary"
+								mode="ios"
+							>
+								<ion-spinner name="bubbles"></ion-spinner>
+							</ion-button>
+							<p class="go-to-login ion-text-center">Already have an account? <a (click)="navigateLoginPage()">Try to Log In.</a>
+							</p>
+						</div>
+					</form>
+				</ion-col>
+			</ion-row>
+
+			<ion-row>
+				<ion-col>
+					<p class="copyright ion-text-center">Hak cipta terpelihara Majlis Bandaraya Petaling Jaya</p>
+				</ion-col>
+			</ion-row>
+		</ion-grid>
+	</div>
+</ion-content>
+
+<!-- <ion-footer class="ion-padding ion-no-border" mode="ios">
+	<ion-grid>
+		
+	</ion-grid>
+</ion-footer> -->

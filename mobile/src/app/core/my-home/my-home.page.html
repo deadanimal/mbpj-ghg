@@ -1,0 +1,53 @@
+<ion-header [translucent]="true" mode="ios" class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>MyHome</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+
+<ion-content [fullscreen]="true">
+  <ion-list mode="ios" class="ion-no-margin list-core">
+    <ion-list-header mode="ios">
+      <h3>Registered Homes</h3>
+    </ion-list-header>
+
+    <ion-card mode="ios" [hidden]="isMyHomesEmpty" *ngFor="let house of houses">
+      <ion-card-content class="ion-no-padding ion-padding-start ion-padding-end">
+        <ion-item class="ion-no-padding" lines="none">
+          <ion-icon name="home-outline" slot="start" color="primary"></ion-icon>
+          <ion-label class="ion-text-wrap">
+            <h3>{{house.assessment_tax_account}}</h3>
+            <h4 *ngIf="house.building_type == 'CD'">Condominium</h4>
+            <h4 *ngIf="house.building_type == 'FL'">Flat</h4>
+            <h4 *ngIf="house.building_type == 'TO'">Townhouse</h4>
+            <h4 *ngIf="house.building_type == 'TE'">Terrace House</h4>
+            <h4 *ngIf="house.building_type == 'BS'">Bungalow / Semidetached</h4>
+            <h4 *ngIf="house.building_type == 'AS'">Apartment / Service Apartment</h4>
+            <h4 *ngIf="house.building_type == 'OT'">Other</h4>
+            <p>
+              {{house.address_1}}, 
+              <span *ngIf="house.address_2">{{house.address_2}},</span> 
+              <span *ngIf="house.address_3">{{house.address_3}},</span> 
+              {{house.postcode}} {{house.town}}
+            </p>
+          </ion-label>
+          <ion-button size="small" shape="round" slot="end" (click)="navigateDetail(house)">View</ion-button>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <div [hidden]="!isMyHomesEmpty">
+      <img [src]="iconError" class="hint-img">
+      <p class="hint-text">No home registered yet, please register using the button below</p>
+    </div>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed" (click)="addHome('/my-home/add/')">
+    <ion-fab-button>
+      <ion-icon name="add-circle-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

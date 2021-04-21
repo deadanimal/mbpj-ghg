@@ -1,0 +1,95 @@
+<ion-header [translucent]="true" mode="ios" class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Home</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-grid mode="ios" class="ion-no-margin">
+    <ion-row mode="ios" class="ion-no-margin" [hidden]="!isApplicant">
+      <ion-col mode="ios" class="ion-no-padding">
+        <ion-card mode="ios" class="ion-margin" (click)="navigatePage('/core/my-home')">
+          <img [src]="imgMyHome">
+          <ion-card-content class="ion-no-padding">
+            <h5 class="ion-text-center ion-no-margin ion-padding">MyHome</h5>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col mode="ios" class="ion-no-padding">
+        <ion-card mode="ios" class="ion-margin" (click)="navigatePage('/core/application/walkthrough')">
+          <img [src]="imgApply">
+          <ion-card-content class="ion-no-padding">
+            <h5 class="ion-text-center ion-no-margin ion-padding">Apply eRebate</h5>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row mode="ios" class="ion-no-margin" [hidden]="isApplicant">
+      <ion-col mode="ios" class="ion-no-padding">
+        <ion-card mode="ios" class="ion-margin" (click)="navigatePage('/core/my-home')">
+          <img [src]="imgMyHome">
+          <ion-card-content class="ion-no-padding">
+            <h5 class="ion-text-center ion-no-margin ion-padding">Schedule</h5>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col mode="ios" class="ion-no-padding">
+        <ion-card mode="ios" class="ion-margin" (click)="navigatePage('/core/application/walkthrough')">
+          <img [src]="imgApply">
+          <ion-card-content class="ion-no-padding">
+            <h5 class="ion-text-center ion-no-margin ion-padding">Helpdesk</h5>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+
+    <ion-row mode="ios" class="ion-no-margin">
+      <ion-col mode="ios" class="ion-no-padding">
+        <ion-card mode="ios" class="ion-margin" (click)="navigatePage('/core/applications')">
+          <img [src]="imgHistory">
+          <ion-card-content class="ion-no-padding">
+            <h5 class="ion-text-center ion-no-margin ion-padding">History</h5>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+
+      <ion-col mode="ios" class="ion-no-padding">
+        <ion-card mode="ios" class="ion-margin" (click)="navigatePage('/core/notifications')">
+          <img [src]="imgNotification">
+          <ion-card-content class="ion-no-padding">
+            <h5 class="ion-text-center ion-no-margin ion-padding">Notifications</h5>
+          </ion-card-content>
+        </ion-card>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+
+  <ion-list mode="ios" class="ion-no-margin list-core" [hidden]="!isApplicant">
+    <ion-list-header mode="ios">
+      <h3>Status</h3>
+    </ion-list-header>
+
+    <ion-card mode="ios" [hidden]="isApplicationEmpty">
+      <ion-card-content>
+        <ion-item class="ion-no-padding" lines="none">
+          <ion-label>
+            <h2>{{id_serial}}</h2>
+            <p>Submitted on {{created_at}}</p>
+          </ion-label>
+          <ion-button size="small" shape="round" slot="end">View</ion-button>
+        </ion-item>
+      </ion-card-content>
+    </ion-card>
+
+    <div [hidden]="!isApplicationEmpty">
+      <img [src]="iconError" class="hint-img">
+      <p class="hint-text">No application submitted yet</p>
+    </div>
+  </ion-list>
+</ion-content>

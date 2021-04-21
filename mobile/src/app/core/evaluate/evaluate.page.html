@@ -1,0 +1,829 @@
+<ion-header [translucent]="true" mode="ios" class="ion-no-border">
+  <ion-toolbar mode="ios">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>Applications</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen>
+  <ion-list mode="ios" class="ion-no-margin list-core">
+    <ion-grid class="settings" *ngIf="!isConfirm">
+
+      <div class="section-title">
+        <h2>Assessment</h2>
+      </div>
+      <ion-row>
+        <ion-col>
+          <ion-slides pager="true" [options]="slidesOptions">
+
+            <ion-slide>
+              <ion-card>
+                <div class="section-title">
+                  <p>Energy</p>
+                </div>
+
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Solar water heater
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="a1Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+                    <img src="assets/img/custom/water-heater.jpg">
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Solar panel / Other renewable energy source
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="a2Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        70 % > = LED light / light saving light
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="a3Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        5 star electrical appliances except fan
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="a4Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Roof insulation
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="a5Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Energy usage < 112 kW / hour / capita / month </mat-panel-title>
+                          <mat-panel-description>
+                            25%
+                          </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="a6Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                </mat-accordion>
+
+              </ion-card>
+            </ion-slide>
+
+            <ion-slide>
+              <ion-card>
+                <div class="section-title">
+                  <p>Water</p>
+                </div>
+
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Rainwater collection system
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="b1Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Waste water recycle
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="b2Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Water usage < 202 litre / capita / day </mat-panel-title>
+                          <mat-panel-description>
+                            25%
+                          </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="b3Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Water saving tools
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="b4Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Flush box < 6 litre </mat-panel-title>
+                          <mat-panel-description>
+                            20%
+                          </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <form [formGroup]="b5Form">
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                        <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                        <ion-input type="number" formControlName="system" placeholder="Type system marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                        <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here">
+                        </ion-input>
+                      </ion-item>
+                      <ion-item lines="none">
+                        <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                        <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      </ion-item>
+                    </form>
+
+                  </mat-expansion-panel>
+
+                </mat-accordion>
+              </ion-card>
+            </ion-slide>
+
+            <ion-slide>
+              <ion-card>
+                <div class="section-title">
+                  <p>Waste</p>
+                </div>
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Compose foodwaste
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        25%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Waste recycle
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        25%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Reuse
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        25%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Reduce
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        25%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                </mat-accordion>
+              </ion-card>
+            </ion-slide>
+
+            <ion-slide>
+              <ion-card>
+                <div class="section-title">
+                  <p>Transportation</p>
+                </div>
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Own & use hybrid / electric / NGV or electric motorcycle for work / activity
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Using public transportation / walking / riding bicycle to work & other activites
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                </mat-accordion>
+              </ion-card>
+            </ion-slide>
+
+            <ion-slide>
+              <ion-card>
+                <div class="section-title">
+                  <p>Biodiversity</p>
+                </div>
+                <mat-accordion>
+                  <mat-expansion-panel>
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        >= 50% green house area landscape (landed property)
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Significant planting (terrace house)
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                  <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+                    <mat-expansion-panel-header collapsedHeight="*" expandedHeight="*">
+                      <mat-panel-title class="text-left">
+                        Perimeter planting
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        20%
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" placeholder="Type system marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-input type="text" placeholder="Type remarks"></ion-input>
+                    </ion-item>
+
+                  </mat-expansion-panel>
+
+                </mat-accordion>
+              </ion-card>
+            </ion-slide>
+          </ion-slides>
+
+          <ion-item lines="none">
+            <ion-button class="btn-green-lg mt-1" (click)="previewEvaluation()">Submit</ion-button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+
+    <ion-grid class="settings" *ngIf="isConfirm">
+      <div class="section-title">
+        <h2>Please confirm marks below</h2>
+        <div class="btn-back-item">
+          <div class="btn-back ion-activatable">
+            <button (click)="backToEvaluation()">
+              <ion-ripple-effect></ion-ripple-effect> Back to evaluation
+            </button>
+          </div>
+        </div>
+      </div>
+      <ion-row>
+        <ion-col>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">A1. Solar water heater</ion-label>
+            <ion-text>{{totalA1}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">A2. Solar panel / Other renewable energy source</ion-label>
+            <ion-text>{{totalA2}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">A3. 70 % > = LED light / light saving light</ion-label>
+            <ion-text>{{totalA3}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">A4. 5 star electrical appliances except fan</ion-label>
+            <ion-text>{{totalA4}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">A5. Roof insulation</ion-label>
+            <ion-text>{{totalA5}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">A6. Energy usage < 112 kW/hour/capita/month</ion-label>
+                <ion-text>{{totalA6}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">B1. Rainwater collection system</ion-label>
+            <ion-text>{{totalB1}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">B2. Waste water recycle</ion-label>
+            <ion-text>{{totalB2}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">B3. Water saving tools</ion-label>
+            <ion-text>{{totalB3}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">B4. Water saving tools</ion-label>
+            <ion-text>{{totalB4}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">B5. Flush box < 6 litre</ion-label>
+                <ion-text>{{totalB5}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">C1. Compose foodwaste</ion-label>
+            <ion-text>{{totalC1}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">C2. Waste recycle</ion-label>
+            <ion-text>{{totalC2}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">C3. Waste recycle</ion-label>
+            <ion-text>{{totalC3}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">C4. Reduce</ion-label>
+            <ion-text>{{totalC4}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">D1. Own & use hybrid/electric/NGV or electric motorcycle for work/acitivity
+            </ion-label>
+            <ion-text>{{totalD1}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">D2. Using public transportation / walking / riding bicycle to work & other
+              activites</ion-label>
+            <ion-text>{{totalD2}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">E1. >= 50% green house area landscape (landed property)</ion-label>
+            <ion-text>{{totalE1}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">E2. Significant planting (terrace house)</ion-label>
+            <ion-text>{{totalE2}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap">E3. Perimeter planting</ion-label>
+            <ion-text>{{totalE3}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap ion-text-bold">Total applied by applicant</ion-label>
+            <ion-text class="ion-text-bold">100%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap ion-text-bold">Total evaluated</ion-label>
+            <ion-text class="ion-text-bold">{{totalAll | number}}%</ion-text>
+          </ion-item>
+          <ion-item class="ion-text-wrap">
+            <ion-label class="ion-text-wrap" position="stacked">Remarks</ion-label>
+            <ion-input placeholder="Please enter remarks"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-button class="btn-green-lg mt-1" (click)="doSubmit()">Confirm & submit</ion-button>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </ion-list>
+</ion-content>

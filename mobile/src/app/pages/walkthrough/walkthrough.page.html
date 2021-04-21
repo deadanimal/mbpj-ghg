@@ -1,0 +1,47 @@
+<ion-content class="ion-padding" fullscreen>
+	<ion-slides #introSlides [options]="sliderConfig" (ionSlideDidChange)="slideDidChange()">
+		<ion-slide *ngFor="let slide of slides">
+			<img [src]="slide.image">
+			<h1 class="ion-padding-end ion-padding-start">{{slide.text}}</h1>
+		</ion-slide>
+	</ion-slides>
+</ion-content>
+
+<ion-footer class="ion-padding ion-no-border" mode="ios">
+	<ion-grid>
+		<ion-row>
+			<ion-col>
+				<ion-button 
+					*ngIf="!endReached"
+					class="round"
+					fill="clear"
+					shape="round"
+					(click)="navigatePage('/auth/login')"
+					color="primary"
+				>
+					Skip
+				</ion-button>
+			</ion-col>
+			<ion-col class="ion-text-right">
+				<ion-button
+					*ngIf="!endReached"
+					class="round"
+					shape="round"
+					color="primary"
+					(click)="next()"
+				>
+					Next
+				</ion-button>
+				<ion-button
+					*ngIf="endReached"
+					class="round"
+					shape="round"
+					color="primary"
+					(click)="navigatePage('/auth/login')"
+				>
+					Enter
+				</ion-button>
+			</ion-col>
+		</ion-row>
+	</ion-grid>
+</ion-footer>

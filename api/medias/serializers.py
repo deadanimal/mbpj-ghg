@@ -15,7 +15,13 @@ from .models import (
 )
 
 class MediaSerializer(serializers.ModelSerializer):
+    document = Base64ImageField()
 
     class Meta:
         model = Media
         fields = '__all__'
+
+    def create(self, validated_data):
+        document = validated_data.pop('document')
+
+        return Media.objects.create(document=document)

@@ -43,15 +43,7 @@ export class AuthService {
   register(body: Form): Observable<any>{
     return this.http.post<any>(this.urlRegister, body).pipe(
       tap((res) => {
-        console.log('Registration: ', res)
-        let urlUpdateUser = this.urlUser + res.user.pk + '/'
-        let bodyUpdateUser = {
-          new_nric: res.user.username
-        }
-        return this.http.put<any>(urlUpdateUser, bodyUpdateUser).subscribe(
-          (res) => {console.log('Update registered user: ', res)},
-          (err) => {console.log('Error update registered user: ', err)}
-        )
+        // console.log('Registration: ', res)
       })
     )
   }

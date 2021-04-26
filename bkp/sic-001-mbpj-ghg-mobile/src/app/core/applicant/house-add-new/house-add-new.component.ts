@@ -253,4 +253,7 @@ export class HouseAddNewComponent implements OnInit {
     });
   }
 
+  checkFormGroup() {
+    console.log("checkValue this.houseForm", this.houseForm);
+  }
 }

@@ -48,13 +48,13 @@ export class LoginApplicantComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: new FormControl('', Validators.compose([
+      username: new FormControl('931006055518', Validators.compose([
         Validators.required,
         Validators.minLength(9),
         Validators.maxLength(12),
         // Validators.pattern('^[0-9]+$')
       ])),
-      password: new FormControl('', Validators.compose([
+      password: new FormControl('PabloEscobar', Validators.compose([
         Validators.required,
         Validators.minLength(8)
       ]))

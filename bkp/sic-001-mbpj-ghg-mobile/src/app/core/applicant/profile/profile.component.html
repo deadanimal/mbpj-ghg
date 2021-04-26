@@ -64,12 +64,12 @@
               clearInput 
               type="text"
               [value]="user.occupation"
-              
+              formControlName="occupation"
               placeholder="{{'PROFILE.occupationPlaceholder' | translate}}"
             >
             </ion-input>
           </ion-item>
-          <!--formControlName="occupation"-->
+
           <ion-item mode="ios">
             <ion-label position="stacked">{{'PROFILE.tel' | translate}}</ion-label>
             <ion-input 

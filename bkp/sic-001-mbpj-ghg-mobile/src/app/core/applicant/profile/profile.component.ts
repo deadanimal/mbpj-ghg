@@ -210,7 +210,7 @@ export class ProfileComponent implements OnInit {
       }
     }
     if (!this.userForm.value.nric_picture) {
-      if (this.user.occupation) {
+      if (this.user.nric_picture) {
         this.userForm.value.nric_picture = this.user.nric_picture
       }
       else {
@@ -218,7 +218,7 @@ export class ProfileComponent implements OnInit {
       }
     }
     if (!this.userForm.value.profile_picture){
-      if (this.user.occupation) {
+      if (this.user.profile_picture) {
         this.userForm.value.profile_picture = this.user.profile_picture
       }
       else {

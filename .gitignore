@@ -17,8 +17,8 @@ misc
 .DS_Store
 
 # Misc
-bkp
-**/bkp
+# bkp
+# **/bkp
 server
 
 # Ionic

@@ -1,0 +1,64 @@
+<ngx-loading-bar></ngx-loading-bar>
+<div class="main-content auth-content">
+    <div class="container py-lg-8">
+        <div class="row justify-content-center">
+            <div class="col-lg-5 col-md-7">
+                <div class="card bg-secondary border-0 mb-0">
+                    <div class="card-body px-lg-5 py-lg-5">
+                        <div class="client-logo-area">
+							<img class="client-logo" src="assets/img/logo/mbpj-logo.png">
+							<h6 class="h2 text-default d-inline-block mt-3 mb-0">
+								Skim Rebat Cukai Taksiran Rumah Mesra Alam Hijau Petaling Jaya
+							</h6>
+						</div>
+                        <form [formGroup]="resetForm">
+                            <div class="form-group mb-3" [ngClass]="{ focused: focusEmail === true }">
+                                <div class="input-group input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text bg-info">
+                                            <i class="ni ni-email-83 text-white"></i>
+                                        </span>
+                                    </div>
+                                    <input 
+                                        class="form-control text-dark"
+                                        placeholder="Email" 
+                                        type="email"
+                                        formControlName="email"
+                                        (focus)="focusEmail = true" 
+                                        (blur)="focusEmail = false"
+                                    />
+                                </div>
+                                <div class="validation-errors">
+									<ng-container *ngFor="let message of resetFormMessage.email">
+										<div class="error-message"
+										  *ngIf="resetForm.get('email').hasError(message.type) && (resetForm.get('email').dirty || resetForm.get('email').touched)">
+										  {{ message.message }}
+										</div>
+									</ng-container>
+								</div>
+                            </div>
+                            <div class="text-center">
+                                <button 
+                                    type="button"
+                                    [disabled]="!resetForm.valid"
+                                    class="btn btn-info mt-4 mb-2" 
+                                    (click)="reset()"
+                                >
+                                    Reset password
+                                </button>
+                            </div>
+                        </form>
+                        <div class="row mt-1">
+                            <div class="col text-center">
+                                <button class="btn btn-icon btn-3 btn-outline-info" type="button" [routerLink]="['/auth/login']">
+                                    <span class="btn-inner--icon"><i class="fas fa-angle-left"></i></span>
+                                    <span class="btn-inner--text">Back to login</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

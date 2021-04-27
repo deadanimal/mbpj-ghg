@@ -1,0 +1,82 @@
+import { Component, OnInit } from '@angular/core';
+import { ApplicationsService } from 'src/app/shared/services/applications/applications.service';
+import { Application } from 'src/app/shared/services/applications/applications.model';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { AlertController } from '@ionic/angular';
+import { Router } from '@angular/router';
+import * as moment from 'moment';
+
+@Component({
+  selector: 'app-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
+})
+export class HomeComponent implements OnInit {
+
+  // Check
+  isGotApplication: boolean = false
+
+  // Image
+  imgNotFound = 'assets/icon/error-404.svg'
+
+  // Data
+  applications: Application[] = []
+
+  constructor(
+    private authService: AuthService,
+    private applicationService: ApplicationsService,
+    private alertCtrl: AlertController,
+    private router: Router
+  ) { }
+
+  ngOnInit() {
+    this.applications = this.applicationService.applicationsApplicantCurrent
+    //console.log(this.applicationService.retrievedApplicantCurrentApplications)
+    if (this.applications.length != 0){
+      this.isGotApplication = true
+    }
+    // this.doCheckUserDetail()
+    this.applications.forEach(
+      (application) => {
+        application.date_submitted = moment(application.date_submitted, 'YYYY-MM-DD').format('DD-MM-YYYY')
+      }
+    )
+  }
+
+  ionViewDidEnter(){
+    // this.applications = this.applicationService.retrievedApplicantCurrentApplications
+    this.doCheckUserDetail()
+  }
+
+  doCheckUserDetail(){
+    if(
+      !this.authService.userSelfDetail.full_name || 
+      !this.authService.userSelfDetail.gender || 
+      !this.authService.userSelfDetail.new_nric ||
+      !this.authService.userSelfDetail.phone 
+    ){
+      this.alertDetailsIncomplete()
+    }
+    else {
+      console.log('You are alright')
+    }
+  }
+
+  async alertDetailsIncomplete() {
+    const alert = await this.alertCtrl.create({
+      header: 'Hmm',
+      message: 'It seems like your details is incomplete',
+      backdropDismiss: false,
+      buttons: [{
+          text: 'Edit details',
+          handler: () => {
+            console.log('Going to edit')
+            this.router.navigate(['applicant/profile'])
+          }
+        }
+      ]
+    })
+    await alert.present();
+  }
+
+}

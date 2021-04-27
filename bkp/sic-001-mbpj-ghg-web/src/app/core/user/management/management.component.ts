@@ -1,0 +1,327 @@
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { FormGroup, FormControl, Validators, AbstractControl } from '@angular/forms';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap';
+
+import { LoadingBarService } from '@ngx-loading-bar/core';
+import { ToastrService } from 'ngx-toastr';
+
+import { User } from 'src/app/shared/services/users/users.model';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { UsersService } from 'src/app/shared/services/users/users.service';
+import { NotifyService } from 'src/app/shared/handler/notify/notify.service';
+
+export enum SelectionType {
+  single = 'single',
+  multi = 'multi',
+  multiClick = 'multiClick',
+  cell = 'cell',
+  checkbox = 'checkbox'
+}
+
+@Component({
+  selector: 'app-management',
+  templateUrl: './management.component.html',
+  styleUrls: ['./management.component.scss']
+})
+export class ManagementComponent implements OnInit {
+
+  public tempApplicants: User[] = []
+  public tempEvaluators: User[] = []
+  public tempAllUsers: User[] = []
+  public tempUser: User
+
+  // Table
+  tableEntries: number = 5;
+  tableSelected: any[] = [];
+  tableTemp = [];
+  tableActiveRow: any;
+  tableRows: any[] = []
+  SelectionType = SelectionType;
+
+  focus
+
+  focusNRIC
+  focusPassword
+  focusConfirmPassword
+  focusFullName
+  focusEmail
+  focusPhone
+  focusUserType
+
+  userRegistrationForm = new FormGroup({
+    username: new FormControl('', Validators.compose([
+      Validators.required,
+      Validators.maxLength(12),
+      Validators.minLength(12),
+      Validators.pattern('^[0-9]*$')
+    ])),
+    password1: new FormControl('', Validators.compose([
+      Validators.required,
+      Validators.pattern('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$')
+    ])),
+    password2: new FormControl('', Validators.compose([
+      Validators.required
+    ]))
+  },
+  {
+    validators: this.passwordConfirming
+  })
+
+  userInformationForm = new FormGroup({
+    email: new FormControl('', Validators.compose([
+      Validators.email
+    ])),
+    full_name: new FormControl('', Validators.compose([
+      Validators.required
+    ])),
+    phone: new FormControl('', Validators.compose([
+      Validators.required,
+      Validators.minLength(10),
+      Validators.maxLength(11)
+    ])),
+    new_nric: new FormControl(''),
+    user_type: new FormControl('', Validators.compose([
+      Validators.required,
+      Validators.minLength(2)
+    ])),
+    username: new FormControl(''),
+    is_active: new FormControl(true)
+  })
+
+  userRegistrationValidationMessage = {
+    'username': [
+      { type: 'required', message: 'NRIC is required' },
+      { type: 'maxlength', message: 'NRIC is too long' },
+      { type: 'minlength', message: 'NRIC is too short' },
+      { type: 'pattern', message: 'NRIC must consist of numbers only' }
+    ],
+    'password1': [
+      { type: 'required', message: 'Password is required' },
+      { type: 'pattern', message: 'Password must have at least one uppercase letter, one lowercase letter, one number, and eight character' }
+    ],
+    'password2': [
+      { type: 'required', message: 'Confirm password is required' }
+    ]
+  }
+
+  userInformationValidationMessage = {
+    'phone': [
+      { type: 'required', message: 'Phone is required' },
+      { type: 'minlength', message: 'Opsie, too short' },
+      { type: 'maxlength', message: 'Eh, too long' },
+      { type: 'pattern', message: 'Numbers only..' }
+    ],
+    'email': [
+      { type: 'email', message: 'Need a valid email..' }
+    ],
+    'full_name': [
+      { type: 'required', message: 'Please enter full name' }
+    ],
+    'user_type': [
+      { type: 'required', message: 'User type is required' }
+    ]
+  }
+
+  passwordConfirming(c: AbstractControl): { invalid: boolean } {
+    if (c.get('password1').value !== c.get('password2').value) {
+      return { invalid: true };
+    }
+  }
+
+  defaultModal: BsModalRef;
+  default = {
+    keyboard: true,
+    class: "modal-dialog-centered"
+  };
+
+  tableColumns: string[] = ['full_name', 'new_nric', 'phone', 'is_active', 'user_type', 'id']
+
+  constructor(
+    private authService: AuthService,
+    private userService: UsersService,
+    private modalService: BsModalService,
+    public toastr: ToastrService,
+    private loadingBar: LoadingBarService,
+    private notifyService: NotifyService
+  ) {
+    this.getData()
+  }
+
+  ngOnInit() {
+  }
+
+  getData() {
+    this.tempAllUsers = this.userService.users
+    this.userService.getAll().subscribe(
+      (res) => {
+        this.tableRows = [...this.userService.users]
+        this.tableTemp = this.tableRows.map((prop, key) => {
+          return {
+            ...prop,
+            no: key+1
+          };
+        });
+      }
+    )
+  }
+
+  registerUser() {
+    this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username
+    //console.log(this.userRegistrationForm.value)
+    //console.log(this.userInformationForm.value)
+    this.loadingBar.start()
+    
+    this.authService.register(this.userRegistrationForm.value).subscribe(
+      (res) => {
+        //console.log('Registration success: ', res)
+        this.updateNewUser(res.user)
+      },
+      () => {
+        //console.log('Registration unsuccessful')
+        this.loadingBar.complete()
+      },
+      () => {
+        //console.log('After that')
+      }
+    )
+  }
+
+  updateNewUser(user) {
+    this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username
+    this.userInformationForm.value.username = this.userRegistrationForm.value.username
+    this.userService.update(this.userInformationForm.value, user.pk).subscribe(
+      () => {
+        this.tempAllUsers = this.userService.users
+        this.successMessage('register')
+        this.loadingBar.complete()
+      },
+      () => {
+        this.loadingBar.complete()
+      },
+      () => {
+        this.closeModalRegister()
+        this.getData()
+      }
+    )
+  }
+
+  updateRegisteredUser() {
+    this.loadingBar.start()
+    //console.log(this.userInformationForm.value)
+    //this.userInformationForm.value.new_nric = this.userInformationForm.value.username
+    this.userService.update(this.userInformationForm.value,this.tempUser.id).subscribe(
+      () => {
+        this.tempAllUsers = this.userService.users
+        this.loadingBar.complete()
+        this.successMessage('update')
+      },
+      () => {
+        this.loadingBar.complete()
+      },
+      () => {
+        this.closeModalView()
+        this.getData()
+      }
+    )
+  }
+
+  openModalRegister(modalDefault: TemplateRef<any>) {
+    this.defaultModal = this.modalService.show(modalDefault, this.default);
+  }
+
+  closeModalRegister() {
+    this.userRegistrationForm.reset()
+    this.userInformationForm.reset()
+    this.defaultModal.hide()
+  }
+
+  async openModalView(modalDefault: TemplateRef<any>, user) {
+    this.tempUser = user
+    this.userInformationForm.setValue({
+      email: this.tempUser.email,
+      full_name: this.tempUser.full_name,
+      phone: this.tempUser.phone,
+      new_nric: this.tempUser.new_nric,
+      user_type: this.tempUser.user_type,
+      is_active: this.tempUser.is_active,
+      username: this.tempUser.username
+    })
+    this.defaultModal = this.modalService.show(modalDefault, this.default)
+    //console.log(this.userInformationForm.value.email)
+    //console.log(this.userInformationForm)
+    //console.log(user)
+  }
+
+  closeModalView() {
+    if (this.tempUser){
+      delete this.tempUser
+    }
+    this.userInformationForm.reset()
+    this.defaultModal.hide()
+  }
+
+  successMessage(type: string) {
+    if (type == 'register') {
+      let title = 'Success'
+      let message = 'User is registered'
+      this.notifyService.openToastr(title, message)
+    }
+    else if (type == 'update') {
+      let title = 'Success'
+      let message = 'User is updated'
+      this.notifyService.openToastr(title, message)
+    }
+  }
+
+  openSearch() {
+    document.body.classList.add("g-navbar-search-showing");
+    setTimeout(function () {
+      document.body.classList.remove("g-navbar-search-showing");
+      document.body.classList.add("g-navbar-search-show");
+    }, 150);
+    setTimeout(function () {
+      document.body.classList.add("g-navbar-search-shown");
+    }, 300);
+  }
+
+  closeSearch() {
+    document.body.classList.remove("g-navbar-search-shown");
+    setTimeout(function () {
+      document.body.classList.remove("g-navbar-search-show");
+      document.body.classList.add("g-navbar-search-hiding");
+    }, 150);
+    setTimeout(function () {
+      document.body.classList.remove("g-navbar-search-hiding");
+      document.body.classList.add("g-navbar-search-hidden");
+    }, 300);
+    setTimeout(function () {
+      document.body.classList.remove("g-navbar-search-hidden");
+    }, 500);
+  }
+
+  entriesChange($event) {
+    this.tableEntries = $event.target.value;
+  }
+
+  filterTable($event) {
+    let val = $event.target.value;
+    this.tableTemp = this.tableRows.filter(function (d) {
+      for (var key in d) {
+        if (d[key].toLowerCase().indexOf(val) !== -1) {
+          return true;
+        }
+      }
+      return false;
+    });
+  }
+
+  onSelect({ selected }) {
+    this.tableSelected.splice(0, this.tableSelected.length);
+    this.tableSelected.push(...selected);
+  }
+
+  onActivate(event) {
+    this.tableActiveRow = event.row;
+  }
+  
+}

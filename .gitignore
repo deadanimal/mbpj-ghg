@@ -20,3 +20,8 @@ misc
 bkp
 **/bkp
 server
+
+# Ionic
+**/platforms
+**/plugins
+**/www

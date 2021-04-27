@@ -42,7 +42,7 @@ export class ApplicationAssessmentsService {
   }
 
   filter(filterField): Observable<any> {
-    let urlFilter = this.urlAssessment + '?' + filterField + '/'
+    let urlFilter = this.urlAssessment + '?' + filterField
     return this.http.get<ApplicationAssessment[]>(urlFilter).pipe(
       tap((res) => {
         this.assessmentsFiltered = res

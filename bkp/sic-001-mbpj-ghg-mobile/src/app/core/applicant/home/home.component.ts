@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit {
     if (this.applications.length != 0){
       this.isGotApplication = true
     }
-    this.doCheckUserDetail()
+    // this.doCheckUserDetail()
     this.applications.forEach(
       (application) => {
         application.date_submitted = moment(application.date_submitted, 'YYYY-MM-DD').format('DD-MM-YYYY')
@@ -43,10 +43,10 @@ export class HomeComponent implements OnInit {
     )
   }
 
-  /*ionViewDidEnter(){
-    this.applications = this.applicationService.retrievedApplicantCurrentApplications
+  ionViewDidEnter(){
+    // this.applications = this.applicationService.retrievedApplicantCurrentApplications
     this.doCheckUserDetail()
-  }*/
+  }
 
   doCheckUserDetail(){
     if(

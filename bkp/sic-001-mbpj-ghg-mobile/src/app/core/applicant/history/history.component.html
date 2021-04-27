@@ -21,7 +21,7 @@
       </ion-col>
     </ion-row>
 
-    <div *ngIf="!isGotHistory; else gotHistory" class="error-section">
+    <div *ngIf="applications.length == 0; else gotHistory" class="error-section">
       <ion-img [src]="imgNotFound"></ion-img>
       <p>{{'HISTORY.noHistory' | translate}}</p>
     </div>
@@ -36,10 +36,10 @@
                   <img [src]="imgHistoryThumbnail">
                 </ion-thumbnail>
                 <ion-label class="ion-text-wrap">
-                  <div *ngFor="let house of houses">
-                    <p *ngIf="application.applied_house == house.id">
-                      {{house.address}}, {{house.postcode}}, {{house.area}}
-                    </p>
+                  <div>
+                    <!-- <p *ngIf="application.applied_house == house.id"> -->
+                      {{application.applied_house[0].address}}, {{application.applied_house[0].postcode}}, {{application.applied_house[0].area}}
+                    <!-- </p> -->
                   </div>
                   
                   <p>{{application.date_submitted}}</p>
@@ -65,13 +65,13 @@
                     {{'HOME.submitted' | translate}}
                   </p>
                 </ion-label>
-                <!--<div class="btn-upload-item">
+                <div class="btn-upload-item">
                   <div class="btn-upload ion-activatable">
-                    <button [routerLink]="['/applicant/history-view']">
+                    <button (click)="clickHistoryView(application)">
                       <ion-ripple-effect></ion-ripple-effect> {{'HISTORY.viewButton' | translate}}
                     </button>
                   </div>
-                </div>-->
+                </div>
               </ion-item>
             </ion-card-content>
           </ion-card>

@@ -42,7 +42,7 @@ export class EvaluationsService {
   }
 
   filter(filterField): Observable<any> {
-    let urlFilter = this.urlEvaluation + '?' + filterField + '/'
+    let urlFilter = this.urlEvaluation + '?' + filterField
     return this.http.get<Evaluation[]>(urlFilter).pipe(
       tap((res) => {
         this.evalutionsFiltered = res

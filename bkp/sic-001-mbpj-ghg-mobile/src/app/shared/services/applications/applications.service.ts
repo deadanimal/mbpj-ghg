@@ -124,4 +124,12 @@ export class ApplicationsService {
     )
   }
 
+  getApplicantDetail(): Observable<any> {
+    return this.http.get<any>(this.urlApplication + 'get_application_details/').pipe(
+      tap((res) => {
+        console.log('Applications: ', this.applications)
+      })
+    )
+  }
+
 }

@@ -25,8 +25,10 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = [
-    'sic-001-mbpj-ghg.herokuapp.com',
+    'mbpj-ghg-api.pipe.my',
+    'ghg-api.mbpj.gov.my',
     '127.0.0.1',
+    'localhost'
 ]
 
 # Application definition
@@ -147,24 +149,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = True
-CORS_ORIGIN_WHITELIST = [
-    'https://sic-001-mbpj-ghg.herokuapp.com',
-    'http://127.0.0.1',
-    'http://localhost',
-    'http://localhost:4200',
-    'http://localhost:8100'
-]
-CORS_ORIGIN_REGEX_WHITELIST = [
-    'https://sic-001-mbpj-ghg.herokuapp.com',
-    'http://127.0.0.1',
-    'http://localhost',
-    'http://localhost:4200',
-    'http://localhost:8100'
-]
-
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 
 AWS_ACCESS_KEY_ID = config('AWS_ACCESS_KEY_ID')
@@ -174,6 +161,32 @@ AWS_S3_REGION_NAME = config('AWS_S3_REGION_NAME')
 AWS_S3_ENDPOINT_URL = config('AWS_S3_ENDPOINT_URL')
 AWS_DEFAULT_ACL = 'public-read'
 
+#AUTH_USER_MODEL = 'users.CustomUser'
+
+ANYMAIL = {
+    'SENDGRID_API_KEY': config('SENDGRID_API_KEY'),
+}
+EMAIL_BACKEND = "anymail.backends.sendgrid.EmailBackend"
+DEFAULT_FROM_EMAIL = "ghg@mbpj.gov.my"  # if you don't already have this in settings
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = [
+    'http://mbpj-ghg-api.pipe.my',
+    'http://ghg-api.mbpj.gov.my',
+    'http://127.0.0.1',
+    'http://localhost'
+]
+CORS_ORIGIN_REGEX_WHITELIST = [
+    'http://mbpj-ghg-api.pipe.my',
+    'http://ghg-api.mbpj.gov.my',
+    'http://127.0.0.1',
+    'http://localhost'
+]
+
+AUTH_USER_MODEL = 'users.CustomUser' 
+ACCOUNT_EMAIL_VERIFICATION = 'optional'
+ACCOUNT_EMAIL_SUBJECT_PREFIX = '[MBPJ eRebat] '
 SITE_ID = 1
 
 REST_USE_JWT = True
@@ -181,15 +194,27 @@ REST_USE_JWT = True
 REST_FRAMEWORK = {
     
     'DEFAULT_AUTHENTICATION_CLASSES': (
-        
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    # 'PASSWORD_RESET_SERIALIZER': (
+    #     'users.serializers.PasswordResetSerializer'
+    # )
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ]
     
 }
 
+# REST_AUTH_SERIALIZERS = {
+#     'PASSWORD_RESET_SERIALIZER': (
+#         'users.serializers.PasswordResetSerializer'
+#     )
+# }
+
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=5),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
 
@@ -209,13 +234,13 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 
     'SLIDING_TOKEN_REFRESH_EXP_CLAIM': 'refresh_exp',
-    'SLIDING_TOKEN_LIFETIME': timedelta(minutes=5),
-    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_LIFETIME': timedelta(days=1),
+    'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=5),
 }
 
-AUTH_USER_MODEL = 'users.CustomUser'
-
-GDAL_LIBRARY_PATH = os.environ.get('GDAL_LIBRARY_PATH')
-GEOS_LIBRARY_PATH = os.environ.get('GEOS_LIBRARY_PATH')
-
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+CELERY_BROKER_URL = config('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = config('CELERY_RESULT_BACKEND')
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_BEAT_SCHEDULE = {}

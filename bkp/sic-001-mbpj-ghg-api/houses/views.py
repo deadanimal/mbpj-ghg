@@ -36,11 +36,16 @@ class HouseViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = House.objects.all()
-        if self.user.user_type == 'XX':
-            user_ = self.user
-            queryset = House.objects.filter(user=user_)
+        user = self.request.user
+
+        if user.is_anonymous:
+            queryset = queryset
         else:
-            queryset = House.objects.all()
+            if user.user_type == 'AP':
+                user_ = user
+                queryset = House.objects.filter(applicant=user_)
+            else:
+                queryset = House.objects.all()
         return queryset
     
     def create(self, request):

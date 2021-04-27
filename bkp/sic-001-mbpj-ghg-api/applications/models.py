@@ -36,7 +36,7 @@ class AssessmentAspect(models.Model):
     incentive = models.IntegerField(default=0)
 
     def __str__(self):
-        return self.name
+        return self.name + ' - ' + self.aspect_type + ' (' + self.aspect + ')'
 
     class Meta:
         ordering = ['name']
@@ -72,8 +72,6 @@ class ApplicationAssessment(models.Model):
     assessment_aspect = models.ForeignKey(AssessmentAspect, on_delete=models.CASCADE, null=True, related_name='application_assessment_assessment_aspect')
     remarks = models.CharField(max_length=255, default='NA', blank=True)
     supporting_doc = models.ImageField(null=True, upload_to=PathAndRename('assessment'))
-    total_lamp = models.IntegerField(default=0, blank=True)
-    total_led = models.IntegerField(default=0, blank=True)
 
     # def __str__(self):
         # return self.name

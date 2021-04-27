@@ -19,6 +19,10 @@ from .models import (
     ApplicationEvent
 )
 
+from houses.models import (
+    House
+)
+
 from .serializers import (
     ApplicationSerializer, 
     ApplicationAssessmentSerializer,
@@ -46,6 +50,38 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Application.objects.all()
         return queryset
+
+    @action(methods=['GET'], detail=False)
+    def get_application_details(self, request):
+
+        applicant = self.request.user
+        # applicant = request.data['applicant']
+        applications = Application.objects.filter(applicant=applicant).order_by('-date_submitted').values()
+
+        application_data = []
+        for application in applications:
+            # print('application data', application)
+            applied_house = House.objects.filter(id=application['applied_house_id']).values()
+            # print('house data', applied_house)
+            application_assessments = ApplicationAssessment.objects.filter(application=application['id']).values()
+            # print('application assessment data', application_assessments)
+
+            evaluation = []
+            for application_assessment in application_assessments:
+                evaluation = Evaluation.objects.filter(application_assessment=application_assessment['id']).values()
+            
+            # print('evaluation', evaluation)
+            data = {
+                'id': application['id'],
+                'status': application['status'],
+                'date_submitted': application['date_submitted'],
+                'applied_house': applied_house,
+                'application_assessment': application_assessments,
+                'evaluation': evaluation
+            }
+            application_data.append(data)
+
+        return Response(application_data)
     
     def create(self, request):
         ApplicationEvent.objects.create(

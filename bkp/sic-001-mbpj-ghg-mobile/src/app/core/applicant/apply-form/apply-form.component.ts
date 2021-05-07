@@ -5,7 +5,7 @@ import { ApplicationAssessmentsService } from 'src/app/shared/services/applicati
 import { AssessmentAspectsService } from 'src/app/shared/services/assessment-aspects/assessment-aspects.service';
 import { AlertController, ToastController, ActionSheetController } from '@ionic/angular';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormControl, FormArray, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import * as moment from 'moment';
@@ -43,6 +43,9 @@ export class ApplyFormComponent implements OnInit {
   public consumptionElectricity: number = 0
   public consumptionWater: number = 0
 
+  public assessmentName: string
+  public assessmentType: string
+
   constructor(
     private authService: AuthService,
     private applicationService: ApplicationsService,
@@ -78,11 +81,11 @@ export class ApplyFormComponent implements OnInit {
   initAssessment() {
     return this.formBuilder.group({
       application: new FormControl(''),
-      assessment_aspect: new FormControl(''),
+      assessment_aspect: new FormControl('', Validators.required),
       remarks: new FormControl(''),
       supporting_doc: new FormControl(''),
-      total_led: new FormControl(''),
-      total_lamp: new FormControl('')
+      total_led: new FormControl(0),
+      total_lamp: new FormControl(0)
     })
   }
 
@@ -283,6 +286,15 @@ export class ApplyFormComponent implements OnInit {
     console.log('permanent occupant ', this.tempSelectedHouse.permanent_occupant)
     this.consumptionElectricity = (averagelectricity/this.tempSelectedHouse.permanent_occupant)
     this.consumptionWater = (averageWater * 1000)/(this.tempSelectedHouse.permanent_occupant * 30)
+  }
+
+  changeAssessmentAspect(ev) {
+    let result = this.tempAssessmentAspects.find((obj) => {
+      return obj.id == ev.target.value
+    })
+    console.log(result)
+    this.assessmentName = result.name
+    this.assessmentType = result.aspect_type
   }
 
 }

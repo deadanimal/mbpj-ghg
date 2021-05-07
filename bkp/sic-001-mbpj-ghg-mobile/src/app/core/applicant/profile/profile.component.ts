@@ -60,13 +60,14 @@ export class ProfileComponent implements OnInit {
 
   ngOnInit() {
     this.userForm = this.formBuilder.group({
-      full_name: new FormControl(''),
-      new_nric: new FormControl(''),
+      full_name: new FormControl('', Validators.required),
+      new_nric: new FormControl('', Validators.required),
       old_nric: new FormControl(''),
       tel: new FormControl(''),
       username: new FormControl(''),
       phone: new FormControl('', Validators.required),
-      email: new FormControl(''),
+      email: new FormControl('', Validators.required),
+      gender: new FormControl(''),
       profile_picture: new FormControl(''),
       nric_picture: new FormControl(''),
       occupation: new FormControl(''),
@@ -77,6 +78,13 @@ export class ProfileComponent implements OnInit {
 
   getData() {
     this.user = this.authService.userSelfDetail
+    this.userForm.patchValue({
+      ...this.user
+    });
+    if (this.user.new_nric == "") {
+      this.userForm.controls['new_nric'].setValue(this.user.username)
+      this.user.new_nric = this.user.username
+    }
   }
 
   async openUploadSheet() {
@@ -152,7 +160,7 @@ export class ProfileComponent implements OnInit {
           this.encodeFile64()
         },
         (err) => {
-          console.log(err
+          console.error(err
         )}
       );
     /**/
@@ -167,7 +175,7 @@ export class ProfileComponent implements OnInit {
           console.log(this.tempImageEncoded)
         },
         (err) => {
-          console.log(err)
+          console.error(err)
         }
       )
   }
@@ -197,6 +205,9 @@ export class ProfileComponent implements OnInit {
     }
     if (!this.userForm.value.email) {
       this.userForm.value.email = this.user.email
+    }
+    if (!this.userForm.value.gender) {
+      this.userForm.value.gender = this.user.gender
     }
     if (!this.userForm.value.tel) {
       this.userForm.value.tel = this.user.tel
@@ -236,7 +247,7 @@ export class ProfileComponent implements OnInit {
         this.getData()
       },
       (err) => {
-        // console.log('err')
+        // console.error('err')
         this.loadingMessage.dismiss()
       },
       () => {

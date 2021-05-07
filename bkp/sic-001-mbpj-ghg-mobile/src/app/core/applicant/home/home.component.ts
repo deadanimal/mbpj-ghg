@@ -51,7 +51,7 @@ export class HomeComponent implements OnInit {
   doCheckUserDetail(){
     if(
       !this.authService.userSelfDetail.full_name || 
-      !this.authService.userSelfDetail.gender || 
+      !this.authService.userSelfDetail.email || 
       !this.authService.userSelfDetail.new_nric ||
       !this.authService.userSelfDetail.phone 
     ){
@@ -64,11 +64,11 @@ export class HomeComponent implements OnInit {
 
   async alertDetailsIncomplete() {
     const alert = await this.alertCtrl.create({
-      header: 'Hmm',
-      message: 'It seems like your details is incomplete',
+      header: 'Profile',
+      message: 'It seems like your profile is incomplete. Please complete your profile details.',
       backdropDismiss: false,
       buttons: [{
-          text: 'Edit details',
+          text: 'Edit profile',
           handler: () => {
             console.log('Going to edit')
             this.router.navigate(['applicant/profile'])

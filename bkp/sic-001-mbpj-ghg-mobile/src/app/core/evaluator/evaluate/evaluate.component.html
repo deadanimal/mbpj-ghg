@@ -14,6 +14,23 @@
 
   <ion-grid class="settings" *ngIf="!isConfirm">
 
+    <ion-row *ngFor="let applicationAssessment of tempApplicationAssessment; let i = index">
+      <ion-col>
+        <ion-item mode="ios" lines="none">
+          <ion-label position="stacked" class="ion-text-wrap">{{'APPLYFORM.assessmentAspect' | translate}} #{{i+1}}</ion-label>
+          <ion-textarea rows="3" [value]="applicationAssessment.assessment_aspect_name" readonly></ion-textarea>
+        </ion-item>
+        <ion-item mode="ios" lines="none">
+          <ion-label position="stacked" class="ion-text-wrap">{{'APPLYFORM.remarks' | translate}}</ion-label>
+          <ion-textarea rows="5" [value]="applicationAssessment.remarks" readonly></ion-textarea>
+        </ion-item>
+        <ion-item mode="ios" lines="none">
+          <ion-label position="stacked" class="ion-text-wrap">{{'APPLYFORM.attach' | translate}}</ion-label>
+          <ion-img class="text-center" [src]="applicationAssessment.supporting_doc"></ion-img>
+        </ion-item>
+      </ion-col>
+    </ion-row>
+
     <div class="section-title">
       <h2>Assessment</h2>
     </div>
@@ -34,29 +51,28 @@
                       Solar water heater
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalA1 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="a1Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
-                  <img src="assets/img/custom/water-heater.jpg">
               
                 </mat-expansion-panel>
 
@@ -67,26 +83,26 @@
                       Solar panel / Other renewable energy source
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalA2 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="a2Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -99,26 +115,26 @@
                       70 % > = LED light / light saving light
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalA3 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="a3Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -131,26 +147,26 @@
                       5 star electrical appliances except fan
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalA4 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="a4Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -163,26 +179,26 @@
                       Roof insulation
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalA5 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="a5Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -195,26 +211,26 @@
                       Energy usage < 112 kW / hour / capita / month
                     </mat-panel-title>
                     <mat-panel-description>
-                      25%
+                      {{ totalA6 }}% / 25%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="a6Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -238,26 +254,26 @@
                       Rainwater collection system
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalB1 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="b1Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
               
@@ -270,26 +286,26 @@
                       Waste water recycle
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalB2 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="b2Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -302,26 +318,26 @@
                       Water usage < 202 litre / capita / day
                     </mat-panel-title>
                     <mat-panel-description>
-                      25%
+                      {{ totalB3 }}% / 25%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="b3Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -334,26 +350,26 @@
                       Water saving tools
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalB4 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="b4Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -366,26 +382,26 @@
                       Flush box < 6 litre
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalB5 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
                   <form [formGroup]="b5Form">
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here"></ion-input>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                      <ion-input type="number" formControlName="system" placeholder="Type system marks here"></ion-input>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here"></ion-input>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
                     </ion-item>
                     <ion-item lines="none">
                       <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                      <ion-input type="text" formControlName="remarks" placeholder="Type remarks"></ion-input>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
                     </ion-item>
                   </form>
 
@@ -407,26 +423,28 @@
                       Compose foodwaste
                     </mat-panel-title>
                     <mat-panel-description>
-                      25%
+                      {{ totalC1 }}% / 25%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="c1Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
               
                 </mat-expansion-panel>
 
@@ -437,26 +455,28 @@
                       Waste recycle
                     </mat-panel-title>
                     <mat-panel-description>
-                      25%
+                      {{ totalC2 }}% / 25%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="c2Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
 
                 </mat-expansion-panel>
 
@@ -467,26 +487,28 @@
                       Reuse
                     </mat-panel-title>
                     <mat-panel-description>
-                      25%
+                      {{ totalC3 }}% / 25%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="c3Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
 
                 </mat-expansion-panel>
 
@@ -497,26 +519,28 @@
                       Reduce
                     </mat-panel-title>
                     <mat-panel-description>
-                      25%
+                      {{ totalC4 }}% / 25%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="c4Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
 
                 </mat-expansion-panel>
 
@@ -536,26 +560,28 @@
                       Own & use hybrid / electric / NGV or electric motorcycle for work / activity
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalD1 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="d1Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
               
                 </mat-expansion-panel>
 
@@ -566,26 +592,28 @@
                       Using public transportation / walking  / riding bicycle to work & other activites
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalD2 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="d2Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
 
                 </mat-expansion-panel>
 
@@ -605,26 +633,28 @@
                       >= 50% green house area landscape (landed property)
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalE1 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="e1Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
               
                 </mat-expansion-panel>
                 
@@ -635,26 +665,28 @@
                       Significant planting (terrace house)
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalE2 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="e2Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
 
                 </mat-expansion-panel>
 
@@ -665,26 +697,28 @@
                       Perimeter planting
                     </mat-panel-title>
                     <mat-panel-description>
-                      20%
+                      {{ totalE3 }}% / 20%
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type equipment marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
-                    <ion-input type="number" placeholder="Type system marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
-                    <ion-input type="number" placeholder="Type efficiency marks here"></ion-input>
-                  </ion-item>
-                  <ion-item lines="none">
-                    <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
-                    <ion-input type="text" placeholder="Type remarks"></ion-input>
-                  </ion-item>
+                  <form [formGroup]="e3Form">
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Equipment (30%)</ion-label>
+                      <ion-input type="number" formControlName="equipment" placeholder="Type equipment marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">System (30%)</ion-label>
+                      <ion-input type="number" formControlName="system" placeholder="Type system marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Efficiency (40%)</ion-label>
+                      <ion-input type="number" formControlName="efficiency" placeholder="Type efficiency marks here" (ionChange)="changeEvaluation()"></ion-input>
+                    </ion-item>
+                    <ion-item lines="none">
+                      <ion-label position="stacked" class="ion-text-wrap">Remarks</ion-label>
+                      <ion-textarea rows="5" formControlName="remarks" placeholder="Type remarks"></ion-textarea>
+                    </ion-item>
+                  </form>
 
                 </mat-expansion-panel>
 
@@ -799,11 +833,11 @@
         </ion-item>
         <ion-item class="ion-text-wrap">
           <ion-label class="ion-text-wrap ion-text-bold">Total evaluated</ion-label>
-          <ion-text class="ion-text-bold">{{totalAll | number}}%</ion-text>
+          <ion-text class="ion-text-bold">{{totalAll | number : '1.2-2'}}%</ion-text>
         </ion-item>
-        <ion-item class="ion-text-wrap">
+        <ion-item mode="ios" class="ion-text-wrap">
           <ion-label class="ion-text-wrap" position="stacked">Remarks</ion-label>
-          <ion-input placeholder="Please enter remarks"></ion-input>
+          <ion-textarea rows="5" placeholder="Please enter remarks"></ion-textarea>
         </ion-item>
         <ion-item lines="none">
           <ion-button class="btn-green-lg mt-1" (click)="doSubmit()">Confirm & submit</ion-button>

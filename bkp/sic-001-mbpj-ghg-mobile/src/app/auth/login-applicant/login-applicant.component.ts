@@ -89,35 +89,6 @@ export class LoginApplicantComponent implements OnInit {
     )
   }
 
-  async loginDebug() {
-    this.loginForm.value.username = '919191019191'
-    this.loginForm.value.password = 'poopoo1230'
-    // console.log('Cheating here')
-    this.loadingMessage = await this.loadingCtrl.create({
-      message: 'Loading...'
-    });
-    await this.loadingMessage.present();
-    
-    this.authService.obtainToken(this.loginForm.value).subscribe(
-      () => {
-        //console.log('Accepted')
-      },
-      () => {
-        //console.log('Rejected')
-        this.loadingMessage.dismiss()
-      },
-      () => {
-        if (this.authService.userType == 'AP'){
-          this.fetchData()
-        }
-        else {
-          let message = 'Not authorized'
-          this.notifyService.openToastrError(message)
-        }
-      }
-    )
-  }
-
   fetchData() {
     let message = 'Welcome back!'
     this.houseService.getUser(this.authService.userID).subscribe()

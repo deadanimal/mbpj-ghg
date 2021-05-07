@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { ApplicationsService } from 'src/app/shared/services/applications/applications.service';
 import { ApplicationAssessmentsService } from 'src/app/shared/services/application-assessments/application-assessments.service';
+import { AssessmentAspectsService } from 'src/app/shared/services/assessment-aspects/assessment-aspects.service';
 import { EvaluationsService } from 'src/app/shared/services/evaluations/evaluations.service';
 import { HousesService } from 'src/app/shared/services/houses/houses.service';
 //import { ApplicationEvaluationsService } from 'src/app/shared/services/application-evaluations/application-evaluations.service';
@@ -260,6 +261,7 @@ export class EvaluateComponent implements OnInit {
   tempHouse
   tempApplicant
   tempApplicationAssessment = []
+  tempAssessmentAspect = []
 
   imageSrc
 
@@ -267,6 +269,7 @@ export class EvaluateComponent implements OnInit {
     private authService: AuthService,
     private applicationService: ApplicationsService,
     private applicationAssessmentService: ApplicationAssessmentsService,
+    private assessmentAspectService: AssessmentAspectsService,
     private evaluationService: EvaluationsService,
     private houseService: HousesService,
     private camera: Camera,
@@ -275,6 +278,7 @@ export class EvaluateComponent implements OnInit {
     public router: Router,
     public toastr: ToastController
   ) { 
+    this.tempAssessmentAspect = this.assessmentAspectService.retrievedAssessmentAspects
     this.tempApplication = this.router.getCurrentNavigation().extras
     console.log('application: ', this.tempApplication)
   }
@@ -304,44 +308,77 @@ export class EvaluateComponent implements OnInit {
       (data) => {
         if (data.application == this.tempApplication.id){
           this.tempApplicationAssessment.push(data)
-          console.log(this.tempApplicationAssessment)
+          this.tempApplicationAssessment.forEach((objTempAppAss, index) => {
+            let result = this.tempAssessmentAspect.find((objTempAssAsp) => {
+              return objTempAssAsp.id == objTempAppAss.assessment_aspect
+            })
+            this.tempApplicationAssessment[index].assessment_aspect_name = result.name +' '+ result.aspect
+          })
+          console.log('application assessment', this.tempApplicationAssessment)
         }
       }
     )
   }
 
+  changeEvaluation() {
+    this.totalA1 = (this.a1Form.value.equipment + this.a1Form.value.system + this.a1Form.value.efficiency)/100*20
+    this.totalA2 = (this.a2Form.value.equipment + this.a2Form.value.system + this.a2Form.value.efficiency)/100*20
+    this.totalA3 = (this.a3Form.value.equipment + this.a3Form.value.system + this.a3Form.value.efficiency)/100*20
+    this.totalA4 = (this.a4Form.value.equipment + this.a4Form.value.system + this.a4Form.value.efficiency)/100*20
+    this.totalA5 = (this.a5Form.value.equipment + this.a5Form.value.system + this.a5Form.value.efficiency)/100*20
+    this.totalA6 = (this.a6Form.value.equipment + this.a6Form.value.system + this.a6Form.value.efficiency)/100*25
+
+    this.totalB1 = (this.b1Form.value.equipment + this.b1Form.value.system + this.b1Form.value.efficiency)/100*20
+    this.totalB2 = (this.b2Form.value.equipment + this.b2Form.value.system + this.b2Form.value.efficiency)/100*20
+    this.totalB3 = (this.b3Form.value.equipment + this.b3Form.value.system + this.b3Form.value.efficiency)/100*25
+    this.totalB4 = (this.b4Form.value.equipment + this.b4Form.value.system + this.b4Form.value.efficiency)/100*20
+    this.totalB5 = (this.b5Form.value.equipment + this.b5Form.value.system + this.b5Form.value.efficiency)/100*20
+
+    this.totalC1 = (this.c1Form.value.equipment + this.c1Form.value.system + this.c1Form.value.efficiency)/100*25
+    this.totalC2 = (this.c2Form.value.equipment + this.c2Form.value.system + this.c2Form.value.efficiency)/100*25
+    this.totalC3 = (this.c3Form.value.equipment + this.c3Form.value.system + this.c3Form.value.efficiency)/100*25
+    this.totalC4 = (this.c4Form.value.equipment + this.c4Form.value.system + this.c4Form.value.efficiency)/100*25
+
+    this.totalD1 = (this.d1Form.value.equipment + this.d1Form.value.system + this.d1Form.value.efficiency)/100*20
+    this.totalD2 = (this.d2Form.value.equipment + this.d2Form.value.system + this.d2Form.value.efficiency)/100*20
+
+    this.totalE1 = (this.e1Form.value.equipment + this.e1Form.value.system + this.e1Form.value.efficiency)/100*20
+    this.totalE2 = (this.e2Form.value.equipment + this.e2Form.value.system + this.e2Form.value.efficiency)/100*20
+    this.totalE3 = (this.e3Form.value.equipment + this.e3Form.value.system + this.e3Form.value.efficiency)/100*20
+  }
+
   previewEvaluation() {
     this.totalA1 = (this.a1Form.value.equipment + this.a1Form.value.system + this.a1Form.value.efficiency)/100*20
-    this.totalA2 = this.a2Form.value.equipment + this.a2Form.value.system + this.a2Form.value.efficiency/100*20
-    this.totalA3 = this.a3Form.value.equipment + this.a3Form.value.system + this.a3Form.value.efficiency/100*20
-    this.totalA4 = this.a4Form.value.equipment + this.a4Form.value.system + this.a4Form.value.efficiency/100*20
-    this.totalA5 = this.a5Form.value.equipment + this.a5Form.value.system + this.a5Form.value.efficiency/100*20
-    this.totalA6 = this.a6Form.value.equipment + this.a6Form.value.system + this.a6Form.value.efficiency/100*25
+    this.totalA2 = (this.a2Form.value.equipment + this.a2Form.value.system + this.a2Form.value.efficiency)/100*20
+    this.totalA3 = (this.a3Form.value.equipment + this.a3Form.value.system + this.a3Form.value.efficiency)/100*20
+    this.totalA4 = (this.a4Form.value.equipment + this.a4Form.value.system + this.a4Form.value.efficiency)/100*20
+    this.totalA5 = (this.a5Form.value.equipment + this.a5Form.value.system + this.a5Form.value.efficiency)/100*20
+    this.totalA6 = (this.a6Form.value.equipment + this.a6Form.value.system + this.a6Form.value.efficiency)/100*25
 
-    this.totalB1 = this.b1Form.value.equipment + this.b1Form.value.system + this.b1Form.value.efficiency/100*20
-    this.totalB2 = this.b2Form.value.equipment + this.b2Form.value.system + this.b2Form.value.efficiency/100*20
-    this.totalB3 = this.b3Form.value.equipment + this.b3Form.value.system + this.b3Form.value.efficiency/100*25
-    this.totalB4 = this.b4Form.value.equipment + this.b4Form.value.system + this.b4Form.value.efficiency/100*20
-    this.totalB5 = this.b5Form.value.equipment + this.b5Form.value.system + this.b5Form.value.efficiency/100*20
+    this.totalB1 = (this.b1Form.value.equipment + this.b1Form.value.system + this.b1Form.value.efficiency)/100*20
+    this.totalB2 = (this.b2Form.value.equipment + this.b2Form.value.system + this.b2Form.value.efficiency)/100*20
+    this.totalB3 = (this.b3Form.value.equipment + this.b3Form.value.system + this.b3Form.value.efficiency)/100*25
+    this.totalB4 = (this.b4Form.value.equipment + this.b4Form.value.system + this.b4Form.value.efficiency)/100*20
+    this.totalB5 = (this.b5Form.value.equipment + this.b5Form.value.system + this.b5Form.value.efficiency)/100*20
 
-    this.totalC1 = this.c1Form.value.equipment + this.c1Form.value.system + this.c1Form.value.efficiency/100*25
-    this.totalC2 = this.c2Form.value.equipment + this.c2Form.value.system + this.c2Form.value.efficiency/100*25
-    this.totalC3 = this.c3Form.value.equipment + this.c3Form.value.system + this.c3Form.value.efficiency/100*25
-    this.totalC3 = this.c4Form.value.equipment + this.c4Form.value.system + this.c4Form.value.efficiency/100*25
+    this.totalC1 = (this.c1Form.value.equipment + this.c1Form.value.system + this.c1Form.value.efficiency)/100*25
+    this.totalC2 = (this.c2Form.value.equipment + this.c2Form.value.system + this.c2Form.value.efficiency)/100*25
+    this.totalC3 = (this.c3Form.value.equipment + this.c3Form.value.system + this.c3Form.value.efficiency)/100*25
+    this.totalC4 = (this.c4Form.value.equipment + this.c4Form.value.system + this.c4Form.value.efficiency)/100*25
 
-    this.totalD1 = this.d1Form.value.equipment + this.d1Form.value.system + this.d1Form.value.efficiency/100*20
-    this.totalD2 = this.d2Form.value.equipment + this.d2Form.value.system + this.d2Form.value.efficiency/100*20
+    this.totalD1 = (this.d1Form.value.equipment + this.d1Form.value.system + this.d1Form.value.efficiency)/100*20
+    this.totalD2 = (this.d2Form.value.equipment + this.d2Form.value.system + this.d2Form.value.efficiency)/100*20
 
-    this.totalE1 = this.e1Form.value.equipment + this.e1Form.value.system + this.e1Form.value.efficiency/100*20
-    this.totalE2 = this.e2Form.value.equipment + this.e2Form.value.system + this.e2Form.value.efficiency/100*20
-    this.totalE3 = this.e3Form.value.equipment + this.e3Form.value.system + this.e3Form.value.efficiency/100*20
+    this.totalE1 = (this.e1Form.value.equipment + this.e1Form.value.system + this.e1Form.value.efficiency)/100*20
+    this.totalE2 = (this.e2Form.value.equipment + this.e2Form.value.system + this.e2Form.value.efficiency)/100*20
+    this.totalE3 = (this.e3Form.value.equipment + this.e3Form.value.system + this.e3Form.value.efficiency)/100*20
 
     let sumA = (this.totalA1 + this.totalA2 + this.totalA3 + this.totalA4 + this.totalA5 + this.totalA6)/125 * 100
     let sumB = (this.totalB1 + this.totalB2 + this.totalB3 + this.totalB4 + this.totalB5)/105*100
-    let sumC = (this.totalC1 + this.totalC2 + this.totalC3 + this.totalC4)
+    let sumC = (this.totalC1 + this.totalC2 + this.totalC3 + this.totalC4)/100*100
     let sumD = (this.totalD1 + this.totalD2)/40*100
     let sumE = (this.totalE1 + this.totalE2 + this.totalE3)/60*100
-    this.totalAll = (sumA + sumB + sumC + sumD + sumE)/180 * 100
+    this.totalAll = (sumA + sumB + sumC + sumD + sumE)/430 * 100
 
     this.isConfirm = true;
   }

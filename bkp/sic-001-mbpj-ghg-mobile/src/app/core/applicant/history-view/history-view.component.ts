@@ -88,10 +88,10 @@ export class HistoryViewComponent implements OnInit {
 
   getAspectType(value: string) {
     let results = this.assessmentaspects.find((obj) => {
-      return obj.id = value;
+      return obj.id == value;
     });
     let result = this.aspecttypes.find((obj) => {
-      return results.aspect_type = obj.value;
+      return results.aspect_type == obj.value;
     });
     return result.display_name + ' - ' + results.name + ' (' + results.aspect + ')';
   }

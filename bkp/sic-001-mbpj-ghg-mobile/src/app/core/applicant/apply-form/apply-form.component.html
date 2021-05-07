@@ -42,8 +42,8 @@
 							*ngFor="let ind of formGroup.get('form')?.controls; let i = index">
 							<ion-item-group>
 								<ion-item lines="none" mode="ios">
-									<ion-label position="stacked">{{'APPLYFORM.assessmentAspect' | translate}}</ion-label>
-									<ion-select formControlName="assessment_aspect"
+									<ion-label position="stacked">{{'APPLYFORM.assessmentAspect' | translate}} <span style="color: red">*</span></ion-label>
+									<ion-select formControlName="assessment_aspect" (ionChange)="changeAssessmentAspect($event)"
 										placeholder="{{'APPLYFORM.assessmentAspectPlaceholder' | translate}}">
 										<ion-select-option disabled>{{'APPLYFORM.energy' | translate}}</ion-select-option>
 										<ng-container *ngFor="let energy of tempAssessmentAspects">
@@ -77,25 +77,27 @@
 										</ng-container>
 									</ion-select>
 								</ion-item>
-								<ion-item *ngIf="formGroup.value.form[i].assessment_aspect == '9c18a34e-21d9-4b1d-88c1-f3d19b5bfbe2'">
-									<ion-label position="stacked" class="ion-text-wrap">No. of lamp in house</ion-label>
-									<ion-input type="number" formControlName="total_lamp" placeholder="E.g.: 10" (ionChange)="calculateA3(i)"></ion-input>
-								</ion-item>
-								<ion-item *ngIf="formGroup.value.form[i].assessment_aspect == '9c18a34e-21d9-4b1d-88c1-f3d19b5bfbe2'">
-									<ion-label position="stacked" class="ion-text-wrap">No. of LED in house</ion-label>
-									<ion-input type="number" formControlName="total_led" placeholder="E.g.: 10" (ionChange)="calculateA3(i)"></ion-input>
-								</ion-item>
-								<ion-item *ngIf="formGroup.value.form[i].assessment_aspect == '9c18a34e-21d9-4b1d-88c1-f3d19b5bfbe2'">
-									<ion-label position="stacked" class="ion-text-wrap">Total saving (%)</ion-label>
-									<ion-input type="number" [value]="energySaving.toFixed(2)" disabled></ion-input>
-								</ion-item>
-								<ion-item *ngIf="formGroup.value.form[i].assessment_aspect == '4391e0e3-52dd-4d70-9697-b80329681d5e'">
+								<div *ngIf="assessmentName == 'A3' && assessmentType == 'EN'">
+									<ion-item lines="none" mode="ios">
+										<ion-label position="stacked" class="ion-text-wrap">No. of lamp in house</ion-label>
+										<ion-input type="number" formControlName="total_lamp" placeholder="E.g.: 10" (ionChange)="calculateA3(i)"></ion-input>
+									</ion-item>
+									<ion-item lines="none" mode="ios">
+										<ion-label position="stacked" class="ion-text-wrap">No. of LED in house</ion-label>
+										<ion-input type="number" formControlName="total_led" placeholder="E.g.: 10" (ionChange)="calculateA3(i)"></ion-input>
+									</ion-item>
+									<ion-item lines="none" mode="ios">
+										<ion-label position="stacked" class="ion-text-wrap">Total saving (%)</ion-label>
+										<ion-input type="number" [value]="energySaving.toFixed(2)" readonly></ion-input>
+									</ion-item>
+								</div>
+								<ion-item lines="none" mode="ios" *ngIf="assessmentName == 'A6' && assessmentType == 'EN'">
 									<ion-label position="stacked" class="ion-text-wrap">Consumption of electricity (kWh/capita/month)</ion-label>
-									<ion-input type="number" [value]="consumptionElectricity.toFixed(2)" disabled></ion-input>
+									<ion-input type="number" [value]="consumptionElectricity.toFixed(2)" readonly></ion-input>
 								</ion-item>
-								<ion-item *ngIf="formGroup.value.form[i].assessment_aspect == '4391e0e3-52dd-4d70-9697-b80329681d5e'">
+								<ion-item lines="none" mode="ios" *ngIf="assessmentName == 'B3' && assessmentType == 'WA'">
 									<ion-label position="stacked" class="ion-text-wrap">Consumption of water (L/capita/day)</ion-label>
-									<ion-input type="number" [value]="consumptionWater.toFixed(2)" disabled></ion-input>
+									<ion-input type="number" [value]="consumptionWater.toFixed(2)" readonly></ion-input>
 								</ion-item>
 								<ion-item lines="none" mode="ios">
 									<ion-label position="stacked">{{'APPLYFORM.remarks' | translate}}</ion-label>
@@ -106,7 +108,7 @@
 									<ion-img class="text-center" [src]="tempImageEncoded[i]" *ngIf="tempImageEncoded[i]"></ion-img>
 								  </ion-item>
 								<ion-item lines="none" mode="ios">
-									<ion-label position="stacked">{{'APPLYFORM.attach' | translate}}</ion-label>
+									<ion-label position="stacked">{{'APPLYFORM.attach' | translate}} <span style="color: red">*</span></ion-label>
 									<div class="btn-upload-item">
 										<div class="btn-upload ion-activatable">
 											<button (click)="openUploadSheet(i)">

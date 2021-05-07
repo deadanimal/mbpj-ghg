@@ -89,6 +89,7 @@ export class ApplicationComponent implements OnInit {
   }
 
   ionViewDidEnter(){
+    this.mergedNominatedApplications = []
     this.loadedNominatedHouses = []
     this.loadedNominatedApplications = this.applicationService.applicationsEvaluatorNominated
     //this.loadedNominatedHouses = this.houseService.retrievedHouses
@@ -135,14 +136,12 @@ export class ApplicationComponent implements OnInit {
 
   }
 
-  doStartEvaluate(house){
-    console.log(house)
+  doStartEvaluate(application_id){
     let application
     this.loadedNominatedApplications.forEach(
       (data) => {
-        if (data.applied_house == house){
+        if (data.id == application_id){
           application = data
-          console.log(application)
         }
       }
     )

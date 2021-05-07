@@ -62,13 +62,13 @@ export class LoginEvaluatorComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: new FormControl('', Validators.compose([
+      username: new FormControl('931006055519', Validators.compose([
         Validators.required,
         Validators.minLength(12),
         Validators.maxLength(12),
         Validators.pattern('^[0-9]+$')
       ])),
-      password: new FormControl('', Validators.compose([
+      password: new FormControl('PabloEscobar', Validators.compose([
         Validators.required,
         Validators.minLength(8)
       ]))
@@ -105,72 +105,6 @@ export class LoginEvaluatorComponent implements OnInit {
     )
   }
 
-  async loginDebug() {
-    this.loginForm.value.username = '998877665544'
-    this.loginForm.value.password = 'poopoo1230'
-    // console.log('Sorry termalas')
-    
-    this.loadingMessage = await this.loadingCtrl.create({
-      message: 'Loading...'
-    });
-    await this.loadingMessage.present();
-
-    this.authService.obtainToken(this.loginForm.value).subscribe(
-      () => {
-        // console.log('Accepted')
-        // this.successfulToast()
-      },
-      () => {
-        // console.log('Rejected')
-        this.loadingMessage.dismiss()
-        // this.unsuccessfulLoginAlert()
-      },
-      () => {
-        if (this.authService.userType == "EV"){
-          this.fetchData()
-        }
-        else {
-          this.loadingMessage.dismiss()
-          let message = 'Not authorized'
-          this.notifyService.openToastrError(message)
-        }
-      }
-    )
-  }
-
-  async loginDebug1() {
-    this.loginForm.value.username = 'sb@prototype.com.my'
-    this.loginForm.value.password = 'poopoo1230'
-    // console.log('Sorry termalas')
-    
-    this.loadingMessage = await this.loadingCtrl.create({
-      message: 'Loading...'
-    });
-    await this.loadingMessage.present();
-
-    this.authService.obtainToken(this.loginForm.value).subscribe(
-      () => {
-        // console.log('Accepted')
-        // this.successfulToast()
-      },
-      () => {
-        // console.log('Rejected')
-        this.loadingMessage.dismiss()
-        // this.unsuccessfulLoginAlert()
-      },
-      () => {
-        if (this.authService.userType == "EV"){
-          this.fetchData()
-        }
-        else {
-          this.loadingMessage.dismiss()
-          let message = 'Not authorized'
-          this.notifyService.openToastrError(message)
-        }
-      }
-    )
-  }
-
   fetchData() {
     let message = 'Welcome back!'
     this.applicationService.getApplicant(this.authService.userID).subscribe(
@@ -191,6 +125,7 @@ export class LoginEvaluatorComponent implements OnInit {
     this.houseService.getUser(this.authService.userID).subscribe()
     this.ticketAnswerService.getUser(this.authService.userID).subscribe()
     this.ticketQuestionService.getUser(this.authService.userID).subscribe()
+    this.applicationService.getEvaluator(this.authService.userID).subscribe()
   }
 
 }

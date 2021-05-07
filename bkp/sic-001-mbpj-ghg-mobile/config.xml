@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="my.com.pipeline.mbpj.ghg" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>eRebat</name>
-    <description>MBPJ Skim Rebat Cukai Taksiran Rumah Mesra Alam Hijau</description>
-    <author email="hi@ionicframework.com" href="http://ionicframework.com/">Pipeline Network</author>
+<widget id="my.gov.mbpj.ghg" version="1.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>eRebate MBPJ</name>
+    <description>Green Eco -Friendly Home Assessment Tax Rebate Scheme</description>
+    <author email="adminmbpj@mbpj.gov.my" href="https://www.mbpj.gov.my/en">ICT MBPJ</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />

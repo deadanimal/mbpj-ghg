@@ -62,13 +62,13 @@ export class LoginEvaluatorComponent implements OnInit {
 
   ngOnInit() {
     this.loginForm = this.formBuilder.group({
-      username: new FormControl('931006055519', Validators.compose([
+      username: new FormControl('', Validators.compose([
         Validators.required,
         Validators.minLength(12),
         Validators.maxLength(12),
         Validators.pattern('^[0-9]+$')
       ])),
-      password: new FormControl('PabloEscobar', Validators.compose([
+      password: new FormControl('', Validators.compose([
         Validators.required,
         Validators.minLength(8)
       ]))

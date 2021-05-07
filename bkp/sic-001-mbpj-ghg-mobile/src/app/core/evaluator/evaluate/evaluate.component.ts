@@ -345,6 +345,13 @@ export class EvaluateComponent implements OnInit {
     this.totalE1 = (this.e1Form.value.equipment + this.e1Form.value.system + this.e1Form.value.efficiency)/100*20
     this.totalE2 = (this.e2Form.value.equipment + this.e2Form.value.system + this.e2Form.value.efficiency)/100*20
     this.totalE3 = (this.e3Form.value.equipment + this.e3Form.value.system + this.e3Form.value.efficiency)/100*20
+
+    let sumA = (this.totalA1 + this.totalA2 + this.totalA3 + this.totalA4 + this.totalA5 + this.totalA6)///125 * 100
+    let sumB = (this.totalB1 + this.totalB2 + this.totalB3 + this.totalB4 + this.totalB5)///105*100
+    let sumC = (this.totalC1 + this.totalC2 + this.totalC3 + this.totalC4)///100*100
+    let sumD = (this.totalD1 + this.totalD2)///40*100
+    let sumE = (this.totalE1 + this.totalE2 + this.totalE3)///60*100
+    this.totalAll = (sumA + sumB + sumC + sumD + sumE)///430 * 100
   }
 
   previewEvaluation() {
@@ -373,12 +380,12 @@ export class EvaluateComponent implements OnInit {
     this.totalE2 = (this.e2Form.value.equipment + this.e2Form.value.system + this.e2Form.value.efficiency)/100*20
     this.totalE3 = (this.e3Form.value.equipment + this.e3Form.value.system + this.e3Form.value.efficiency)/100*20
 
-    let sumA = (this.totalA1 + this.totalA2 + this.totalA3 + this.totalA4 + this.totalA5 + this.totalA6)/125 * 100
-    let sumB = (this.totalB1 + this.totalB2 + this.totalB3 + this.totalB4 + this.totalB5)/105*100
-    let sumC = (this.totalC1 + this.totalC2 + this.totalC3 + this.totalC4)/100*100
-    let sumD = (this.totalD1 + this.totalD2)/40*100
-    let sumE = (this.totalE1 + this.totalE2 + this.totalE3)/60*100
-    this.totalAll = (sumA + sumB + sumC + sumD + sumE)/430 * 100
+    let sumA = (this.totalA1 + this.totalA2 + this.totalA3 + this.totalA4 + this.totalA5 + this.totalA6)///125 * 100
+    let sumB = (this.totalB1 + this.totalB2 + this.totalB3 + this.totalB4 + this.totalB5)///105*100
+    let sumC = (this.totalC1 + this.totalC2 + this.totalC3 + this.totalC4)///100*100
+    let sumD = (this.totalD1 + this.totalD2)///40*100
+    let sumE = (this.totalE1 + this.totalE2 + this.totalE3)///60*100
+    this.totalAll = (sumA + sumB + sumC + sumD + sumE)///430 * 100
 
     this.isConfirm = true;
   }

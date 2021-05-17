@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'https://sic-001-mbpj-ghg.herokuapp.com/'
+  baseUrl: 'http://127.0.0.1:8000/'
 };
 
 /*

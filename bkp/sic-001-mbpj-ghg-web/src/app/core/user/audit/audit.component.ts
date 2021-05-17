@@ -102,8 +102,15 @@ export class AuditComponent implements OnInit {
     private userService: UsersService,
     public toastr: ToastrService
   ) {
-    this.users = this.userService.users
-    this.getData()
+    this.userService.getAll().subscribe(
+      (res) => {
+        this.users = res
+      }, () => {
+
+      }, () => {
+        this.getData()
+      }
+    )
     // this.mergeData()
   }
 
@@ -198,7 +205,7 @@ export class AuditComponent implements OnInit {
         counter++
         if (counter === this.ticketEventService.events.length){
           console.log('Ticket: ', this.ticketEventsMerged)
-          this.tableRowsTickets = [...this.ticketEventsMerged]
+          this.tableRowsTickets = this.ticketEventsMerged
           this.tableTempTickets = this.tableRowsTickets.map((prop, key) => {
             return {
               ...prop,
@@ -243,7 +250,7 @@ export class AuditComponent implements OnInit {
         counter++
         if (counter === this.applicationEventService.events.length){
           console.log('Application: ', this.applicationsEventMerged)
-          this.tableRowsApplications = [...this.applicationsEventMerged]
+          this.tableRowsApplications = this.applicationsEventMerged
           this.tableTempApplications = this.tableRowsApplications.map((prop, key) => {
             return {
               ...prop,
@@ -289,7 +296,7 @@ export class AuditComponent implements OnInit {
         counter++
         if (counter === this.houseEventService.events.length){
           console.log('House: ', this.houseEventsMerged)
-          this.tableRowsHouses = [...this.houseEventsMerged]
+          this.tableRowsHouses = this.houseEventsMerged
           this.tableTempHouses = this.tableRowsHouses.map((prop, key) => {
             return {
               ...prop,
@@ -334,7 +341,7 @@ export class AuditComponent implements OnInit {
         counter++
         if (counter === this.userEventService.events.length){
           console.log('User: ', this.userEventsMerged)
-          this.tableRowsUsers = [...this.userEventsMerged]
+          this.tableRowsUsers = this.userEventsMerged
           this.tableTempUsers = this.tableRowsUsers.map((prop, key) => {
             return {
               ...prop,

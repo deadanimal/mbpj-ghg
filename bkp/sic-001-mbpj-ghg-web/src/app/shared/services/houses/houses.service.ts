@@ -92,7 +92,7 @@ export class HousesService {
   }
 
   filter(filterField): Observable<any> {
-    let filterUrl = this.housesUrl + '?' + filterField + '/'
+    let filterUrl = this.housesUrl + '?' + filterField
     return this.http.get<House[]>(filterUrl).pipe(
       tap((res) => {
         this.retrievedFilteredHouses = res

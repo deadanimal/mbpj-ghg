@@ -49,6 +49,14 @@ export class ApplicationsComponent implements OnInit {
   public tempUsers: User[] = []
   public mergedApplications: MergedApplication[] = []
 
+  applicationCM
+  applicationCR
+  applicationIE
+  applicationIP
+  applicationPD
+  applicationRJ
+  applicationSM
+
   tableColumns: string[] = [
     'applicant_name', 
     'date_submitted', 
@@ -77,7 +85,36 @@ export class ApplicationsComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.initChart()
+    this.applicationService.doRetrieveAllApplications().subscribe(
+      (application) => {
+        this.applicationCM = application.filter((obj) => {
+          return obj.status == 'CM'
+        })
+        this.applicationCR = application.filter((obj) => {
+          return obj.status == 'CR'
+        })
+        this.applicationIE = application.filter((obj) => {
+          return obj.status == 'IE'
+        })
+        this.applicationIP = application.filter((obj) => {
+          return obj.status == 'IP'
+        })
+        this.applicationPD = application.filter((obj) => {
+          return obj.status == 'PD'
+        })
+        this.applicationRJ = application.filter((obj) => {
+          return obj.status == 'RJ'
+        })
+        this.applicationSM = application.filter((obj) => {
+          return obj.status == 'SM'
+        })
+      }, (err) => {
+        console.log('err', err)
+      }, () => {
+        this.initChart()
+      }
+    )
+
     this.initTable()
   }
 
@@ -88,32 +125,60 @@ export class ApplicationsComponent implements OnInit {
   }
 
   mergeData() {
-    this.tempApplications = this.applicationService.retrievedApplications
-    this.tempHouses = this.houseService.retrievedHouses
-    this.tempUsers = this.userService.users
-    let mergerCounter: number = 0
-    console.log('1: ', this.tempApplications)
-    console.log('2: ', this.tempHouses)
-    console.log('3: ', this.tempUsers)
-    
-    this.tempApplications.forEach(
-      (application: Application) => {
-        this.tempHouses.forEach(
-          (house: House) => {
-            if (house.id == application.applied_house){
-              this.tempUsers.forEach(
-                (applicant: User) => {
-                  if (applicant.id == application.applicant){
-                    if (application.evaluator_nominated){
-                      this.tempUsers.forEach(
-                        (evaluator: User) => {
-                          if (evaluator.id == application.evaluator_nominated){
+    this.applicationService.doRetrieveAllApplications().subscribe((resApp) => {
+      this.tempApplications = resApp
+    }, (err) => {
+      console.error("err", err)
+    }, () => {
+      this.houseService.getAll().subscribe((resHouse) => {
+        this.tempHouses = resHouse
+      }, (err) => {
+        console.error("err", err)
+      }, () => {
+        this.userService.getAll().subscribe((resUser) => {
+          this.tempUsers = resUser
+        }, (err) => {
+          console.error("err", err)
+        }, () => {
+          let mergerCounter: number = 0
+          // console.log('1: ', this.tempApplications)
+          // console.log('2: ', this.tempHouses)
+          // console.log('3: ', this.tempUsers)
+          
+          this.tempApplications.forEach(
+            (application: Application) => {
+              this.tempHouses.forEach(
+                (house: House) => {
+                  if (house.id == application.applied_house){
+                    this.tempUsers.forEach(
+                      (applicant: User) => {
+                        if (applicant.id == application.applicant){
+                          if (application.evaluator_nominated){
+                            this.tempUsers.forEach(
+                              (evaluator: User) => {
+                                if (evaluator.id == application.evaluator_nominated){
+                                  this.mergedApplications.push({
+                                    id: application.id,
+                                    applicant_id: application.applicant,
+                                    applicant_name: applicant.full_name,
+                                    evaluator_nominated_id: application.evaluator_nominated,
+                                    evaluator_nominated_name: evaluator.full_name,
+                                    applied_house_id: application.applied_house,
+                                    applied_house_assessment_tax_account: house.assessment_tax_account,
+                                    status: application.status,
+                                    date_submitted: moment(application.date_submitted, 'YYYY-MM-DD').format('DD/MM/YYYY')
+                                  })
+                                }
+                              }
+                            )
+                          }
+                          else {
                             this.mergedApplications.push({
                               id: application.id,
                               applicant_id: application.applicant,
                               applicant_name: applicant.full_name,
                               evaluator_nominated_id: application.evaluator_nominated,
-                              evaluator_nominated_name: evaluator.full_name,
+                              evaluator_nominated_name: 'Not assigned',
                               applied_house_id: application.applied_house,
                               applied_house_assessment_tax_account: house.assessment_tax_account,
                               status: application.status,
@@ -121,37 +186,28 @@ export class ApplicationsComponent implements OnInit {
                             })
                           }
                         }
-                      )
-                    }
-                    else {
-                      this.mergedApplications.push({
-                        id: application.id,
-                        applicant_id: application.applicant,
-                        applicant_name: applicant.full_name,
-                        evaluator_nominated_id: application.evaluator_nominated,
-                        evaluator_nominated_name: 'Not assigned',
-                        applied_house_id: application.applied_house,
-                        applied_house_assessment_tax_account: house.assessment_tax_account,
-                        status: application.status,
-                        date_submitted: moment(application.date_submitted, 'YYYY-MM-DD').format('DD/MM/YYYY')
-                      })
-                    }
+                      }
+                    )
                   }
                 }
               )
+              mergerCounter++
+              if (mergerCounter === this.tempApplications.length) {
+                this.tableSource = new MatTableDataSource<MergedApplication>(this.mergedApplications)
+                this.tableSource.paginator = this.paginator;
+                this.tableSource.sort = this.sort;
+                // console.log('mergedApplications', this.mergedApplications)
+              }
+              
             }
-          }
-        )
-        mergerCounter++
-        if (mergerCounter === this.tempApplications.length) {
-          this.tableSource = new MatTableDataSource<MergedApplication>(this.mergedApplications)
-          this.tableSource.paginator = this.paginator;
-          this.tableSource.sort = this.sort;
-          console.log(this.mergedApplications)
-        }
-        
-      }
-    )
+          )
+        })
+      })
+    })
+
+    // this.tempApplications = this.applicationService.retrievedApplications
+    // this.tempHouses = this.houseService.retrievedHouses
+    // this.tempUsers = this.userService.users
 
   }
 
@@ -193,7 +249,7 @@ export class ApplicationsComponent implements OnInit {
   }
 
   initChart() {
-    this.zone.runOutsideAngular(() => {
+    // this.zone.runOutsideAngular(() => {
       // Create chart
       this.pieChart = am4core.create("chartdiv", am4charts.PieChart);
       this.pieChart.hiddenState.properties.opacity = 0; // this creates initial fade-in
@@ -203,28 +259,38 @@ export class ApplicationsComponent implements OnInit {
       this.pieChart.data = [
         {
           country: "Completed",
-          value: 260,
-          color: am4core.color("#28b463")
+          value: this.applicationCM ? this.applicationCM.length : 0,
+          // color: am4core.color("#28b463")
+        },
+        {
+          country: "Created",
+          value: this.applicationCR ? this.applicationCR.length : 0,
+          // color: am4core.color("#28b463")
+        },
+        {
+          country: "In Progress",
+          value: this.applicationIP ? this.applicationIP.length : 0,
+          // color: am4core.color("#28b463")
+        },
+        {
+          country: "Paid",
+          value: this.applicationPD ? this.applicationPD.length : 0,
+          // color: am4core.color("#28b463")
         },
         {
           country: "Rejected",
-          value: 230,
-          color: am4core.color("#a93226")
+          value: this.applicationRJ ? this.applicationRJ.length : 0,
+          // color: am4core.color("#a93226")
         },
         {
           country: "In Evaluation",
-          value: 200,
-          color: am4core.color("#f1c40f")
-        },
-        {
-          country: "Site visit",
-          value: 165,
-          color: am4core.color("#ca6f1e")
+          value: this.applicationIE ? this.applicationIE.length : 0,
+          // color: am4core.color("#f1c40f")
         },
         {
           country: "Submitted",
-          value: 128,
-          color: am4core.color("#2471a3")
+          value: this.applicationSM ? this.applicationSM.length : 0,
+          // color: am4core.color("#2471a3")
         }
       ];
 
@@ -240,11 +306,11 @@ export class ApplicationsComponent implements OnInit {
 
       this.pieChart.legend = new am4charts.Legend();
 
-    })
+    // })
   }
 
   doViewDetail(selectedApplication) {
-    console.log(selectedApplication)
+    // console.log('selectedApplication', selectedApplication)
     this.router.navigate(['/applications/details'], selectedApplication)
   }
 

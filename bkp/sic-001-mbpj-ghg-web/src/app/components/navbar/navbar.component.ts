@@ -33,7 +33,8 @@ export class NavbarComponent implements OnInit {
     public toastr: ToastrService
   ) {
     this.location = location;
-    this.user = this.authService.userDetail
+    this.user = this.authService.decodedToken();
+    // this.user = this.authService.userDetail
     // console.log('User: ', this.user)
     this.router.events.subscribe((event: Event) => {
        if (event instanceof NavigationStart) {

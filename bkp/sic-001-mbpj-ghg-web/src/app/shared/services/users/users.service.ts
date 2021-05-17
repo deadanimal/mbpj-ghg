@@ -16,8 +16,7 @@ export class UsersService {
   public urlUser: string = environment.baseUrl + 'v1/users/'
   public users: User[] = []
   public usersFiltered: User[] = []
-
-  public updateUserId: string
+  public userStatistics: any
 
   constructor(
     private http: HttpClient,
@@ -63,6 +62,24 @@ export class UsersService {
     return this.http.put<any>(updateUserUrl, body).pipe(
       tap((res) => {
         //console.log('Updated user: ', res)
+      })
+    )
+  }
+
+  delete(id: string): Observable<any> {
+    let urlDelete = this.urlUser + id + "/";
+    return this.http.delete<any>(urlDelete).pipe(
+      tap((res) => {
+        // console.log("Deleted user: ", res);
+      })
+    );
+  }
+
+  getStatistics(): Observable<any> {
+    let urlTemp = this.urlUser + 'get_total_user'
+    return this.http.get<any>(urlTemp).pipe(
+      tap((res) => {
+        this.userStatistics = res
       })
     )
   }

@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://sic-001-mbpj-ghg.herokuapp.com/'
+  baseUrl: 'https://mbpj-ghg-api.pipe.my/'
 };

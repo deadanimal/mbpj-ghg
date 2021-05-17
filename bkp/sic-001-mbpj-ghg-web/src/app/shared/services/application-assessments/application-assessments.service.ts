@@ -72,7 +72,7 @@ export class ApplicationAssessmentsService {
 
   doRetrieveFilteredApplicationAssessments(filterField): Observable<any> {
     let headers = this.createHeader()
-    let filterUrl = this.applicationAssessmentsUrl + '?' + filterField + '/'
+    let filterUrl = this.applicationAssessmentsUrl + '?' + filterField
     return this.http.get<ApplicationAssessment[]>(filterUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedFilteredApplicationAssessments = res

@@ -27,16 +27,18 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { HelpdeskComponent } from './helpdesk/helpdesk.component';
 import { HousesComponent } from './houses/houses.component';
 import { HouseDetailsComponent } from './house-details/house-details.component';
-import { ManagementComponent } from './management/management.component';
 import { ProfileComponent } from './profile/profile.component';
 import { ReportComponent } from './report/report.component';
 import { SettingsComponent } from './settings/settings.component';
 import { TestingComponent } from './testing/testing.component';
-import { DetailComponent } from './applications/detail/detail.component';
 import { ApplicationDetailsComponent } from './application-details/application-details.component';
 import { NotificationsComponent } from './notifications/notifications.component';
 import { MaintenanceComponent } from './maintenance/maintenance.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { UsersComponent } from './management/users/users.component';
+import { FaqsComponent } from './management/faqs/faqs.component';
+import { AssessmentTaxesComponent } from './assessment-taxes/assessment-taxes.component';
+import { RebatesComponent } from './rebates/rebates.component';
 
 
 @NgModule({
@@ -49,14 +51,16 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     HelpdeskComponent,
     HousesComponent,
     HouseDetailsComponent,
-    ManagementComponent,
-    DetailComponent,
     ProfileComponent,
     ReportComponent,
     SettingsComponent,
     TestingComponent,
     NotificationsComponent,
     MaintenanceComponent,
+    UsersComponent,
+    FaqsComponent,
+    AssessmentTaxesComponent,
+    RebatesComponent,
     
   ],
   imports: [

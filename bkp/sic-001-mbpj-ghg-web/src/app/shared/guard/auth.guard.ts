@@ -16,6 +16,7 @@ export class AuthGuard implements CanActivate {
   }
   canActivate(route: ActivatedRouteSnapshot){
     const expectedRole = route.data.role
+    this.auth.decodedToken();
     if (this.auth.userType == expectedRole) {
       return true
     }

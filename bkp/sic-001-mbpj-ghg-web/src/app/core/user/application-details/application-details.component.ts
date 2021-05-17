@@ -1,5 +1,5 @@
 import { Component, OnInit, TemplateRef, NgZone } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormArray, FormGroup, FormControl } from '@angular/forms';
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 
 import { User } from 'src/app/shared/services/users/users.model';
@@ -25,6 +25,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { LoadingBarService } from '@ngx-loading-bar/core';
 import { ApplicationAssessment } from 'src/app/shared/services/application-assessments/application-assessments.model';
+import { AssessmentAspect } from 'src/app/shared/services/assessment-aspects/assessment-aspects.model';
 import { Evaluation } from 'src/app/shared/services/evaluations/evaluations.model';
 import { EvaluationSchedule } from 'src/app/shared/services/evaluation-schedules/evaluation-schedules.model';
 am4core.useTheme(am4themes_animated);
@@ -52,11 +53,13 @@ export class ApplicationDetailsComponent implements OnInit {
   public tempApplication
   public tempApplicant: User
   public tempApplicationAssessment: ApplicationAssessment[] = []
+  public tempAssessmentAspect: AssessmentAspect[] = []
   public tempHouse: House
   public tempEvaluator: User
   public tempEvaluatorList: User[] = []
   public tempEvaluation: Evaluation[] = []
   public tempEvaluationSchedule: EvaluationSchedule
+  public statusApproveReject = ["Completed", "Rejected", "Paid"]
   public focus
 
   evaluatorForm = new FormGroup({
@@ -79,6 +82,8 @@ export class ApplicationDetailsComponent implements OnInit {
   statusForm = new FormGroup({
     status: new FormControl('')
   })
+
+  evaluationFormArray = new FormArray([])
 
   leafletOptions = {
     layers: [
@@ -125,6 +130,7 @@ export class ApplicationDetailsComponent implements OnInit {
     public loadingBar: LoadingBarService
   ) {
     this.tempApplication = this.router.getCurrentNavigation().extras
+    console.log("tempApplication", this.tempApplication)
     this.initData()
   }
 
@@ -132,7 +138,26 @@ export class ApplicationDetailsComponent implements OnInit {
     
   }
 
+  initEvaluation() {
+    return new FormGroup({
+      id: new FormControl(''),
+      equipment: new FormControl(0),
+      system: new FormControl(0),
+      efficiency: new FormControl(0),
+      remarks: new FormControl(''),
+      application_assessment: new FormControl(''),
+      assessment_aspect_name: new FormControl('')
+    })
+  }
+
   initData() {
+    this.assessmentAspectService.doRetrieveAllAssessmentAspects().subscribe(
+      (assessment_aspect) => {
+        this.tempAssessmentAspect = assessment_aspect
+        // console.log("tempAssessmentAspect", this.tempAssessmentAspect)
+      }
+    )
+
     if (this.tempApplication.status == 'CM') {
       this.tempApplication.status = 'Completed'
     }
@@ -183,7 +208,7 @@ export class ApplicationDetailsComponent implements OnInit {
           else if (this.tempHouse.building_type == 'OT'){
             this.tempHouse.building_type = 'Other'
           }
-          console.log('House: ', this.tempHouse)
+          // console.log('tempHouse: ', this.tempHouse)
         }
       }
     )
@@ -200,7 +225,37 @@ export class ApplicationDetailsComponent implements OnInit {
         }
       }
     )
-    this.applicationAssessmentService.retrievedApplicationAssessments.forEach(
+    this.applicationAssessmentService.doRetrieveFilteredApplicationAssessments("application="+this.tempApplication.id).subscribe(
+      (assessment) => {
+        this.tempApplicationAssessment = assessment
+      }, (err) => {
+        console.error('err', err)
+      }, () => {
+        for (let index = 0; index < this.tempApplicationAssessment.length; index++) {
+          let result = this.tempAssessmentAspect.find((obj) => {
+            return obj.id == this.tempApplicationAssessment[index].assessment_aspect
+          })
+          this.tempApplicationAssessment[index].assessment_aspect_name = result.name + '. ' + result.aspect
+
+          this.evaluationService.doRetrieveFilteredEvaluations("application_assessment="+this.tempApplicationAssessment[index].id).subscribe(
+            (evaluation) => {
+              this.tempEvaluation.push(evaluation[0])
+              // console.log('evaluationFormArray', this.evaluationFormArray.value[index])
+              // console.log('tempEvaluation', this.tempEvaluation)
+            }, (err) => {
+              console.error('err', err)
+            }, () => {
+              this.evaluationFormArray.push(this.initEvaluation())
+              this.evaluationFormArray.at(index).patchValue({
+                ...this.tempEvaluation[index],
+                assessment_aspect_name: result.name + '. ' + result.aspect
+              })
+            }
+          )
+        }
+      }
+    )
+    /* this.applicationAssessmentService.retrievedApplicationAssessments.forEach(
       (assessment) => {
         if (assessment.application == this.tempApplication.id) {
           this.tempApplicationAssessment.push(assessment)
@@ -214,7 +269,7 @@ export class ApplicationDetailsComponent implements OnInit {
           )
         }
       }
-    )
+    ) */
     this.evaluationScheduleService.retrievedEvaluationSchedules.forEach(
       (schedule) => {
         if (schedule.application == this.tempApplication.id) {
@@ -312,6 +367,15 @@ export class ApplicationDetailsComponent implements OnInit {
   }
 
   submitEditEvaluation() {
+    // console.log('submitEditEvaluation', this.evaluationFormArray)
+    this.evaluationFormArray.controls.forEach((formarray) => {
+      this.evaluationService.doUpdateEvaluation(formarray.value, formarray.value.id).subscribe(
+        (res) => {
+          console.log('res', res)
+        }, (err) => {
+          console.error('err', err)
+        })
+    })
     this.isEdit = false
     this.toastr.show(
       '<span class="alert-icon fas fa-check-circle" data-notify="icon"></span> <div class="alert-text"</div> <span class="alert-title" data-notify="title">Success</span> <span data-notify="message">Evaluation score edit successfully submited</span></div>',
@@ -485,4 +549,11 @@ export class ApplicationDetailsComponent implements OnInit {
     this.defaultModal.hide()
   }
   
+  getAssessmentAspect(assessment_aspect_id) {
+    let result = this.tempAssessmentAspect.find((obj) => {
+      return obj.id == assessment_aspect_id
+    })
+    return result.name + '. ' + result.aspect
+  }
+
 }

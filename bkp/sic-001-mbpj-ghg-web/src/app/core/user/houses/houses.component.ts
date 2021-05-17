@@ -68,9 +68,9 @@ export class HousesComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.zone.runOutsideAngular(() => {
-      this.initChart()
-    })
+    // this.zone.runOutsideAngular(() => {
+    //   this.initChart()
+    // })
   }
 
   ngOnDestroy() {
@@ -92,6 +92,13 @@ export class HousesComponent implements OnInit, OnDestroy {
     this.tempHouses = this.houseService.retrievedHouses
     this.tempUsers = this.userService.users
     let mergerCounter: number = 0
+
+    this.zone.runOutsideAngular(() => {
+      this.initChart()
+    })
+
+    console.log('tempHouses', this.tempHouses)
+    console.log('tempUsers', this.tempUsers)
 
     this.tempHouses.forEach(
       (house: House) => {
@@ -124,6 +131,8 @@ export class HousesComponent implements OnInit, OnDestroy {
                 id: house.id,
                 applicant_id: house.applicant,
                 applicant_name: user.full_name,
+                applicant_phone: user.phone,
+                applicant_email: user.email,
                 address: house.address,
                 assessment_tax_account: house.assessment_tax_account,
                 building_type: house.building_type,
@@ -162,15 +171,15 @@ export class HousesComponent implements OnInit, OnDestroy {
       () => {
       },
       () => {
-        this.mergeData()
-      }
-    )
-    this.userService.getAll().subscribe(
-      () => {
-      },
-      () => {
-      },
-      () => {
+        this.userService.getAll().subscribe(
+          () => {
+          },
+          () => {
+          },
+          () => {
+            this.mergeData()
+          }
+        )
       }
     )
   }

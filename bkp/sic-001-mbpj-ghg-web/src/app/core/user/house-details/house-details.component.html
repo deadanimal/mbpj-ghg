@@ -1,48 +1,326 @@
 <div class="header bg-transparent pb-6">
-    <div class="container-fluid">
-        <div class="header-body">
-            <div class="row align-items-center py-4">
-                <div class="col-lg-6 col-7">
-                    <h6 class="h2 text-dark d-inline-block mb-0">Details</h6>
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-dark d-inline-block mb-0">Details</h6>
 
-                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                            <li class="breadcrumb-item">
-                                <a [routerLink]="['/dashboard']"> <i class="fas fa-home text-dark"> </i> </a>
-                            </li>
-              
-                            <li class=" breadcrumb-item">
-                                <a class="text-dark" [routerLink]="['/houses']"> Houses </a>
-                            </li>
-              
-                            <li aria-current="page" class=" breadcrumb-item active">
-                                Details
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item">
+                <a [routerLink]="['/dashboard']">
+                  <i class="fas fa-home text-dark"> </i>
+                </a>
+              </li>
+
+              <li class="breadcrumb-item">
+                <a class="text-dark" [routerLink]="['/houses']"> Houses </a>
+              </li>
+
+              <li aria-current="page" class="breadcrumb-item active">
+                Details
+              </li>
+            </ol>
+          </nav>
         </div>
+
+        <div class="col-lg-6 col-5 text-right">
+          <h6 class="h2 text-dark d-inline-block mb-0">
+            Assessment Tax Account -
+            {{ tempFilterHouse?.assessment_tax_account }}
+          </h6>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="container-fluid mt--6">
-    <div class="row">
-        <div class="col">
-            <div class="card">
-                <div class="card-header bg-info py-2">
-                    <div class="row">
-                        <div class="col my-auto">
-                            <h4 class="text-white m-0">Houses list</h4>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        
-                    </div>
-                </div>
+  <div class="row">
+    <div class="col-md-6 col-sm-12">
+      <div class="card">
+        <div class="card-header bg-info py-2">
+          <div class="row">
+            <div class="col my-auto">
+              <h4 class="text-white m-0">Applicant</h4>
             </div>
+          </div>
         </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <div class="form-control-label">Full Name</div>
+                <input
+                  class="form-control"
+                  type="text"
+                  readonly
+                  [value]="tempHouse.applicant_name"
+                />
+              </div>
+              <div class="form-group">
+                <div class="form-control-label">Email</div>
+                <input
+                  class="form-control"
+                  type="text"
+                  readonly
+                  [value]="tempHouse.applicant_email"
+                />
+              </div>
+              <div class="form-group">
+                <div class="form-control-label">Phone</div>
+                <input
+                  class="form-control"
+                  type="text"
+                  readonly
+                  [value]="tempHouse.applicant_phone"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header bg-info py-2">
+          <div class="row">
+            <div class="col my-auto">
+              <h4 class="text-white m-0">Address</h4>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <textarea
+                  class="form-control"
+                  rows="5"
+                  readonly
+                  [value]="
+                    tempFilterHouse?.address +
+                    ', ' +
+                    tempFilterHouse?.postcode +
+                    ', ' +
+                    tempFilterHouse?.area
+                  "
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-header bg-info py-2">
+          <div class="row">
+            <div class="col my-auto">
+              <h4 class="text-white m-0">Home</h4>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <label class="form-control-label">Building Type</label>
+                <input
+                  class="form-control"
+                  type="text"
+                  readonly
+                  [value]="tempHouse.building_type_full"
+                />
+              </div>
+              <div class="form-group">
+                <div class="form-control-label">Staying Duration</div>
+                <input
+                  class="form-control"
+                  type="text"
+                  readonly
+                  [value]="
+                    tempFilterHouse?.staying_duration_years +
+                    ' year ' +
+                    tempFilterHouse?.staying_duration_months +
+                    ' month'
+                  "
+                />
+              </div>
+              <div class="form-group">
+                <div class="form-control-label">Permanent Occupant</div>
+                <input
+                  class="form-control"
+                  type="text"
+                  readonly
+                  [value]="tempFilterHouse?.permanent_occupant"
+                />
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <div class="form-control-label">Car</div>
+                    <input
+                      class="form-control"
+                      type="text"
+                      readonly
+                      [value]="tempFilterHouse?.vehicle_car"
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <div class="form-control-label">Motorcycle</div>
+                    <input
+                      class="form-control"
+                      type="text"
+                      readonly
+                      [value]="tempFilterHouse?.vehicle_motorcycle"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <div class="form-control-label">Bicycle</div>
+                    <input
+                      class="form-control"
+                      type="text"
+                      readonly
+                      [value]="tempFilterHouse?.vehicle_bicycle"
+                    />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <div class="form-control-label">Other</div>
+                    <input
+                      class="form-control"
+                      type="text"
+                      readonly
+                      [value]="tempFilterHouse?.vehicle_other"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+    <div class="col-md-6 col-sm-12">
+      <div class="card">
+        <div class="card-header bg-info py-2">
+          <div class="row">
+            <div class="col my-auto">
+              <h4 class="text-white m-0">Bills</h4>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="form-group">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h3>Electricity bill #1</h3>
+                  </div>
+                  <div>
+                    {{
+                      tempFilterHouse?.electricity_bill_1_month
+                        | date: "MMMM, y"
+                    }}
+                    - {{ tempFilterHouse?.electricity_bill_1_usage }} kWh
+                  </div>
+                </div>
+                <img
+                  style="width: 100%"
+                  [src]="tempFilterHouse?.electricity_bill_1_doc"
+                />
+              </div>
+              <div class="form-group">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h3>Electricity bill #2</h3>
+                  </div>
+                  <div>
+                    {{
+                      tempFilterHouse?.electricity_bill_2_month
+                        | date: "MMMM, y"
+                    }}
+                    - {{ tempFilterHouse?.electricity_bill_2_usage }} kWh
+                  </div>
+                </div>
+                <img
+                  style="width: 100%"
+                  [src]="tempFilterHouse?.electricity_bill_2_doc"
+                />
+              </div>
+              <div class="form-group">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h3>Electricity bill #3</h3>
+                  </div>
+                  <div>
+                    {{
+                      tempFilterHouse?.electricity_bill_3_month
+                        | date: "MMMM, y"
+                    }}
+                    - {{ tempFilterHouse?.electricity_bill_3_usage }} kWh
+                  </div>
+                </div>
+                <img
+                  style="width: 100%"
+                  [src]="tempFilterHouse?.electricity_bill_3_doc"
+                />
+              </div>
+
+              <div class="form-group">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h3>Water bill #1</h3>
+                  </div>
+                  <div>
+                    {{ tempFilterHouse?.water_bill_1_month | date: "MMMM, y" }}
+                    - {{ tempFilterHouse?.water_bill_1_usage }} m<sup>3</sup>
+                  </div>
+                </div>
+                <img
+                  style="width: 100%"
+                  [src]="tempFilterHouse?.water_bill_1_doc"
+                />
+              </div>
+              <div class="form-group">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h3>Water bill #2</h3>
+                  </div>
+                  <div>
+                    {{ tempFilterHouse?.water_bill_2_month | date: "MMMM, y" }}
+                    - {{ tempFilterHouse?.water_bill_2_usage }} m<sup>3</sup>
+                  </div>
+                </div>
+                <img
+                  style="width: 100%"
+                  [src]="tempFilterHouse?.water_bill_2_doc"
+                />
+              </div>
+              <div class="form-group">
+                <div class="d-flex justify-content-between">
+                  <div>
+                    <h3>Water bill #3</h3>
+                  </div>
+                  <div>
+                    {{ tempFilterHouse?.water_bill_3_month | date: "MMMM, y" }}
+                    - {{ tempFilterHouse?.water_bill_3_usage }} m<sup>3</sup>
+                  </div>
+                </div>
+                <img
+                  style="width: 100%"
+                  [src]="tempFilterHouse?.water_bill_3_doc"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

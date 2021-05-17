@@ -1,82 +1,93 @@
-import { Component, OnInit, NgZone } from '@angular/core';
-import { ToastrService } from 'ngx-toastr';
+import { Component, OnInit, NgZone } from "@angular/core";
+import { LoadingBarService } from "@ngx-loading-bar/core";
+import { environment } from "src/environments/environment";
+import { ToastrService } from "ngx-toastr";
+
+import { ReportsService } from "src/app/shared/services/reports/reports.service";
 
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import kelly from "@amcharts/amcharts4/themes/kelly.js";
-import { ReportsService } from 'src/app/shared/services/reports/reports.service';
 am4core.useTheme(am4themes_animated);
-am4core.useTheme(kelly);
 
 @Component({
-  selector: 'app-report',
-  templateUrl: './report.component.html',
-  styleUrls: ['./report.component.scss']
+  selector: "app-report",
+  templateUrl: "./report.component.html",
+  styleUrls: ["./report.component.scss"],
 })
 export class ReportComponent implements OnInit {
+  // Data
+  reportType: string = "";
 
-  public chartStatus
-  public chartTrend
-  public chartCategory
-  public chartApp
-  public chartEnergy
-  public chartWater
-  public chartTransportation
-  public chartBiodiversity
-  public chartWaste
+  // DatePicker
+  startDate;
+  endDate;
+  datePickerConfig = {
+    isAnimated: true,
+    containerClass: "theme-dark-blue",
+    dateInputFormat: "YYYY-MM-DD",
+  };
+
+  public chartStatus;
+  public chartTrend;
+  public chartCategory;
+  public chartApp;
+  public chartEnergy;
+  public chartWater;
+  public chartTransportation;
+  public chartBiodiversity;
+  public chartWaste;
 
   constructor(
     public zone: NgZone,
+    public loadingBar: LoadingBarService,
     public toastr: ToastrService,
     private reportService: ReportsService
-  ) { }
+  ) {}
 
-  ngOnInit() {
-
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     this.zone.runOutsideAngular(() => {
-      this.initChartCategory()
-      this.initChartStatus()
-      this.initChartTrend()
-      this.initChartApp()
-      this.initChartEnergy()
-      this.initChartWater()
-      this.initChartTransportation()
-      this.initChartWaste()
-      this.initChartBiodiversity()
-    })
+      this.initChartCategory();
+      this.initChartStatus();
+      this.initChartTrend();
+      this.initChartApp();
+      this.initChartEnergy();
+      this.initChartWater();
+      this.initChartTransportation();
+      this.initChartWaste();
+      this.initChartBiodiversity();
+    });
   }
 
   ngOnDestroy() {
     this.zone.runOutsideAngular(() => {
       if (this.chartCategory) {
-        this.chartCategory.dispose()
+        this.chartCategory.dispose();
       }
       if (this.chartStatus) {
-        this.chartStatus.dispose()
+        this.chartStatus.dispose();
       }
       if (this.chartTrend) {
-        this.chartTrend.dispose()
+        this.chartTrend.dispose();
       }
       if (this.chartApp) {
-        this.chartApp.dispose()
+        this.chartApp.dispose();
       }
       if (this.chartEnergy) {
-        this.chartEnergy.dispose()
+        this.chartEnergy.dispose();
       }
       if (this.chartWater) {
-        this.chartWater.dispose()
+        this.chartWater.dispose();
       }
       if (this.chartTransportation) {
-        this.chartTransportation.dispose()
+        this.chartTransportation.dispose();
       }
       if (this.chartWaste) {
-        this.chartWaste.dispose()
+        this.chartWaste.dispose();
       }
-    })
+    });
   }
 
   initChartStatus() {
@@ -84,13 +95,16 @@ export class ReportComponent implements OnInit {
       this.chartStatus = am4core.create("statusdiv", am4charts.PieChart);
 
       // Add data
-      this.chartStatus.data = [{
-        "status": "Approved",
-        "amount": 501.9
-      }, {
-        "status": "Rejected",
-        "amount": 301.9
-      }];
+      this.chartStatus.data = [
+        {
+          status: "Approved",
+          amount: 501.9,
+        },
+        {
+          status: "Rejected",
+          amount: 301.9,
+        },
+      ];
 
       // Add and configure Series
       let pieSeries = this.chartStatus.series.push(new am4charts.PieSeries());
@@ -100,55 +114,57 @@ export class ReportComponent implements OnInit {
       pieSeries.slices.template.strokeWidth = 2;
       pieSeries.slices.template.strokeOpacity = 1;
 
-      pieSeries.radius = am4core.percent(60)
+      pieSeries.radius = am4core.percent(60);
 
       // This creates initial animation
       pieSeries.hiddenState.properties.opacity = 1;
       pieSeries.hiddenState.properties.endAngle = -90;
       pieSeries.hiddenState.properties.startAngle = -90;
-    })
+    });
   }
 
   initChartTrend() {
     this.zone.runOutsideAngular(() => {
-      this.chartTrend = am4core.create("trenddiv", am4charts.XYChart)
+      this.chartTrend = am4core.create("trenddiv", am4charts.XYChart);
       this.chartTrend.data = [
         {
-          "location": 'Old Town',
-          "amount": 121
+          location: "Old Town",
+          amount: 121,
         },
         {
-          "location": 'Bukit Gasing',
-          "amount": 134
+          location: "Bukit Gasing",
+          amount: 134,
         },
         {
-          "location": 'Taman Jaya',
-          "amount": 26
+          location: "Taman Jaya",
+          amount: 26,
         },
         {
-          "location": 'Taman Gee Huat',
-          "amount": 29
+          location: "Taman Gee Huat",
+          amount: 29,
         },
         {
-          "location": 'Taman Paramount',
-          "amount": 26
+          location: "Taman Paramount",
+          amount: 26,
         },
         {
-          "location": 'Asia Jaya',
-          "amount": 65
-        }
+          location: "Asia Jaya",
+          amount: 65,
+        },
       ];
-      
+
       // Create axes
-      let categoryAxis = this.chartTrend.yAxes.push(new am4charts.CategoryAxis());
+      let categoryAxis = this.chartTrend.yAxes.push(
+        new am4charts.CategoryAxis()
+      );
       categoryAxis.dataFields.category = "location";
       categoryAxis.numberFormatter.numberFormat = "#";
       categoryAxis.renderer.inversed = true;
       categoryAxis.renderer.grid.template.location = 0;
       categoryAxis.renderer.cellStartLocation = 0.1;
       categoryAxis.renderer.cellEndLocation = 0.9;
-      
-      let  valueAxis = this.chartTrend.xAxes.push(new am4charts.ValueAxis()); 
+
+      let valueAxis = this.chartTrend.xAxes.push(new am4charts.ValueAxis());
       valueAxis.renderer.opposite = true;
 
       let series = this.chartTrend.series.push(new am4charts.ColumnSeries());
@@ -173,7 +189,7 @@ export class ReportComponent implements OnInit {
       categoryLabel.label.fill = am4core.color("#fff");
       categoryLabel.label.hideOversized = false;
       categoryLabel.label.truncate = false;
-    })
+    });
   }
 
   initChartCategory() {
@@ -181,36 +197,47 @@ export class ReportComponent implements OnInit {
       this.chartCategory = am4core.create("categorydiv", am4charts.XYChart);
 
       // Add data
-      this.chartCategory.data = [{
-        "category": "Energy",
-        "value": 3025
-      }, {
-        "category": "Waste",
-        "value": 1882
-      }, {
-        "category": "Water",
-        "value": 1809
-      }, {
-        "category": "Transportation",
-        "value": 1322
-      }, {
-        "category": "Biodiversity",
-        "value": 1122
-      }];
+      this.chartCategory.data = [
+        {
+          category: "Energy",
+          value: 3025,
+        },
+        {
+          category: "Waste",
+          value: 1882,
+        },
+        {
+          category: "Water",
+          value: 1809,
+        },
+        {
+          category: "Transportation",
+          value: 1322,
+        },
+        {
+          category: "Biodiversity",
+          value: 1122,
+        },
+      ];
 
       // Create axes
 
-      let categoryAxis = this.chartCategory.xAxes.push(new am4charts.CategoryAxis());
+      let categoryAxis = this.chartCategory.xAxes.push(
+        new am4charts.CategoryAxis()
+      );
       categoryAxis.dataFields.category = "category";
       categoryAxis.renderer.grid.template.location = 0;
       categoryAxis.renderer.minGridDistance = 30;
 
-      categoryAxis.renderer.labels.template.adapter.add("dy", function (dy, target) {
-        if (target.dataItem && target.dataItem.index && 2 == 2) {
-          return dy + 25;
+      categoryAxis.renderer.labels.template.adapter.add(
+        "dy",
+        function (dy, target) {
+          if (target.dataItem && target.dataItem.index && 2 == 2) {
+            return dy + 25;
+          }
+          return dy;
         }
-        return dy;
-      });
+      );
 
       let valueAxis = this.chartCategory.yAxes.push(new am4charts.ValueAxis());
 
@@ -220,13 +247,12 @@ export class ReportComponent implements OnInit {
       series.dataFields.categoryX = "category";
       series.name = "Value";
       series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
-      series.columns.template.fillOpacity = .8;
+      series.columns.template.fillOpacity = 0.8;
 
       let columnTemplate = series.columns.template;
       columnTemplate.strokeWidth = 2;
       columnTemplate.strokeOpacity = 1;
-    })
-
+    });
   }
 
   initChartApp() {
@@ -234,34 +260,44 @@ export class ReportComponent implements OnInit {
       this.chartApp = am4core.create("appdiv", am4charts.XYChart);
       this.chartApp.paddingRight = 20;
 
-      let data = [{
-        "year": "2011",
-        "value": 100
-      }, {
-        "year": "2012",
-        "value": 200
-      }, {
-        "year": "2013",
-        "value": 300
-      }, {
-        "year": "2014",
-        "value": 250
-      }, {
-        "year": "2015",
-        "value": 500
-      }, {
-        "year": "2016",
-        "value": 800
-      }, {
-        "year": "2017",
-        "value": 750
-      }, {
-        "year": "2018",
-        "value": 879
-      }, {
-        "year": "2019",
-        "value": 1250
-      }];
+      let data = [
+        {
+          year: "2011",
+          value: 100,
+        },
+        {
+          year: "2012",
+          value: 200,
+        },
+        {
+          year: "2013",
+          value: 300,
+        },
+        {
+          year: "2014",
+          value: 250,
+        },
+        {
+          year: "2015",
+          value: 500,
+        },
+        {
+          year: "2016",
+          value: 800,
+        },
+        {
+          year: "2017",
+          value: 750,
+        },
+        {
+          year: "2018",
+          value: 879,
+        },
+        {
+          year: "2019",
+          value: 1250,
+        },
+      ];
 
       this.chartApp.data = data;
       this.chartApp.dateFormatter.inputDateFormat = "yyyy";
@@ -287,33 +323,39 @@ export class ReportComponent implements OnInit {
       this.chartApp.cursor.lineX.fillOpacity = 0.1;
 
       this.chartApp.scrollbarX = new am4core.Scrollbar();
-    })
+    });
   }
 
   initChartEnergy() {
-
     this.zone.runOutsideAngular(() => {
       this.chartEnergy = am4core.create("chartenergy", am4charts.PieChart);
       // Add data
-      this.chartEnergy.data = [ {
-        "aspect": "A1",
-        "amount": 501
-      }, {
-        "aspect": "A2",
-        "amount": 301
-      }, {
-        "aspect": "A3",
-        "amount": 201
-      }, {
-        "aspect": "A4",
-        "amount": 165
-      }, {
-        "aspect": "A5",
-        "amount": 139
-      }, {
-        "aspect": "A6",
-        "amount": 195
-      } ];
+      this.chartEnergy.data = [
+        {
+          aspect: "A1",
+          amount: 501,
+        },
+        {
+          aspect: "A2",
+          amount: 301,
+        },
+        {
+          aspect: "A3",
+          amount: 201,
+        },
+        {
+          aspect: "A4",
+          amount: 165,
+        },
+        {
+          aspect: "A5",
+          amount: 139,
+        },
+        {
+          aspect: "A6",
+          amount: 195,
+        },
+      ];
 
       // Add and configure Series
       let pieSeries = this.chartEnergy.series.push(new am4charts.PieSeries());
@@ -323,36 +365,41 @@ export class ReportComponent implements OnInit {
       pieSeries.slices.template.strokeWidth = 2;
       pieSeries.slices.template.strokeOpacity = 1;
 
-      pieSeries.radius = am4core.percent(65)
+      pieSeries.radius = am4core.percent(65);
 
       // This creates initial animation
       pieSeries.hiddenState.properties.opacity = 1;
       pieSeries.hiddenState.properties.endAngle = -90;
       pieSeries.hiddenState.properties.startAngle = -90;
-    })
+    });
   }
 
   initChartWater() {
-
     this.zone.runOutsideAngular(() => {
       this.chartWater = am4core.create("chartwater", am4charts.PieChart);
       // Add data
-      this.chartWater.data = [ {
-        "aspect": "B1",
-        "amount": 51
-      }, {
-        "aspect": "B2",
-        "amount": 31
-      }, {
-        "aspect": "B3",
-        "amount": 21
-      }, {
-        "aspect": "B4",
-        "amount": 15
-      }, {
-        "aspect": "B5",
-        "amount": 19
-      } ];
+      this.chartWater.data = [
+        {
+          aspect: "B1",
+          amount: 51,
+        },
+        {
+          aspect: "B2",
+          amount: 31,
+        },
+        {
+          aspect: "B3",
+          amount: 21,
+        },
+        {
+          aspect: "B4",
+          amount: 15,
+        },
+        {
+          aspect: "B5",
+          amount: 19,
+        },
+      ];
 
       // Add and configure Series
       let pieSeries = this.chartWater.series.push(new am4charts.PieSeries());
@@ -362,64 +409,74 @@ export class ReportComponent implements OnInit {
       pieSeries.slices.template.strokeWidth = 2;
       pieSeries.slices.template.strokeOpacity = 1;
 
-      pieSeries.radius = am4core.percent(65)
+      pieSeries.radius = am4core.percent(65);
 
       // This creates initial animation
       pieSeries.hiddenState.properties.opacity = 1;
       pieSeries.hiddenState.properties.endAngle = -90;
       pieSeries.hiddenState.properties.startAngle = -90;
-    })
+    });
   }
 
   initChartTransportation() {
-
     this.zone.runOutsideAngular(() => {
-      this.chartTransportation = am4core.create("charttransportation", am4charts.PieChart);
+      this.chartTransportation = am4core.create(
+        "charttransportation",
+        am4charts.PieChart
+      );
       // Add data
-      this.chartTransportation.data = [ {
-        "aspect": "D1",
-        "amount": 51
-      }, {
-        "aspect": "D2",
-        "amount": 31
-      } ];
+      this.chartTransportation.data = [
+        {
+          aspect: "D1",
+          amount: 51,
+        },
+        {
+          aspect: "D2",
+          amount: 31,
+        },
+      ];
 
       // Add and configure Series
-      let pieSeries = this.chartTransportation.series.push(new am4charts.PieSeries());
+      let pieSeries = this.chartTransportation.series.push(
+        new am4charts.PieSeries()
+      );
       pieSeries.dataFields.value = "amount";
       pieSeries.dataFields.category = "aspect";
       pieSeries.slices.template.stroke = am4core.color("#fff");
       pieSeries.slices.template.strokeWidth = 2;
       pieSeries.slices.template.strokeOpacity = 1;
 
-      pieSeries.radius = am4core.percent(65)
+      pieSeries.radius = am4core.percent(65);
 
       // This creates initial animation
       pieSeries.hiddenState.properties.opacity = 1;
       pieSeries.hiddenState.properties.endAngle = -90;
       pieSeries.hiddenState.properties.startAngle = -90;
-    })
+    });
   }
 
   initChartWaste() {
-
     this.zone.runOutsideAngular(() => {
       this.chartWaste = am4core.create("chartwaste", am4charts.PieChart);
       // Add data
-      this.chartWaste.data = [ {
-        "aspect": "C1",
-        "amount": 41
-      }, {
-        "aspect": "C2",
-        "amount": 31
-      }, {
-        "aspect": "C3",
-        "amount": 61
-      }, {
-        "aspect": "C4",
-        "amount": 26
-      }
-     ];
+      this.chartWaste.data = [
+        {
+          aspect: "C1",
+          amount: 41,
+        },
+        {
+          aspect: "C2",
+          amount: 31,
+        },
+        {
+          aspect: "C3",
+          amount: 61,
+        },
+        {
+          aspect: "C4",
+          amount: 26,
+        },
+      ];
 
       // Add and configure Series
       let pieSeries = this.chartWaste.series.push(new am4charts.PieSeries());
@@ -429,32 +486,33 @@ export class ReportComponent implements OnInit {
       pieSeries.slices.template.strokeWidth = 2;
       pieSeries.slices.template.strokeOpacity = 1;
 
-      pieSeries.radius = am4core.percent(65)
+      pieSeries.radius = am4core.percent(65);
 
       // This creates initial animation
       pieSeries.hiddenState.properties.opacity = 1;
       pieSeries.hiddenState.properties.endAngle = -90;
       pieSeries.hiddenState.properties.startAngle = -90;
-    })
-    
+    });
   }
 
   initChartBiodiversity() {
-
     this.zone.runOutsideAngular(() => {
       this.chartWaste = am4core.create("chartbiodiversity", am4charts.PieChart);
       // Add data
-      this.chartWaste.data = [ {
-        "aspect": "E1",
-        "amount": 41
-      }, {
-        "aspect": "E2",
-        "amount": 31
-      }, {
-        "aspect": "E3",
-        "amount": 61
-      }
-     ];
+      this.chartWaste.data = [
+        {
+          aspect: "E1",
+          amount: 41,
+        },
+        {
+          aspect: "E2",
+          amount: 31,
+        },
+        {
+          aspect: "E3",
+          amount: 61,
+        },
+      ];
 
       // Add and configure Series
       let pieSeries = this.chartWaste.series.push(new am4charts.PieSeries());
@@ -464,42 +522,90 @@ export class ReportComponent implements OnInit {
       pieSeries.slices.template.strokeWidth = 2;
       pieSeries.slices.template.strokeOpacity = 1;
 
-      pieSeries.radius = am4core.percent(95)
+      pieSeries.radius = am4core.percent(95);
 
       // This creates initial animation
       pieSeries.hiddenState.properties.opacity = 1;
       pieSeries.hiddenState.properties.endAngle = -90;
       pieSeries.hiddenState.properties.startAngle = -90;
-    })
-    
+    });
   }
 
-  doExport() {
-    console.log('masuk')
-    this.successfulToastr()
+  generateReport() {
+    this.loadingBar.start();
+
+    switch (this.reportType) {
+      case "application":
+        this.loadingBar.complete();
+        window.open(environment.baseUrl + 'v1/reports/report_application/')
+        // this.reportService.getApplicationReport().subscribe(
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     // window.open(this.reportService.reportLink, "_blank");
+        //   }
+        // );
+        break;
+      case "approved":
+        this.loadingBar.complete();
+        window.open(environment.baseUrl + 'v1/reports/report_approved/')
+        // this.reportService.getApprovedReport().subscribe(
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     // window.open(this.reportService.reportLink, "_blank");
+        //   }
+        // );
+        break;
+      case "building":
+        this.loadingBar.complete();
+        window.open(environment.baseUrl + 'v1/reports/report_building/')
+        // this.reportService.getBuildingReport().subscribe(
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     // window.open(this.reportService.reportLink, "_blank");
+        //   }
+        // );
+        break;
+      case "town":
+        this.loadingBar.complete();
+        window.open(environment.baseUrl + 'v1/reports/report_town/')
+        // this.reportService.getTownReport().subscribe(
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     this.loadingBar.complete();
+        //   },
+        //   () => {
+        //     // window.open(this.reportService.reportLink, "_blank");
+        //   }
+        // );
+        break;
+      default:
+        this.loadingBar.complete();
+        break;
+    }
   }
 
-  successfulToastr() {
-    this.toastr.show(
-      '<span class="alert-icon fas fa-check-circle" data-notify="icon"></span> <div class="alert-text"</div> <span class="alert-title" data-notify="title">Exporting</span> <span data-notify="message">Your download will begin shortly</span></div>',
-      '',
-      {
-        timeOut: 2000,
-        closeButton: true,
-        enableHtml: true,
-        tapToDismiss: false,
-        titleClass: 'alert-title',
-        positionClass: 'toast-top-right',
-        toastClass: "ngx-toastr alert alert-dismissible alert-success alert-notify",
-      }
-    );
-  }
-
-  createReport() {
-    this.reportService.doCreateReport().subscribe()
-    https://sfo2.digitaloceanspaces.com/motion-api/GHG_Report.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=DA5VG5FZZV6HKNPES2TD%2F20200303%2Fsfo2%2Fs3%2Faws4_request&X-Amz-Date=20200303T061154Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ceba1a0dfed08e5cc59cfb90a5c8338b2d6208002d43eab32b880087c7bc84d9
-    let url = 'https://sfo2.digitaloceanspaces.com/motion-api/GHG_Report.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=DA5VG5FZZV6HKNPES2TD%2F20200401%2Fsfo2%2Fs3%2Faws4_request&X-Amz-Date=20200401T053023Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6773ffce95f5bd00116d2b9d9e94fa7ea9532fac6e84c487c923c28648f4432a'
-    window.open(url)
-  }
-
+  /* createReport() {
+    this.reportService.doCreateReport().subscribe();
+    //sfo2.digitaloceanspaces.com/motion-api/GHG_Report.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=DA5VG5FZZV6HKNPES2TD%2F20200303%2Fsfo2%2Fs3%2Faws4_request&X-Amz-Date=20200303T061154Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=ceba1a0dfed08e5cc59cfb90a5c8338b2d6208002d43eab32b880087c7bc84d9
+    https: let url =
+      "https://sfo2.digitaloceanspaces.com/motion-api/GHG_Report.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=DA5VG5FZZV6HKNPES2TD%2F20200401%2Fsfo2%2Fs3%2Faws4_request&X-Amz-Date=20200401T053023Z&X-Amz-Expires=3600&X-Amz-SignedHeaders=host&X-Amz-Signature=6773ffce95f5bd00116d2b9d9e94fa7ea9532fac6e84c487c923c28648f4432a";
+    window.open(url);
+  } */
 }

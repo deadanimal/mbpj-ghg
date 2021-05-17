@@ -26,6 +26,7 @@ export class AuthService {
   public token: TokenResponse
   public tokenAccess: string
   public tokenRefresh: string
+  public full_name: string
   public email: string
   public userID: string
   public username: string
@@ -73,6 +74,7 @@ export class AuthService {
         this.tokenAccess = res.access
 
         let decodedToken = jwtHelper.decodeToken(this.tokenAccess)
+        this.full_name = decodedToken.full_name
         this.email = decodedToken.email
         this.username = decodedToken.username
         this.userID = decodedToken.user_id
@@ -121,6 +123,25 @@ export class AuthService {
         // console.log('User detail', this.userDetail)
       })
     )
+  }
+
+  decodedToken() {
+    let accessToken = localStorage.getItem("accessToken");
+    let jwtHelper: JwtHelperService = new JwtHelperService();
+    let decodedToken = jwtHelper.decodeToken(accessToken);
+    this.full_name = decodedToken.full_name
+    this.email = decodedToken.email
+    this.username = decodedToken.username
+    this.userID = decodedToken.user_id
+    this.userType = decodedToken.user_type
+    let user_obj = {
+      user_id: decodedToken.user_id,
+      username: decodedToken.username,
+      full_name: decodedToken.full_name,
+      email: decodedToken.email,
+      user_type: decodedToken.user_type,
+    };
+    return user_obj;
   }
 
   /*

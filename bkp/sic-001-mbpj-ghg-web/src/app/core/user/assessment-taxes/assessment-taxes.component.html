@@ -1,0 +1,569 @@
+<ngx-loading-bar></ngx-loading-bar>
+<div class="header bg-transparent pb-6">
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-dark d-inline-block mb-0">Assessment Tax</h6>
+
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item">
+                <a [routerLink]="['/dashboard']">
+                  <i class="fas fa-home text-dark"> </i>
+                </a>
+              </li>
+
+              <li aria-current="page" class="breadcrumb-item active">
+                Assessment Tax
+              </li>
+            </ol>
+          </nav>
+        </div>
+
+        <div class="col-lg-6 col-5 text-right">
+          <a
+            class="btn btn-sm btn-info text-white"
+            (click)="openModal(regAssessmentTax, 'register', '')"
+          >
+            Register Assessment Tax
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid mt--6">
+  <div class="row">
+    <div class="col">
+      <div class="card">
+        <div class="card-header bg-info py-2">
+          <div class="row">
+            <div class="col my-auto">
+              <h4 class="text-white m-0">Assessment Taxes list</h4>
+            </div>
+          </div>
+        </div>
+        <div class="dataTables_wrapper py-4">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="dataTables_length" id="datatable_length">
+                <label>
+                  Show
+                  <select
+                    name="datatable_length"
+                    aria-controls="datatable"
+                    class="form-control form-control-sm custom-select custom-select-sm"
+                    (change)="entriesChange($event)"
+                  >
+                    <option value="5" [selected]="tableEntries == 5">5</option>
+                    <option value="10" [selected]="tableEntries == 10">
+                      10
+                    </option>
+                    <option value="15" [selected]="tableEntries == 15">
+                      15
+                    </option>
+                    <option value="-1" [selected]="tableEntries == -1">
+                      All
+                    </option>
+                  </select>
+                  records
+                </label>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <div id="datatable_filter" class="dataTables_filter">
+                <label>
+                  <input
+                    type="search"
+                    class="form-control form-control-sm"
+                    placeholder="Search records"
+                    aria-controls="datatable"
+                    (keyup)="filterTable($event)"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <ngx-datatable
+            class="bootstrap selection-cell"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="'auto'"
+            [limit]="tableEntries != -1 ? tableEntries : undefined"
+            [rows]="tableTemp"
+          >
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>No.</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.no }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Name</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.name }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Aspect Type</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ getAspectType(row.aspect_type) }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Aspect</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.aspect }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Incentive (%)</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.incentive }}
+              </ng-template>
+            </ngx-datatable-column>
+            <!-- <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Status</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div *ngIf="row.is_active">
+                  <a class="badge badge-success">Active</a>
+                </div>
+                <div *ngIf="!row.is_active">
+                  <a class="badge badge-danger">Inactive</a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column> -->
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Action</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <button
+                  class="btn btn-icon btn-2 btn-primary btn-sm"
+                  type="button"
+                  (click)="openModal(viewAssessmentTax, 'update', row)"
+                >
+                  <span class="btn-inner--icon"
+                    >Edit <i class="fas fa-edit"></i
+                  ></span>
+                </button>
+                <button
+                  class="btn btn-icon btn-2 btn-danger btn-sm"
+                  type="button"
+                  (click)="deleteAssessmentTax(row)"
+                >
+                  <span class="btn-inner--icon"
+                    >Delete <i class="fas fa-trash"></i
+                  ></span>
+                </button>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #regAssessmentTax let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header bg-info">
+      <h6 class="modal-title" id="modal-title-default">
+        Register Assessment Tax
+      </h6>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="defaultModal.hide()"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="assessmentAspectForm">
+        <div class="form-group" [ngClass]="{ focused: focusName === true }">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Name*"
+              type="text"
+              formControlName="name"
+              (focus)="focusName = true"
+              (blur)="focusName = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="let validation of assessmentAspectValidationMessage.name"
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm.get('name').hasError(validation.type) &&
+                (assessmentAspectForm.get('name').dirty ||
+                  assessmentAspectForm.get('name').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="form-group"
+          [ngClass]="{ focused: focusAspectType === true }"
+        >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <select
+              class="custom-select form-control"
+              formControlName="aspect_type"
+              (focus)="focusAspectType = true"
+              (blur)="focusAspectType = false"
+            >
+              <option selected hidden value="">Select evaluator</option>
+              <option
+                *ngFor="let aspecttype of dropdownAspectTypes"
+                [value]="aspecttype.value"
+              >
+                {{ aspecttype.display_name }}
+              </option>
+            </select>
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.aspect_type
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm
+                  .get('aspect_type')
+                  .hasError(validation.type) &&
+                (assessmentAspectForm.get('aspect_type').dirty ||
+                  assessmentAspectForm.get('aspect_type').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div class="form-group" [ngClass]="{ focused: focusAspect === true }">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Aspect*"
+              type="text"
+              formControlName="aspect"
+              (focus)="focusAspect = true"
+              (blur)="focusAspect = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="let validation of assessmentAspectValidationMessage.aspect"
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm.get('aspect').hasError(validation.type) &&
+                (assessmentAspectForm.get('aspect').dirty ||
+                  assessmentAspectForm.get('aspect').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="form-group"
+          [ngClass]="{ focused: focusIncentive === true }"
+        >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Incentive*"
+              type="number"
+              formControlName="incentive"
+              (focus)="focusIncentive = true"
+              (blur)="focusIncentive = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.incentive
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm
+                  .get('incentive')
+                  .hasError(validation.type) &&
+                (assessmentAspectForm.get('incentive').dirty ||
+                  assessmentAspectForm.get('incentive').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-info"
+        (click)="registerAssessmentTax()"
+        [disabled]="!assessmentAspectForm.valid"
+      >
+        Register
+      </button>
+      <button
+        type="button"
+        class="btn btn-link-info ml-auto"
+        data-dismiss="modal"
+        (click)="defaultModal.hide()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #viewAssessmentTax let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header bg-info">
+      <h6 class="modal-title" id="modal-title-default">
+        Update Assessment Tax
+      </h6>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="defaultModal.hide()"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="assessmentAspectForm">
+        <div class="form-group" [ngClass]="{ focused: focusName === true }">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Name*"
+              type="text"
+              formControlName="name"
+              (focus)="focusName = true"
+              (blur)="focusName = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="let validation of assessmentAspectValidationMessage.name"
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm.get('name').hasError(validation.type) &&
+                (assessmentAspectForm.get('name').dirty ||
+                  assessmentAspectForm.get('name').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="form-group"
+          [ngClass]="{ focused: focusAspectType === true }"
+        >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <select
+              class="custom-select form-control"
+              formControlName="aspect_type"
+              (focus)="focusAspectType = true"
+              (blur)="focusAspectType = false"
+            >
+              <option selected hidden value="">Select evaluator</option>
+              <option
+                *ngFor="let aspecttype of dropdownAspectTypes"
+                [value]="aspecttype.value"
+              >
+                {{ aspecttype.display_name }}
+              </option>
+            </select>
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.aspect_type
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm
+                  .get('aspect_type')
+                  .hasError(validation.type) &&
+                (assessmentAspectForm.get('aspect_type').dirty ||
+                  assessmentAspectForm.get('aspect_type').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div class="form-group" [ngClass]="{ focused: focusAspect === true }">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Aspect*"
+              type="text"
+              formControlName="aspect"
+              (focus)="focusAspect = true"
+              (blur)="focusAspect = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="let validation of assessmentAspectValidationMessage.aspect"
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm.get('aspect').hasError(validation.type) &&
+                (assessmentAspectForm.get('aspect').dirty ||
+                  assessmentAspectForm.get('aspect').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="form-group"
+          [ngClass]="{ focused: focusIncentive === true }"
+        >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Incentive*"
+              type="number"
+              formControlName="incentive"
+              (focus)="focusIncentive = true"
+              (blur)="focusIncentive = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.incentive
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                assessmentAspectForm
+                  .get('incentive')
+                  .hasError(validation.type) &&
+                (assessmentAspectForm.get('incentive').dirty ||
+                  assessmentAspectForm.get('incentive').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-info"
+        (click)="updateAssessmentTax()"
+        [disabled]="!assessmentAspectForm.valid"
+      >
+        Update
+      </button>
+      <button
+        type="button"
+        class="btn btn-link-info ml-auto"
+        data-dismiss="modal"
+        (click)="defaultModal.hide()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>

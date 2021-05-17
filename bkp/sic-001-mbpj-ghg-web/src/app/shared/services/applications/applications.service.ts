@@ -24,37 +24,24 @@ export class ApplicationsService {
     private authService: AuthService
   ) { }
 
-  createHeader() {
-    if (this.authService.tokenAccess){
-      let headers = new HttpHeaders(
-        {
-          'Content-Type': 'application/json',
-          'Accept': '*/*',
-          'Authorization': 'Bearer ' + this.authService.tokenAccess
-        }
-      )
-      return headers
-    }
-    else {
-      let headers = new HttpHeaders(
-        {
-          'Content-Type': 'application/json',
-          'Accept': '*/*'
-        }
-      )
-      return headers
-    }
-  }
-
   private handleError(error: any) {
     console.log('error', error);
     return throwError(error);
   }
 
   doRetrieveAllApplications(): Observable<Application[]> {
-    let headers = this.createHeader()
     //let newApplicationUrl = this.applicationsUrl + '?ordering=-date_submitted'
-    return this.http.get<Application[]>(this.applicationsUrl, {headers: headers}).pipe(
+    return this.http.get<Application[]>(this.applicationsUrl).pipe(
+      tap((res) => {
+        this.retrievedApplications = res
+        console.log('Applications: ', this.retrievedApplications)
+      }),
+      catchError(this.handleError)
+    )
+  }
+
+  doRetrieveAllExtendedApplications(): Observable<any> {
+    return this.http.get<any>(this.applicationsUrl + 'extended/').pipe(
       tap((res) => {
         this.retrievedApplications = res
         console.log('Applications: ', this.retrievedApplications)
@@ -64,9 +51,8 @@ export class ApplicationsService {
   }
 
   retrieveFilteredApplications(filterField): Observable<any> {
-    let headers = this.createHeader()
     let filterUrl = environment.baseUrl + 'v1/applications?' + filterField
-    return this.http.get<Application[]>(filterUrl, {headers: headers}).pipe(
+    return this.http.get<Application[]>(filterUrl).pipe(
       tap((res) => {
         this.retrievedFilteredApplications = res
         console.log('Filtered applications: ', this.retrievedFilteredApplications)
@@ -75,10 +61,9 @@ export class ApplicationsService {
     )
   }
 
-  doAssignEvaluator(credentials, appID): Observable<any> {
-    let headers = this.createHeader()
+  doAssignEvaluator(body, appID): Observable<any> {
     let assignEvaluatorUrl = this.applicationsUrl + appID + '/'
-    return this.http.put<any>(assignEvaluatorUrl, credentials, {headers: headers}).pipe(
+    return this.http.put<any>(assignEvaluatorUrl, body).pipe(
       tap((res) => {
         console.log('Assign evaluator response: ', res)
       }),
@@ -86,10 +71,9 @@ export class ApplicationsService {
     )
   }
 
-  doChangeStatus(credentials, appID): Observable<any> {
-    let headers = this.createHeader()
+  doChangeStatus(body, appID): Observable<any> {
     let changeStatusUrl = this.applicationsUrl + appID + '/'
-    return this.http.put<any>(changeStatusUrl, credentials, {headers: headers}).pipe(
+    return this.http.put<any>(changeStatusUrl, body).pipe(
       tap((res) => {
         console.log('Channge status response: ', res)
       }),
@@ -98,8 +82,7 @@ export class ApplicationsService {
   }
 
   doFilterNakDelete(): Observable<any> {
-    let headers = this.createHeader()
-    return this.http.get<any>(this.applicationsUrl, {headers: headers}).pipe(
+    return this.http.get<any>(this.applicationsUrl).pipe(
       tap((res) => {
         this.barangNakDelete = res
       }),
@@ -108,8 +91,7 @@ export class ApplicationsService {
   }
 
   doDeleteScript(id): Observable<any> {
-    let headers = this.createHeader()
-    return this.http.delete<any>(this.applicationsUrl + id +'/', {headers: headers}).pipe(
+    return this.http.delete<any>(this.applicationsUrl + id +'/').pipe(
       tap((res) => {
 
       }),

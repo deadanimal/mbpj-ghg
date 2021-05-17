@@ -22,37 +22,13 @@ export class FaqsService {
     private authService: AuthService
   ) { }
 
-  createHeader() {
-    if (this.authService.tokenAccess){
-      let headers = new HttpHeaders(
-        {
-          'Content-Type': 'application/json',
-          'Accept': '*/*',
-          'Authorization': 'Bearer ' + this.authService.tokenAccess
-        }
-      )
-      return headers
-    }
-    else {
-      let headers = new HttpHeaders(
-        {
-          'Content-Type': 'application/json',
-          'Accept': '*/*'
-        }
-      )
-      return headers
-    }
-  }
-
   private handleError(error: any) {
     console.log('error', error);
     return throwError(error);
   }
 
   doRetrieveAllFaqs(): Observable<FAQ[]> {
-    let headers = this.createHeader()
-    //let houseEventsDescUrl = this.houseEventsUrl + '?ordering=-date_time'
-    return this.http.get<FAQ[]>(this.faqsUrl, {headers: headers}).pipe(
+    return this.http.get<FAQ[]>(this.faqsUrl).pipe(
       tap((res) => {
         this.retrievedFaqs = res
         console.log('FAQs: ', this.retrievedFaqs)
@@ -61,9 +37,8 @@ export class FaqsService {
     )
   }
 
-  doCreateFaq(credentials: Form): Observable<any> {
-    let headers = this.createHeader()
-    return this.http.post<any>(this.faqsUrl,credentials, {headers: headers}).pipe(
+  doCreateFaq(body: Form): Observable<any> {
+    return this.http.post<any>(this.faqsUrl,body).pipe(
       tap((res) => {
         console.log(res)
       }),
@@ -71,22 +46,28 @@ export class FaqsService {
     )
   }
 
-  doUpdateFaq(credentials: Form, currentFaq: string): Observable<any> {
-    let headers = this.createHeader()
-    console.log('FAQ ID: ', currentFaq)
-    let updateHouseUrl = this.faqsUrl + currentFaq + '/'
-    return this.http.put<any>(updateHouseUrl, credentials, {headers: headers}).pipe(
+  doUpdateFaq(body: Form, currentFaq: string): Observable<any> {
+    let urlUpdate = this.faqsUrl + currentFaq + '/'
+    return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
         console.log(res)
       }),
       catchError(this.handleError)
     )
+  }
+
+  doDeleteFaq(currentFaq: string): Observable<any> {
+    let urlDelete = this.faqsUrl + currentFaq + "/";
+    return this.http.delete<any>(urlDelete).pipe(
+      tap((res) => {
+        console.log(res)
+      })
+    );
   }
 
   doRetrieveFilteredFaqs(filterField): Observable<any> {
-    let headers = this.createHeader()
-    let filterUrl = this.faqsUrl + '?' + filterField + '/'
-    return this.http.get<FAQ[]>(filterUrl, {headers: headers}).pipe(
+    let urlFilter = this.faqsUrl + '?' + filterField
+    return this.http.get<FAQ[]>(urlFilter).pipe(
       tap((res) => {
         this.retrievedFilteredFaqs = res
         console.log('Filtered faqs: ', this.retrievedFilteredFaqs)

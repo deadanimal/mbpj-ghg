@@ -72,13 +72,22 @@ export class EvaluationsService {
 
   doRetrieveFilteredEvaluations(filterField): Observable<any> {
     let headers = this.createHeader()
-    let filterUrl = this.evaluationsUrl + '?' + filterField + '/'
+    let filterUrl = this.evaluationsUrl + '?' + filterField
     return this.http.get<Evaluation[]>(filterUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedFilteredEvaluations = res
         console.log('Filtered evaluations: ', this.retrievedFilteredEvaluations)
       }),
       catchError(this.handleError)
+    )
+  }
+
+  doUpdateEvaluation(body: Form, id: string): Observable<any> {
+    let urlUpdate = this.evaluationsUrl + id  + '/'
+    return this.http.put<any>(urlUpdate, body).pipe(
+      tap((res) => {
+        //console.log('Updated user: ', res)
+      })
     )
   }
 

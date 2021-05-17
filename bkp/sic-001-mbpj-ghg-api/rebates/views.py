@@ -15,7 +15,8 @@ from .models import (
 )
 
 from .serializers import (
-    RebateSerializer
+    RebateSerializer,
+    RebateExtendedSerializer
 )
 
 class RebateViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
@@ -35,3 +36,13 @@ class RebateViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = Rebate.objects.all()
         return queryset
+
+    @action(methods=['GET'], detail=False)
+    def extended(self, request, *args, **kwargs):
+
+        queryset = Rebate.objects.all()
+
+        serializer_class = RebateExtendedSerializer(
+            queryset, many=True)
+
+        return Response(serializer_class.data)

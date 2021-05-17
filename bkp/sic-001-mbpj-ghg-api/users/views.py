@@ -6,6 +6,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
 
+        token['full_name'] = user.full_name
         token['username'] = user.username
         token['email'] = user.email
         token['user_type'] = user.user_type
@@ -15,8 +16,11 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+import datetime
+
 from django.shortcuts import render
 from django.db.models import Q
+from django.http import JsonResponse
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -63,6 +67,45 @@ class CustomUserViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             action_by = self.request.user
         )
         return super().update(request)
+
+    @action(methods=['GET'], detail=False)
+    def get_total_user(self, request, *args, **kwargs):
+        current_year = datetime.date.today().year
+        # print(self.request.user)
+        users = CustomUser.objects.all()
+        total_all = users.count()
+        total_current_year = users.filter(date_joined__year=current_year).count()
+        total_current_jan = users.filter(date_joined__year=current_year, date_joined__month=1).count()
+        total_current_feb = users.filter(date_joined__year=current_year, date_joined__month=2).count()
+        total_current_mar = users.filter(date_joined__year=current_year, date_joined__month=3).count()
+        total_current_apr = users.filter(date_joined__year=current_year, date_joined__month=4).count()
+        total_current_may = users.filter(date_joined__year=current_year, date_joined__month=5).count()
+        total_current_jun = users.filter(date_joined__year=current_year, date_joined__month=6).count()
+        total_current_jul = users.filter(date_joined__year=current_year, date_joined__month=7).count()
+        total_current_aug = users.filter(date_joined__year=current_year, date_joined__month=8).count()
+        total_current_sep = users.filter(date_joined__year=current_year, date_joined__month=9).count()
+        total_current_oct = users.filter(date_joined__year=current_year, date_joined__month=10).count()
+        total_current_nov = users.filter(date_joined__year=current_year, date_joined__month=11).count()
+        total_current_dec = users.filter(date_joined__year=current_year, date_joined__month=12).count()
+
+        json_ = {
+            'total_all': total_all,
+            'total_current_year': total_current_year,
+            'total_current_jan': total_current_jan,
+            'total_current_feb': total_current_feb,
+            'total_current_mar': total_current_mar,
+            'total_current_apr': total_current_apr,
+            'total_current_may': total_current_may,
+            'total_current_jun': total_current_jun,
+            'total_current_jul': total_current_jul,
+            'total_current_aug': total_current_aug,
+            'total_current_sep': total_current_sep,
+            'total_current_oct': total_current_oct,
+            'total_current_nov': total_current_nov,
+            'total_current_dec': total_current_dec,
+        }
+
+        return JsonResponse(json_) 
 
 class UserOccupationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = UserOccupation.objects.all()

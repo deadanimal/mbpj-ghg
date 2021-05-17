@@ -61,6 +61,14 @@ class Application(models.Model):
     status = models.CharField(max_length=2, choices=STATUS, default='CR')
     applied_house = models.ForeignKey(House, on_delete=models.CASCADE, null=True, related_name='applied_house_id')
     date_submitted = models.DateField(null=True)
+    date_approved = models.DateField(null=True)
+
+    def save(self,*args, **kwargs):
+        timezone_ = pytz.timezone('Asia/Kuala_Lumpur')
+        if not self.status == 'CM':
+            self.date_approved = datetime.datetime.now(timezone_).strftime('%Y-%m-%d')
+            
+        super(Application, self).save(*args, **kwargs)
 
     class Meta:
         ordering = ['-date_submitted']
@@ -72,6 +80,8 @@ class ApplicationAssessment(models.Model):
     assessment_aspect = models.ForeignKey(AssessmentAspect, on_delete=models.CASCADE, null=True, related_name='application_assessment_assessment_aspect')
     remarks = models.CharField(max_length=255, default='NA', blank=True)
     supporting_doc = models.ImageField(null=True, upload_to=PathAndRename('assessment'))
+    total_lamp = models.IntegerField(default=0, null=True)
+    total_led = models.IntegerField(default=0, null=True)
 
     # def __str__(self):
         # return self.name

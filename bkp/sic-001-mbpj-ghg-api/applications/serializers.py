@@ -18,7 +18,25 @@ from .models import (
     ApplicationEvent
 )
 
+from users.serializers import (
+    CustomUserSerializer
+)
+
+from houses.serializers import (
+    HouseSerializer
+)
+
 class ApplicationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Application
+        fields = '__all__'
+        read_only_fields = ['id']
+
+class ApplicationExtendedSerializer(serializers.ModelSerializer):
+    applicant = CustomUserSerializer(read_only=True)
+    evaluator_nominated = CustomUserSerializer(read_only=True)
+    applied_house = HouseSerializer(read_only=True)
+
     class Meta:
         model = Application
         fields = '__all__'

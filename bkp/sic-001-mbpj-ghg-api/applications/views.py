@@ -25,6 +25,7 @@ from houses.models import (
 
 from .serializers import (
     ApplicationSerializer, 
+    ApplicationExtendedSerializer,
     ApplicationAssessmentSerializer,
     AssessmentAspectSerializer,
     EvaluationSerializer,
@@ -96,6 +97,16 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             action_by = self.request.user
         )
         return super().update(request)
+
+    @action(methods=['GET'], detail=False)
+    def extended(self, request, *args, **kwargs):
+
+        queryset = Application.objects.all()
+
+        serializer_class = ApplicationExtendedSerializer(
+            queryset, many=True)
+
+        return Response(serializer_class.data)
 
 class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ApplicationAssessment.objects.all()

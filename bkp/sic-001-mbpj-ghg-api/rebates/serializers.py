@@ -13,7 +13,19 @@ from .models import (
     Rebate
 )
 
+from applications.serializers import (
+    ApplicationExtendedSerializer
+)
+
 class RebateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Rebate
+        fields = '__all__'
+        read_only_fields = ['id']
+
+class RebateExtendedSerializer(serializers.ModelSerializer):
+    application_id = ApplicationExtendedSerializer(read_only=True)
+
     class Meta:
         model = Rebate
         fields = '__all__'

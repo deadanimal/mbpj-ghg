@@ -211,13 +211,15 @@
         "unsuccessMessage": "User update unsuccessful"
     },
     "HELPDESK": {
+        "submittedDate": "Submit Date",
+        "replyingDate": "Reply Date",
         "helpdesk": "Helpdesk",
         "title": "What can we do for you?",
         "comment": "Comment / question",
         "commentBox": "Type what is your comment / question",
         "submit": "Submit",
         "question": "Question",
-        "reply": "Reply",
+        "reply": "Answer",
         "confirmHeader": "Confirm?",
         "confirmMessage": "You're about to submit this form",
         "cancelButton": "Cancel",

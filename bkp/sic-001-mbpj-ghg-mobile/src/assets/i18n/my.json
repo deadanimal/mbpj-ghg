@@ -211,6 +211,8 @@
         "unsuccessMessage": "Kemaskini profil tidak berjaya"
     },
     "HELPDESK": {
+        "submittedDate": "Tarikh Hantar",
+        "replyingDate": "Tarikh Jawab",
         "helpdesk": "Meja Bantuan",
         "title": "Apa yang kami boleh bantu?",
         "comment": "Komen / soalan",

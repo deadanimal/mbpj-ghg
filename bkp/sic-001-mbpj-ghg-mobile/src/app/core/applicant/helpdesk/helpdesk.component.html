@@ -46,12 +46,12 @@
         <ion-card>
           <ion-card-header color="light">
             <ion-card-subtitle>
-              <p class="m-0">{{question.date_submitted}}</p>
+              <p class="m-0">{{'HELPDESK.submittedDate' | translate}} - {{question.date_submitted}}</p>
             </ion-card-subtitle>
           </ion-card-header>
 
           <ion-card-content>
-            <ion-item class="ticket-list">
+            <ion-item lines="none" class="ticket-list">
               <ion-text class="ion-text-wrap">
                 <h5 style="color: #a9a9a9;">{{'HELPDESK.question'| translate}}</h5>
                 <p>{{question.question}}</p>
@@ -62,7 +62,7 @@
               <div *ngIf="question.id == answer.question_id">
                 <ion-item lines="none" class="ticket-list">
                   <ion-text class="ion-text-wrap">
-                    <h5 style="color: #a9a9a9;">{{'HELPDESK.reply'| translate}}</h5>
+                    <h5 style="color: #a9a9a9;">{{'HELPDESK.reply'| translate}} - {{'HELPDESK.replyingDate' | translate}} ({{answer.date_submitted}})</h5>
                     <p>{{answer.answer}}</p>
                   </ion-text>
                 </ion-item>

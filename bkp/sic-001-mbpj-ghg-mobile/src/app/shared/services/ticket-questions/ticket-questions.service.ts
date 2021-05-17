@@ -43,7 +43,7 @@ export class TicketQuestionsService {
   }
 
   filter(filterField): Observable<any> {
-    let urlFilter = this.urlQuestion + '?' + filterField + '/'
+    let urlFilter = this.urlQuestion + '?' + filterField
     return this.http.get<TicketQuestion[]>(urlFilter).pipe(
       tap((res) => {
         this.questionsFiltered = res

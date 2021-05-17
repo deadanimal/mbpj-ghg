@@ -48,11 +48,11 @@ export class HelpdeskComponent implements OnInit {
       submitted_by: new FormControl('')
     })
 
-    this.questions = this.ticketQuestionService.questionsFiltered
+    this.questions = this.ticketQuestionService.questionsUser
     this.questions.forEach(
       (question) => {
         question.date_submitted = moment(question.date_submitted, 'YYYY-MM-DD').format('DD-MM-YYYY')
-        this.ticketAnswerService.answersFiltered.forEach(
+        this.ticketAnswerService.answers.forEach(
           (answer) => {
             if (question.id == answer.question_id) {
               this.answers.push(answer)

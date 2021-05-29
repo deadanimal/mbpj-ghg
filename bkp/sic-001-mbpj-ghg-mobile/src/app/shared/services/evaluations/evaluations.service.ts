@@ -24,7 +24,7 @@ export class EvaluationsService {
     private http: HttpClient
   ) { }
 
-  create(body: Form): Observable<any> {
+  create(body): Observable<any> {
     return this.http.post<any>(this.urlEvaluation, body).pipe(
       tap((res) => {
         console.log('Create evaluation response: ', res)

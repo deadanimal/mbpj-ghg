@@ -8,6 +8,8 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import viewsets, status
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
+from datetime import datetime
+
 from django_filters.rest_framework import DjangoFilterBackend
 
 from .models import (
@@ -108,6 +110,36 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
         return Response(serializer_class.data)
 
+    @action(methods=['GET'], detail=False)
+    def get_total_app_received_since_2011(self, request):
+
+        queryset = Application.objects.count()
+
+        return Response(queryset)
+
+    @action(methods=['GET'], detail=False)
+    def get_total_app_received_current_year(self, request):
+
+        now = datetime.now()
+        queryset = Application.objects.filter(date_submitted__year=now.strftime("%Y")).count()
+
+        return Response(queryset)
+
+    @action(methods=['GET'], detail=False)
+    def get_total_app_approved_since_2011(self, request):
+
+        queryset = Application.objects.filter(status='CM').count()
+
+        return Response(queryset)
+    
+    @action(methods=['GET'], detail=False)
+    def get_total_app_approved_current_year(self, request):
+
+        now = datetime.now()
+        queryset = Application.objects.filter(status='CM', date_approved__year=now.strftime("%Y")).count()
+
+        return Response(queryset)
+
 class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ApplicationAssessment.objects.all()
     serializer_class = ApplicationAssessmentSerializer
@@ -196,6 +228,21 @@ class EvaluationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             action_by = self.request.user
         )
         return super().create(request)
+
+    def create(self, request):
+        is_many = isinstance(request.data, list)
+
+        serializer = self.get_serializer(data=request.data, many=is_many)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+
+        ApplicationEvent.objects.create(
+            action = 'Create evaluation',
+            action_by = self.request.user
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        # return super().create(request)
     
     def update(self, request, pk=None):
         ApplicationEvent.objects.create(

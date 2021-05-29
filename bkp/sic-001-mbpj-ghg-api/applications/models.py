@@ -1,5 +1,5 @@
 from __future__ import unicode_literals 
-import uuid 
+import datetime, uuid, pytz 
 from django.db import models
 from django.utils.formats import get_format
 #from django import models
@@ -95,7 +95,7 @@ class Evaluation(models.Model):
     system = models.IntegerField(default=0)
     efficiency = models.IntegerField(default=0)
 
-    remarks = models.CharField(max_length=255, default='NA')
+    remarks = models.CharField(max_length=255, default='NA', blank=True)
 
     # def __str__(self):
         # return self.name

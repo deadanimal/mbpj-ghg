@@ -61,6 +61,14 @@ class EvaluationSerializer(serializers.ModelSerializer):
         fields = '__all__'
         read_only_fields = ['id']
 
+class EvaluationExtendedSerializer(serializers.ModelSerializer):
+    application_assessment = ApplicationAssessmentSerializer(read_only=True)
+
+    class Meta:
+        model = Evaluation
+        fields = '__all__'
+        read_only_fields = ['id']
+
 class EvaluationScheduleSerializer(serializers.ModelSerializer):
     class Meta:
         model = EvaluationSchedule

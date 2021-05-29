@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -7,6 +7,8 @@ from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework import viewsets, status
 from rest_framework_extensions.mixins import NestedViewSetMixin
+
+from datetime import datetime
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -46,3 +48,18 @@ class RebateViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             queryset, many=True)
 
         return Response(serializer_class.data)
+
+    @action(methods=['GET'], detail=False)
+    def get_total_rebate_awarded_since_2011(self, request):
+
+        queryset = Rebate.objects.all().aggregate(Sum('amount_approved'))
+
+        return Response(queryset)
+    
+    @action(methods=['GET'], detail=False)
+    def get_total_rebate_awarded_current_year(self, request):
+
+        now = datetime.now()
+        queryset = Rebate.objects.filter(payment_date__year=now.strftime("%Y")).aggregate(Sum('amount_approved'))
+
+        return Response(queryset)

@@ -243,11 +243,46 @@ export class DashboardComponent implements OnInit {
     });
 
     this.totalApplicants = tempUsers.length;
-    this.totalApplications =
-      this.applicationService.retrievedApplications.length;
-    this.totalApprovedRebates = this.rebateService.retrievedRebates.length;
-    this.totalApprovedApplications = tempApprovedApplications.length;
-    // console.log('total: ', this.totalApplicants)
+
+    this.applicationService
+      .doRetrieveTotalAppReceivedSince2011()
+      .subscribe((res) => {
+        this.totalApplicationsSince2011 = res ? res : 0;
+      });
+
+    this.applicationService
+      .doRetrieveTotalAppReceivedCurrentYear()
+      .subscribe((res) => {
+        this.totalApplications = res ? res : 0;
+      });
+
+    this.applicationService
+      .doRetrieveTotalAppApprovedSince2011()
+      .subscribe((res) => {
+        this.totalApprovedApplicationsSince2011 = res ? res : 0;
+      });
+
+    this.applicationService
+      .doRetrieveTotalAppApprovedCurrentYear()
+      .subscribe((res) => {
+        this.totalApprovedApplications = res ? res : 0;
+      });
+
+    this.rebateService
+      .doRetrieveTotalRebateAwardedSince2011()
+      .subscribe((res) => {
+        this.totalApprovedRebatesSince2011 = res.amount_approved__sum
+          ? res.amount_approved__sum
+          : 0;
+      });
+
+    this.rebateService
+      .doRetrieveTotalRebateAwardedCurrentYear()
+      .subscribe((res) => {
+        this.totalApprovedRebates = res.amount_approved__sum
+          ? res.amount_approved__sum
+          : 0;
+      });
   }
 
   doApproveUser() {

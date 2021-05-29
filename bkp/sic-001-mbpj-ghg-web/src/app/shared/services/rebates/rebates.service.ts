@@ -33,13 +33,13 @@ export class RebatesService {
   }
 
   doRetrieveAllExtendedRebates(): Observable<any> {
-    return this.http.get<any>(this.rebatesUrl + 'extended/').pipe(
+    return this.http.get<any>(this.rebatesUrl + "extended/").pipe(
       tap((res) => {
-        this.retrievedRebates = res
-        console.log('Rebates: ', this.retrievedRebates)
+        this.retrievedRebates = res;
+        console.log("Rebates: ", this.retrievedRebates);
       }),
       catchError(this.handleError)
-    )
+    );
   }
 
   doCreateRebate(body: Form): Observable<any> {
@@ -77,6 +77,22 @@ export class RebatesService {
         this.retrievedFilteredRebates = res;
         console.log("Filtered rebates: ", this.retrievedFilteredRebates);
       }),
+      catchError(this.handleError)
+    );
+  }
+
+  doRetrieveTotalRebateAwardedSince2011(): Observable<any> {
+    let url = this.rebatesUrl + "get_total_rebate_awarded_since_2011";
+    return this.http.get<any>(url).pipe(
+      tap((res) => {}),
+      catchError(this.handleError)
+    );
+  }
+
+  doRetrieveTotalRebateAwardedCurrentYear(): Observable<any> {
+    let url = this.rebatesUrl + "get_total_rebate_awarded_current_year";
+    return this.http.get<any>(url).pipe(
+      tap((res) => {}),
       catchError(this.handleError)
     );
   }

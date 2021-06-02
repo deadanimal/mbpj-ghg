@@ -109,7 +109,7 @@ export class HelpdeskComponent implements OnInit {
       () => {
         this.ticketForm.reset()
         let message = this.translate.instant('HELPDESK.successMessage')
-        this.notifyService.openToastrError(message)
+        this.notifyService.openToastr(message)
       }
     )
 

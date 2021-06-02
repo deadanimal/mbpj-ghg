@@ -227,27 +227,49 @@ export class HouseAddNewComponent implements OnInit {
       this.tempImageEncoded[billNumber] =  base64File
       
       if (billNumber == 0) {
-        this.houseForm.value.assessment_tax_doc = this.tempImageEncoded[billNumber]
+        this.houseForm.patchValue({
+          assessment_tax_doc: this.tempImageEncoded[billNumber]
+        });
+        // this.houseForm.value.assessment_tax_doc = this.tempImageEncoded[billNumber]
       }
       if (billNumber == 1) {
-        this.houseForm.value.electricity_bill_1_doc = this.tempImageEncoded[billNumber]
+        this.houseForm.patchValue({
+          electricity_bill_1_doc: this.tempImageEncoded[billNumber]
+        });
+        // this.houseForm.value.electricity_bill_1_doc = this.tempImageEncoded[billNumber]
       }
       else if (billNumber == 2) {
-        this.houseForm.value.electricity_bill_2_doc = this.tempImageEncoded[billNumber]
+        this.houseForm.patchValue({
+          electricity_bill_2_doc: this.tempImageEncoded[billNumber]
+        });
+        // this.houseForm.value.electricity_bill_2_doc = this.tempImageEncoded[billNumber]
       }
       else if (billNumber == 3) {
-        this.houseForm.value.electricity_bill_3_doc = this.tempImageEncoded[billNumber]
+        this.houseForm.patchValue({
+          electricity_bill_3_doc: this.tempImageEncoded[billNumber]
+        });
+        // this.houseForm.value.electricity_bill_3_doc = this.tempImageEncoded[billNumber]
       }
       else if (billNumber == 4) {
-        this.houseForm.value.water_bill_1_doc = this.tempImageEncoded[billNumber]
+        this.houseForm.patchValue({
+          water_bill_1_doc: this.tempImageEncoded[billNumber]
+        });
+        // this.houseForm.value.water_bill_1_doc = this.tempImageEncoded[billNumber]
       }
       else if (billNumber == 5) {
-        this.houseForm.value.water_bill_2_doc = this.tempImageEncoded[billNumber]
+        this.houseForm.patchValue({
+          water_bill_2_doc: this.tempImageEncoded[billNumber]
+        });
+        // this.houseForm.value.water_bill_2_doc = this.tempImageEncoded[billNumber]
       }
       else if (billNumber == 6) {
-        this.houseForm.value.water_bill_3_doc = this.tempImageEncoded[billNumber]
+        this.houseForm.patchValue({
+          water_bill_3_doc: this.tempImageEncoded[billNumber]
+        });
+        // this.houseForm.value.water_bill_3_doc = this.tempImageEncoded[billNumber]
       }
       console.log(this.tempImageEncoded[billNumber]);
+      console.log('houseForm', this.houseForm.value);
     }, (err) => {
       console.log(err);
     });

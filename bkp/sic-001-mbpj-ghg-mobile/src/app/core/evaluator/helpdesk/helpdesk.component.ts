@@ -164,7 +164,8 @@ export class HelpdeskComponent implements OnInit {
     const toast = await this.toastController.create({
       message: this.translate.instant('HELPDESK.successMessage'),
       position: 'top',
-      duration: 3000
+      duration: 3000,
+      color: 'primary'
     })
     toast.present()
   }
@@ -173,7 +174,8 @@ export class HelpdeskComponent implements OnInit {
     const toast = await this.toastController.create({
       message: this.translate.instant('HELPDESK.unsuccessMessage'),
       position: 'top',
-      duration: 3000
+      duration: 3000,
+      color: 'danger'
     })
     toast.present()
   }

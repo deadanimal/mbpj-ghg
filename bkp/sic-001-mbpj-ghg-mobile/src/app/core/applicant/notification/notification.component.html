@@ -5,28 +5,29 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-title>
-    {{ 'NOTIFICATION.notification' | translate}}
+    {{ "NOTIFICATION.notification" | translate }}
   </ion-title>
 </ion-header>
 
 <ion-content>
   <div *ngIf="!isGotNotification; else gotNotification" class="error-section">
     <ion-img [src]="imgNotFound"></ion-img>
-    <p>{{ 'NOTIFICATION.noNotification' | translate}}</p>
+    <p>{{ "NOTIFICATION.noNotification" | translate }}</p>
   </div>
   <ng-template #gotNotification>
-    <ion-row>
+    <ion-row *ngFor="let notification of notifications">
       <ion-col>
         <ion-card mode="ios">
           <ion-card-content>
             <ion-item class="history">
               <ion-label class="ion-text-wrap">
-                <p>#818128</p>
-                <p>It has been 7 days, your application is still in process</p>
+                <!-- <p>#818128</p> -->
+                <h2 style="font-weight: bold;">{{ notification.title }}</h2>
+                <p>{{ notification.message }}</p>
               </ion-label>
-              <ion-thumbnail slot="end">
-                <img [src]="imgNotiThumbnail">
-              </ion-thumbnail>
+              <!-- <ion-thumbnail slot="end">
+                <img [src]="imgNotiThumbnail" />
+              </ion-thumbnail> -->
             </ion-item>
           </ion-card-content>
         </ion-card>

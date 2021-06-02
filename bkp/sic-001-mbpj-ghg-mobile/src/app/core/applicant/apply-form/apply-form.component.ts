@@ -1,56 +1,66 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthService } from 'src/app/shared/services/auth/auth.service';
-import { ApplicationsService } from 'src/app/shared/services/applications/applications.service';
-import { ApplicationAssessmentsService } from 'src/app/shared/services/application-assessments/application-assessments.service';
-import { AssessmentAspectsService } from 'src/app/shared/services/assessment-aspects/assessment-aspects.service';
-import { AlertController, ToastController, ActionSheetController } from '@ionic/angular';
-import { Router, ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormControl, FormArray, FormGroup, Validators } from '@angular/forms';
-import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { Base64 } from '@ionic-native/base64/ngx';
-import * as moment from 'moment';
-import { AssessmentAspect } from 'src/app/shared/services/assessment-aspects/assessment-aspects.model';
-import { TranslateService } from '@ngx-translate/core';
+import { Component, OnInit } from "@angular/core";
+import {
+  FormBuilder,
+  FormControl,
+  FormArray,
+  FormGroup,
+  Validators,
+} from "@angular/forms";
+import { Router, ActivatedRoute } from "@angular/router";
+import {
+  AlertController,
+  ToastController,
+  ActionSheetController,
+} from "@ionic/angular";
+import { TranslateService } from "@ngx-translate/core";
+
+import { Base64 } from "@ionic-native/base64/ngx";
+import { Camera, CameraOptions } from "@ionic-native/camera/ngx";
+
+import { AuthService } from "src/app/shared/services/auth/auth.service";
+import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
+import { ApplicationAssessmentsService } from "src/app/shared/services/application-assessments/application-assessments.service";
+import { AssessmentAspect } from "src/app/shared/services/assessment-aspects/assessment-aspects.model";
+import { AssessmentAspectsService } from "src/app/shared/services/assessment-aspects/assessment-aspects.service";
+import { NotifyService } from "src/app/shared/handler/notify/notify.service";
+
+import * as moment from "moment";
 
 @Component({
-  selector: 'app-apply-form',
-  templateUrl: './apply-form.component.html',
-  styleUrls: ['./apply-form.component.scss'],
+  selector: "app-apply-form",
+  templateUrl: "./apply-form.component.html",
+  styleUrls: ["./apply-form.component.scss"],
 })
 export class ApplyFormComponent implements OnInit {
-
-  //public selectedHouse
-
-  public loadingMessage: HTMLIonLoadingElement
-
-  public formGroup: FormGroup
-  public form: FormArray
+  public formGroup: FormGroup;
+  public form: FormArray;
 
   applicationForm = new FormGroup({
-    date_submitted: new FormControl(''),
-    applicant: new FormControl(''),
-    applied_house: new FormControl('')
-  })
+    date_submitted: new FormControl(""),
+    applicant: new FormControl(""),
+    applied_house: new FormControl(""),
+  });
 
-  public tempImageData: string[] = []
-  public tempImageEncoded: string[] = []
+  public tempImageData: string[] = [];
+  public tempImageEncoded: string[] = [];
 
-  public tempApplication
-  public tempAssessmentAspects: AssessmentAspect[] = []
-  public tempSelectedHouse
+  public tempApplication;
+  public tempAssessmentAspects: AssessmentAspect[] = [];
+  public tempSelectedHouse;
 
-  public energySaving: number = 0
-  public consumptionElectricity: number = 0
-  public consumptionWater: number = 0
+  public energySaving: number = 0;
+  public consumptionElectricity: number = 0;
+  public consumptionWater: number = 0;
 
-  public assessmentName: string
-  public assessmentType: string
+  public assessmentName: string;
+  public assessmentType: string;
 
   constructor(
     private authService: AuthService,
     private applicationService: ApplicationsService,
     private applicationAssessmentService: ApplicationAssessmentsService,
     private assessmentAspectService: AssessmentAspectsService,
+    private notifyService: NotifyService,
     public activatedRoute: ActivatedRoute,
     public actionSheetController: ActionSheetController,
     public alertController: AlertController,
@@ -60,75 +70,77 @@ export class ApplyFormComponent implements OnInit {
     private formBuilder: FormBuilder,
     private camera: Camera,
     public translate: TranslateService
-  ) { 
-    this.tempSelectedHouse = this.router.getCurrentNavigation().extras
-    this.tempAssessmentAspects = this.assessmentAspectService.retrievedAssessmentAspects
+  ) {
+    this.tempSelectedHouse = this.router.getCurrentNavigation().extras;
+    this.tempAssessmentAspects =
+      this.assessmentAspectService.retrievedAssessmentAspects;
   }
 
   ngOnInit() {
     this.formGroup = this.formBuilder.group({
-      form: this.formBuilder.array([this.initAssessment()])
-    })
+      form: this.formBuilder.array([this.initAssessment()]),
+    });
 
-    this.applicationForm.value.applicant = this.authService.userID
-    this.applicationForm.value.applied_house = this.tempSelectedHouse.id
-    this.applicationForm.value.date_submitted = moment(new Date()).format("YYYY-MM-DD")
-    this.calculateConsumption()
+    this.applicationForm.patchValue({
+      applicant: this.authService.userID,
+      applied_house: this.tempSelectedHouse.id,
+      date_submitted: moment(new Date()).format("YYYY-MM-DD"),
+    });
+    this.calculateConsumption();
   }
-
 
   // Dynamic form
   initAssessment() {
     return this.formBuilder.group({
-      application: new FormControl(''),
-      assessment_aspect: new FormControl('', Validators.required),
-      remarks: new FormControl(''),
-      supporting_doc: new FormControl(''),
+      application: new FormControl(""),
+      assessment_aspect: new FormControl("", Validators.required),
+      remarks: new FormControl(""),
+      supporting_doc: new FormControl(""),
       total_led: new FormControl(0),
-      total_lamp: new FormControl(0)
-    })
+      total_lamp: new FormControl(0),
+    });
   }
 
   addAssessment() {
-    this.form = this.formGroup.get('form') as FormArray;
-    this.form.push(this.initAssessment())
-    console.log(this.form.value)
+    this.form = this.formGroup.get("form") as FormArray;
+    this.form.push(this.initAssessment());
+    console.log(this.form.value);
   }
 
-  removeAssessment(ind: number){
-    this.form.removeAt(ind)
+  removeAssessment(ind: number) {
+    this.form.removeAt(ind);
   }
 
   async openUploadSheet(formNumber: number) {
     const actionSheet = await this.actionSheetController.create({
-      header: this.translate.instant('APPLYFORM.uploadSheetHeader'),
+      header: this.translate.instant("APPLYFORM.uploadSheetHeader"),
       buttons: [
         {
-          text: this.translate.instant('APPLYFORM.uploadSheetCamera'),
-          role: 'destructive',
-          icon: 'camera',
+          text: this.translate.instant("APPLYFORM.uploadSheetCamera"),
+          role: "destructive",
+          icon: "camera",
           handler: () => {
-            console.log('Camera opened')
-            this.openCamera(formNumber)
-          }
-        }, 
-        {
-          text: this.translate.instant('APPLYFORM.uploadSheetGallery'),
-          icon: 'images',
-          handler: () => {
-            console.log('Gallery opened')
-            this.openGallery(formNumber)
-          }
+            console.log("Camera opened");
+            this.openCamera(formNumber);
+          },
         },
         {
-          text: this.translate.instant('APPLYFORM.cancelButton'),
-          icon: 'close',
-          role: 'cancel',
+          text: this.translate.instant("APPLYFORM.uploadSheetGallery"),
+          icon: "images",
           handler: () => {
-            console.log('Cancel clicked');
-          }
-        }
-      ]
+            console.log("Gallery opened");
+            this.openGallery(formNumber);
+          },
+        },
+        {
+          text: this.translate.instant("APPLYFORM.cancelButton"),
+          icon: "close",
+          role: "cancel",
+          handler: () => {
+            console.log("Cancel clicked");
+          },
+        },
+      ],
     });
     await actionSheet.present();
   }
@@ -139,162 +151,170 @@ export class ApplyFormComponent implements OnInit {
       destinationType: this.camera.DestinationType.FILE_URI,
       encodingType: this.camera.EncodingType.JPEG,
       mediaType: this.camera.MediaType.PICTURE,
-    }
+    };
 
-    this.camera.getPicture(options).then((imageData) => {
-      this.tempImageData[formNumber] = imageData
-      //this.image = (<any>window).Ionic.WebView.convertFileSrc(imageData);
-      this.encodeFile64(formNumber)
-    }, (err) => {
-      // Handle error
-      alert("error " + JSON.stringify(err))
-    });
+    this.camera.getPicture(options).then(
+      (imageData) => {
+        this.tempImageData[formNumber] = imageData;
+        //this.image = (<any>window).Ionic.WebView.convertFileSrc(imageData);
+        this.encodeFile64(formNumber);
+      },
+      (err) => {
+        // Handle error
+        alert("error " + JSON.stringify(err));
+      }
+    );
   }
 
-  openGallery (formNumber: number): void {
+  openGallery(formNumber: number): void {
     let cameraOptions = {
       sourceType: this.camera.PictureSourceType.PHOTOLIBRARY,
-      destinationType: this.camera.DestinationType.FILE_URI,      
+      destinationType: this.camera.DestinationType.FILE_URI,
       quality: 70,
       targetWidth: 1000,
       targetHeight: 1000,
-      encodingType: this.camera.EncodingType.JPEG,      
-      correctOrientation: true
-    }
-  
-    this.camera.getPicture(cameraOptions)
-      .then(
-        (file_uri) => {
-          this.tempImageData[formNumber] = file_uri
-          this.encodeFile64(formNumber)
-        },
-        (err) => {
-          console.log(err)
-        }
-      );
+      encodingType: this.camera.EncodingType.JPEG,
+      correctOrientation: true,
+    };
+
+    this.camera.getPicture(cameraOptions).then(
+      (file_uri) => {
+        this.tempImageData[formNumber] = file_uri;
+        this.encodeFile64(formNumber);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
     /**/
   }
 
-  encodeFile64(formNumber: number){
-    this.base64.encodeFile(this.tempImageData[formNumber]).then((base64File: string) => {
-      this.tempImageEncoded[formNumber] =  base64File
-      this.formGroup.value.form[formNumber].supporting_doc = this.tempImageEncoded[formNumber]
-      console.log(this.tempImageEncoded[formNumber])
-    }, (err) => {
-      console.log(err)
-    });
+  encodeFile64(formNumber: number) {
+    this.base64.encodeFile(this.tempImageData[formNumber]).then(
+      (base64File: string) => {
+        this.tempImageEncoded[formNumber] = base64File;
+        this.formGroup.value.form[formNumber].supporting_doc =
+          this.tempImageEncoded[formNumber];
+        console.log(this.tempImageEncoded[formNumber]);
+      },
+      (err) => {
+        console.log(err);
+      }
+    );
   }
 
   submitApplication() {
-    this.applicationForm.value.date_submitted = moment().format('YYYY-MM-DD')
+    this.applicationForm.patchValue({
+      date_submitted: moment().format("YYYY-MM-DD"),
+    });
     this.applicationService.create(this.applicationForm.value).subscribe(
       (data) => {
-        this.tempApplication = data
-        //console.log('> ', this.tempApplication)
+        this.tempApplication = data;
       },
       () => {
-        this.unsuccessfulToast()
+        this.notifyService.openToastrError(
+          this.translate.instant("APPLYFORM.unsuccessMessage")
+        );
       },
       () => {
-        this.submitAssessment()
+        this.submitAssessment();
       }
-    )
+    );
   }
 
   submitAssessment() {
     console.log(this.formGroup)
     this.formGroup.value.form.forEach((singleForm, ind, arr) => {
       //element.supporting_doc = this.imageSrc[calc]
-      singleForm.application = this.tempApplication.id
-      console.log(singleForm)
+      singleForm.application = this.tempApplication.id;
       this.applicationAssessmentService.create(singleForm).subscribe(
         () => {
           //this.presentToast()
-          this.applicationAssessmentService.get().subscribe()
+          this.applicationAssessmentService.get().subscribe();
         },
         () => {
-          this.unsuccessfulToast()
+          this.notifyService.openToastrError(
+            this.translate.instant("APPLYFORM.unsuccessMessage")
+          );
         },
         () => {
-          this.successfulToast()
+          if (ind === arr.length - 1) {
+            this.notifyService.openToastr(
+              this.translate.instant("APPLYFORM.successMessage")
+            );
+            this.formGroup.reset();
+            this.applicationForm.reset();
+            this.router.navigate(["/applicant/home"]);
+          }
         }
-      )
-      if (ind === arr.length - 1) {
-        this.successfulToast()
-        this.formGroup.reset()
-        this.applicationForm.reset()
-        this.router.navigate(['/applicant/home'])
-      }
+      );
     });
   }
 
   async confirmationAlert() {
     const alert = await this.alertController.create({
-      header: this.translate.instant('APPLYFORM.confirmHeader'),
-      message: this.translate.instant('APPLYFORM.confirmMessage'),
+      header: this.translate.instant("APPLYFORM.confirmHeader"),
+      message: this.translate.instant("APPLYFORM.confirmMessage"),
       buttons: [
         {
-          text: this.translate.instant('APPLYFORM.cancelButton'),
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: (blah) => {
-          }
-        }, {
-          text: this.translate.instant('APPLYFORM.confirmButton'),
+          text: this.translate.instant("APPLYFORM.cancelButton"),
+          role: "cancel",
+          cssClass: "secondary",
+          handler: (blah) => {},
+        },
+        {
+          text: this.translate.instant("APPLYFORM.confirmButton"),
           handler: () => {
-            this.submitApplication()
+            this.submitApplication();
             //this.router.navigate(['/applicant/house-add-new'])
-          }
-        }
-      ]
+          },
+        },
+      ],
     });
 
     await alert.present();
   }
 
-  async successfulToast() {
-    const toast = await this.toastController.create({
-      message: this.translate.instant('APPLYFORM.successMessage'),
-      position: 'top',
-      duration: 3000,
-      color: 'ghg-green'
-    });
-    toast.present();
-  }
-
-  async unsuccessfulToast() {
-    const toast = await this.toastController.create({
-      message: this.translate.instant('APPLYFORM.unsuccessMessage'),
-      position: 'top',
-      duration: 3000,
-      color: 'ghg-green'
-    });
-    toast.present();
-  }
-
   calculateA3(eventIndex) {
-    console.log('led ', this.formGroup.value.form[eventIndex].total_led)
-    console.log('lamp ', this.formGroup.value.form[eventIndex].total_lamp)
-    this.energySaving = this.formGroup.value.form[eventIndex].total_led / (this.formGroup.value.form[eventIndex].total_lamp + this.formGroup.value.form[eventIndex].total_led) * 100
-    console.log(this.energySaving)
+    console.log("led ", this.formGroup.value.form[eventIndex].total_led);
+    console.log("lamp ", this.formGroup.value.form[eventIndex].total_lamp);
+    this.energySaving =
+      (this.formGroup.value.form[eventIndex].total_led /
+        (this.formGroup.value.form[eventIndex].total_lamp +
+          this.formGroup.value.form[eventIndex].total_led)) *
+      100;
+    console.log(this.energySaving);
   }
 
   calculateConsumption() {
-    let averagelectricity = (this.tempSelectedHouse.electricity_bill_1_usage + this.tempSelectedHouse.electricity_bill_2_usage + this.tempSelectedHouse.electricity_bill_3_usage)/3
-    let averageWater = (this.tempSelectedHouse.water_bill_1_usage + this.tempSelectedHouse.water_bill_2_usage + this.tempSelectedHouse.water_bill_3_usage)/3
-    console.log('average water ', averageWater)
-    console.log('permanent occupant ', this.tempSelectedHouse.permanent_occupant)
-    this.consumptionElectricity = (averagelectricity/this.tempSelectedHouse.permanent_occupant)
-    this.consumptionWater = (averageWater * 1000)/(this.tempSelectedHouse.permanent_occupant * 30)
+    let averagelectricity =
+      (this.tempSelectedHouse.electricity_bill_1_usage +
+        this.tempSelectedHouse.electricity_bill_2_usage +
+        this.tempSelectedHouse.electricity_bill_3_usage) /
+      3;
+    let averageWater =
+      (this.tempSelectedHouse.water_bill_1_usage +
+        this.tempSelectedHouse.water_bill_2_usage +
+        this.tempSelectedHouse.water_bill_3_usage) /
+      3;
+    console.log("average water ", averageWater);
+    console.log(
+      "permanent occupant ",
+      this.tempSelectedHouse.permanent_occupant
+    );
+    this.consumptionElectricity =
+      averagelectricity / this.tempSelectedHouse.permanent_occupant;
+    this.consumptionWater =
+      (averageWater * 1000) / (this.tempSelectedHouse.permanent_occupant * 30);
   }
 
   changeAssessmentAspect(ev) {
     let result = this.tempAssessmentAspects.find((obj) => {
-      return obj.id == ev.target.value
-    })
-    console.log(result)
-    this.assessmentName = result.name
-    this.assessmentType = result.aspect_type
+      return obj.id == ev.target.value;
+    });
+    if (result) {
+      this.assessmentName = result.name;
+      this.assessmentType = result.aspect_type;
+    }
   }
-
 }

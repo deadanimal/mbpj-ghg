@@ -49,14 +49,17 @@ export class HistoryViewComponent implements OnInit {
     private evaluationService: EvaluationsService
   ) {
     // To get all assessment aspects
-    this.assessmentaspects = this.assessmentaspectService.retrievedAssessmentAspects
+    this.assessmentaspects =
+      this.assessmentaspectService.retrievedAssessmentAspects;
 
-    this.route.queryParams.subscribe(params => {
+    this.route.queryParams.subscribe((params) => {
       if (this.router.getCurrentNavigation().extras.state) {
-        this.application.push(this.router.getCurrentNavigation().extras.state.application)
-        console.log("application", this.application)
+        this.application.push(
+          this.router.getCurrentNavigation().extras.state.application
+        );
+        console.log("application", this.application);
       }
-    })
+    });
   }
 
   ngOnInit() {}
@@ -86,13 +89,19 @@ export class HistoryViewComponent implements OnInit {
     await alert.present();
   }
 
-  getAspectType(value: string) {
-    let results = this.assessmentaspects.find((obj) => {
-      return obj.id == value;
-    });
-    let result = this.aspecttypes.find((obj) => {
-      return results.aspect_type == obj.value;
-    });
-    return result.display_name + ' - ' + results.name + ' (' + results.aspect + ')';
+  getAspectType(value) {
+    if (value) {
+      let results = this.assessmentaspects.find((obj) => {
+        return obj.id == value;
+      });
+      let result = this.aspecttypes.find((obj) => {
+        return results.aspect_type == obj.value;
+      });
+      return (
+        result.display_name + " - " + results.name + " (" + results.aspect + ")"
+      );
+    } else {
+      return;
+    }
   }
 }

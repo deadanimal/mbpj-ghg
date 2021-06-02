@@ -37,11 +37,24 @@
               <ion-label position="stacked" mode="ios"
                 >Supporting document</ion-label
               >
-              <p>{{ application_assessment.supporting_doc }}</p>
+              <ion-img
+                style="padding-top: 1rem"
+                *ngIf="application_assessment.supporting_doc"
+                class="text-center"
+                [src]="
+                  'https://sgp1.digitaloceanspaces.com/pipeline-project/' +
+                  application_assessment.supporting_doc
+                "
+              ></ion-img>
             </ion-item>
 
             <div *ngFor="let evaluation of app.evaluation">
-              <div *ngIf="evaluation.application_assessment_id == application_assessment.id">
+              <div
+                *ngIf="
+                  evaluation.application_assessment_id ==
+                  application_assessment.id
+                "
+              >
                 <ion-item mode="ios">
                   <ion-label position="stacked" mode="ios"
                     >Remarks by evaluator</ion-label

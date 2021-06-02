@@ -18,7 +18,7 @@ spec:
         app: mbpj-ghg-webapp
     spec:
       containers:
-      - image: syafiqpipe/mbpj-ghg-webapp:latest
+      - image: afizihusaini/mbpj-ghg-webapp:1.1.2
         imagePullPolicy: Always   
         name: mbpj-ghg-webapp
         resources: {}

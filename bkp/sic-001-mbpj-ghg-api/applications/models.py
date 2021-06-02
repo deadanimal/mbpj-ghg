@@ -65,7 +65,7 @@ class Application(models.Model):
 
     def save(self,*args, **kwargs):
         timezone_ = pytz.timezone('Asia/Kuala_Lumpur')
-        if not self.status == 'CM':
+        if self.status == 'CM':
             self.date_approved = datetime.datetime.now(timezone_).strftime('%Y-%m-%d')
             
         super(Application, self).save(*args, **kwargs)

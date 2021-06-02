@@ -60,7 +60,10 @@ INSTALLED_APPS = [
     'rebates',
     'reports',
     'tickets',
-    'users'
+    'users',
+    'notifications',
+
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [

@@ -151,6 +151,14 @@ user_events_router = router.register(
     'user-events', UserEventViewSet
 )
 
+from notifications.views import (
+    NotificationViewSet
+)
+
+notifications_router = router.register(
+    'notifications', NotificationViewSet
+)
+
 
 urlpatterns = [
     url(r'v1/', include(router.urls)),

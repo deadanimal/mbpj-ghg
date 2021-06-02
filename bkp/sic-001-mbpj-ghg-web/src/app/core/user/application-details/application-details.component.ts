@@ -1,36 +1,33 @@
 import { Component, OnInit, TemplateRef, NgZone } from "@angular/core";
 import { FormArray, FormGroup, FormControl } from "@angular/forms";
+import { Router } from "@angular/router";
+import { LoadingBarService } from "@ngx-loading-bar/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
+import { ToastrService } from "ngx-toastr";
 
 import { User } from "src/app/shared/services/users/users.model";
 import { UsersService } from "src/app/shared/services/users/users.service";
-import {
-  Application,
-  MergedApplication,
-} from "src/app/shared/services/applications/applications.model";
 import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
 import { ApplicationAssessmentsService } from "src/app/shared/services/application-assessments/application-assessments.service";
 import { AssessmentAspectsService } from "src/app/shared/services/assessment-aspects/assessment-aspects.service";
 import { EvaluationsService } from "src/app/shared/services/evaluations/evaluations.service";
 import { EvaluationSchedulesService } from "src/app/shared/services/evaluation-schedules/evaluation-schedules.service";
-import { Rebate } from "src/app/shared/services/rebates/rebates.model";
 import { RebatesService } from "src/app/shared/services/rebates/rebates.service";
-import { House } from "src/app/shared/services/houses/houses.model";
 import { HousesService } from "src/app/shared/services/houses/houses.service";
+import { NotificationsService } from "src/app/shared/services/notifications/notifications.service";
 
-import { Router } from "@angular/router";
-import { ToastrService } from "ngx-toastr";
 import * as moment from "moment";
 
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import { LoadingBarService } from "@ngx-loading-bar/core";
+am4core.useTheme(am4themes_animated);
+
 import { ApplicationAssessment } from "src/app/shared/services/application-assessments/application-assessments.model";
 import { AssessmentAspect } from "src/app/shared/services/assessment-aspects/assessment-aspects.model";
+import { House } from "src/app/shared/services/houses/houses.model";
 import { Evaluation } from "src/app/shared/services/evaluations/evaluations.model";
 import { EvaluationSchedule } from "src/app/shared/services/evaluation-schedules/evaluation-schedules.model";
-am4core.useTheme(am4themes_animated);
 
 /**
  * ------- Tile layer list
@@ -110,6 +107,7 @@ export class ApplicationDetailsComponent implements OnInit {
     private houseService: HousesService,
     private userService: UsersService,
     private rebateService: RebatesService,
+    private notificationService: NotificationsService,
     private modalService: BsModalService,
     private router: Router,
     public toastr: ToastrService,
@@ -306,6 +304,21 @@ export class ApplicationDetailsComponent implements OnInit {
                 this.refreshData();
               }
             );
+
+          let session = "";
+          if (this.scheduleForm.value.session == "AM") session = "Morning";
+          else if (this.scheduleForm.value.session == "PM") session = "Evening";
+
+          let obj = {
+            title: "Evaluator Assign",
+            message: `Evaluator will come to your house at ${this.scheduleForm.value.date} (${session})`,
+            to_user: this.tempApplicant.id,
+            date_send: moment().format("YYYY-MM-DD"),
+          };
+          this.notificationService.register(obj).subscribe(
+            (res) => console.log("res", res),
+            (err) => console.error("err", err)
+          );
         }
       );
   }

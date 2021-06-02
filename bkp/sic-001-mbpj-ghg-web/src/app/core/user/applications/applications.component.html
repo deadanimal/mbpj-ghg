@@ -35,163 +35,164 @@
       </div>
     </div>
     <div class="col-12">
-      <div class="row mb-2">
-        <div class="col">
-          <form
-            class="navbar-search navbar-search-light form-inline mr-sm-3"
-            id="navbar-search-main"
-          >
-            <div
-              class="form-group mb-0"
-              [ngClass]="{ focused: focus === true }"
-            >
-              <div
-                class="input-group input-group-alternative input-group-merge"
-              >
-                <div class="input-group-prepend">
-                  <span class="input-group-text"
-                    ><i class="fas fa-search"></i
-                  ></span>
-                </div>
-                <input
-                  class="form-control"
-                  placeholder="Search"
-                  type="text"
-                  (focus)="focus = true"
-                  (blur)="focus = false"
-                  (keyup)="doFilterTable($event.target.value)"
-                />
-              </div>
-            </div>
-            <button
-              type="button"
-              class="close"
-              (click)="closeSearch()"
-              data-action="search-close"
-              data-target="#navbar-search-main"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">×</span>
-            </button>
-          </form>
-        </div>
-      </div>
       <div class="card">
         <div class="card-header bg-info py-2">
           <div class="row">
             <div class="col my-auto">
-              <h4 class="text-white m-0">List</h4>
-            </div>
-            <div class="col-auto">
-              <button
-                class="btn btn-icon btn-sm btn-2 btn-secondary text-info"
-                type="button"
-                (click)="refreshData()"
-              >
-                <span class="btn-inner--icon"
-                  ><i class="fas fa-sync"></i> Refresh</span
-                >
-              </button>
+              <h4 class="text-white m-0">Applications List</h4>
             </div>
           </div>
         </div>
-        <div class="table-responsive">
-          <table
-            mat-table
-            [dataSource]="tableSource"
-            class="table table-flush"
-            matSort
+        <div class="dataTables_wrapper py-4">
+          <div class="row">
+            <div class="col-sm-12 col-md-6">
+              <div class="dataTables_length" id="datatable_length">
+                <label>
+                  Show
+                  <select
+                    name="datatable_length"
+                    aria-controls="datatable"
+                    class="
+                      form-control form-control-sm
+                      custom-select custom-select-sm
+                    "
+                    (change)="entriesChange($event)"
+                  >
+                    <option value="10" [selected]="tableEntries == 5">5</option>
+                    <option value="25" [selected]="tableEntries == 10">
+                      10
+                    </option>
+                    <option value="50" [selected]="tableEntries == 15">
+                      15
+                    </option>
+                    <option value="-1" [selected]="tableEntries == -1">
+                      All
+                    </option>
+                  </select>
+                  records
+                </label>
+              </div>
+            </div>
+
+            <div class="col-sm-12 col-md-6">
+              <div id="datatable_filter" class="dataTables_filter">
+                <label>
+                  <input
+                    type="search"
+                    class="form-control form-control-sm"
+                    placeholder="Search records"
+                    aria-controls="datatable"
+                    (keyup)="filterTable($event)"
+                  />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <ngx-datatable
+            class="bootstrap selection-cell"
+            [columnMode]="'force'"
+            [headerHeight]="50"
+            [footerHeight]="50"
+            [rowHeight]="'auto'"
+            [limit]="tableEntries != -1 ? tableEntries : undefined"
+            [rows]="tableTemp"
           >
-            <ng-container matColumnDef="applicant_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Applicant
-              </th>
-              <td mat-cell *matCellDef="let element">
-                {{ element.applicant_name }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="date_submitted">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Date submitted
-              </th>
-              <td mat-cell *matCellDef="let element">
-                {{ element.date_submitted }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="applied_house_assessment_tax_account">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Assessment Tax Account No.
-              </th>
-              <td mat-cell *matCellDef="let element">
-                {{ element.applied_house_assessment_tax_account }}
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="evaluator_nominated_name">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>
-                Nominated evaluator
-              </th>
-              <td mat-cell *matCellDef="let element">
-                <div *ngIf="element.evaluator_nominated_name == 'Not assigned'">
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Applicant</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.applicant_name }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Date submitted</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.date_submitted }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Assessment Tax Account No.</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.applied_house_assessment_tax_account }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Nominated evaluator</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div *ngIf="row.evaluator_nominated_name == 'Not assigned'">
                   <span><i class="fas fa-info-circle mr-1"></i></span
-                  >{{ element.evaluator_nominated_name }}
+                  >{{ row.evaluator_nominated_name }}
                 </div>
-                <div *ngIf="element.evaluator_nominated_name != 'Not assigned'">
-                  {{ element.evaluator_nominated_name }}
+                <div *ngIf="row.evaluator_nominated_name != 'Not assigned'">
+                  {{ row.evaluator_nominated_name }}
                 </div>
-              </td>
-            </ng-container>
-
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
-              <td mat-cell *matCellDef="let element">
-                <div *ngIf="element.status == 'CM'">
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template
+                ><span>Status</span></ng-template
+              >
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div *ngIf="row.status == 'CM'">
                   <span class="badge badge-lg badge-default">Completed</span>
                 </div>
-                <div *ngIf="element.status == 'CR'">
+                <div *ngIf="row.status == 'CR'">
                   <span class="badge badge-lg badge-success">Created</span>
                 </div>
-                <div *ngIf="element.status == 'IE'">
+                <div *ngIf="row.status == 'IE'">
                   <span class="badge badge-lg badge-primary"
                     >In evaluation</span
                   >
                 </div>
-                <div *ngIf="element.status == 'IP'">
+                <div *ngIf="row.status == 'IP'">
                   <span class="badge badge-lg badge-primary">In progress</span>
                 </div>
-                <div *ngIf="element.status == 'PD'">
+                <div *ngIf="row.status == 'PD'">
                   <span class="badge badge-lg badge-default">Paid</span>
                 </div>
-                <div *ngIf="element.status == 'SM'">
+                <div *ngIf="row.status == 'SM'">
                   <span class="badge badge-lg badge-success">Submitted</span>
                 </div>
-                <div *ngIf="element.status == 'RJ'">
+                <div *ngIf="row.status == 'RJ'">
                   <span class="badge badge-lg badge-danger">Rejected</span>
                 </div>
-              </td>
-            </ng-container>
+              </ng-template>
+            </ngx-datatable-column>
 
-            <ng-container matColumnDef="id">
-              <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
-              <td mat-cell *matCellDef="let element" class="text-right">
+            <ngx-datatable-column>
+              <ng-template ngx-datatable-header-template>
+                <span>Action</span>
+              </ng-template>
+              <ng-template let-row="row" ngx-datatable-cell-template>
                 <button
                   class="btn btn-icon btn-2 btn-primary btn-sm"
                   type="button"
-                  (click)="doViewDetail(element)"
+                  (click)="viewDetail(row)"
                 >
                   <span class="btn-inner--icon"
                     >View <i class="far fa-eye"></i
                   ></span>
                 </button>
-              </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="tableColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: tableColumns"></tr>
-          </table>
-          <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+                <button
+                  class="btn btn-icon btn-2 btn-danger btn-sm"
+                  type="button"
+                  (click)="deleteApplication(row)"
+                >
+                  <span class="btn-inner--icon"
+                    >Delete <i class="fas fa-trash"></i
+                  ></span>
+                </button>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
         </div>
       </div>
     </div>

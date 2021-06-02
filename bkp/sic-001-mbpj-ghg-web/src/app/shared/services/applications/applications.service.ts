@@ -80,15 +80,6 @@ export class ApplicationsService {
     );
   }
 
-  doFilterNakDelete(): Observable<any> {
-    return this.http.get<any>(this.applicationsUrl).pipe(
-      tap((res) => {
-        this.barangNakDelete = res;
-      }),
-      catchError(this.handleError)
-    );
-  }
-
   doDeleteScript(id): Observable<any> {
     return this.http.delete<any>(this.applicationsUrl + id + "/").pipe(
       tap((res) => {}),

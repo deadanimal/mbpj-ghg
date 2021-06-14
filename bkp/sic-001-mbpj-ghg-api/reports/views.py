@@ -432,62 +432,62 @@ class ReportViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             'count_jan': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=1, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_feb': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=3, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_mar': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=2, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_apr': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=4, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_may': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=5, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_jun': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=6,
-                status='AP'
+                status='CM'
             ).count(),
             'count_jul': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=7, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_aug': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=8, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_sep': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=9, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_oct': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=10, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_nov': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=11, 
-                status='AP'
+                status='CM'
             ).count(),
             'count_dec': applications.filter(
                 date_approved__year=current_year, 
                 date_approved__month=12, 
-                status='AP'
+                status='CM'
             ).count()
         }
 

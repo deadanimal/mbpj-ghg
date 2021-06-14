@@ -1,5 +1,6 @@
 from django.shortcuts import render
-from django.db.models import Q
+from django.db.models import F, Q, Count
+from django.db.models.functions import ExtractYear
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
@@ -9,6 +10,7 @@ from rest_framework import viewsets, status
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from datetime import datetime
+import json
 
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -140,6 +142,60 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
         return Response(queryset)
 
+    @action(methods=['POST'], detail=False)
+    def get_total_approved_rejected_by_year(self, request):
+
+        data = request.data
+
+        year = ''
+        if data['year'] != '':
+            year = data['year']
+        else:
+            year = datetime.now().strftime("%Y")
+
+        # PENDING
+        queryset_approved = Application.objects.filter(date_submitted__year=year, status='CM').count()
+        queryset_rejected = Application.objects.filter(date_submitted__year=year, status='RJ').count()
+
+        data = [
+            {
+                'status': 'Approved',
+                'amount': queryset_approved    
+            },
+            {
+                'status': 'Rejected',
+                'amount': queryset_rejected    
+            } 
+        ]
+
+        return Response(data)
+
+    @action(methods=['POST'], detail=False)
+    def get_total_app_by_area(self, request):
+
+        data = request.data
+
+        year = ''
+        if data['year'] != '':
+            year = data['year']
+        else:
+            year = datetime.now().strftime("%Y")
+
+        queryset = Application.objects.filter(date_submitted__year=year).values('applied_house__area').annotate(location=F('applied_house__area'), amount=Count('applied_house__area')).order_by()
+
+        data = queryset
+
+        return Response(data)
+    
+    @action(methods=['GET'], detail=False)
+    def get_total_app_by_year(self, request):
+
+        queryset = Application.objects.values('date_submitted__year').annotate(year=ExtractYear('date_submitted'), value=Count('date_submitted__year')).order_by()
+
+        data = queryset
+
+        return Response(data)
+
 class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ApplicationAssessment.objects.all()
     serializer_class = ApplicationAssessmentSerializer
@@ -170,7 +226,66 @@ class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             action = 'Update application assessment details',
             action_by = self.request.user
         )
-        return super().update(request)       
+        return super().update(request)      
+    
+    @action(methods=['POST'], detail=False)
+    def get_total_app_by_category(self, request):
+        
+        data = request.data
+
+        year = ''
+        if data['year'] != '':
+            year = data['year']
+        else:
+            year = datetime.now().strftime("%Y")
+            
+        queryset_energy = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='EN').count()
+        queryset_water = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='WA').count()
+        queryset_transportation = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='TR').count()
+        queryset_biodiversity = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='BI').count()
+        queryset_waste = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='WE').count()
+        
+        data = [
+            {
+                'category': "Energy",
+                'value': queryset_energy,
+            },
+            {
+                'category': "Waste",
+                'value': queryset_waste,
+            },
+            {
+                'category': "Water",
+                'value': queryset_water,
+            },
+            {
+                'category': "Transportation",
+                'value': queryset_transportation,
+            },
+            {
+                'category': "Biodiversity",
+                'value': queryset_biodiversity,
+            },
+        ]
+        
+        return Response(data)
+    
+    @action(methods=['POST'], detail=False)
+    def get_total_assessment_by_year(self, request):
+        
+        data = request.data
+
+        year = ''
+        if data['year'] != '':
+            year = data['year']
+        else:
+            year = datetime.now().strftime("%Y")
+            
+        queryset = ApplicationAssessment.objects.values('assessment_aspect__name').filter(application__date_submitted__year=year, assessment_aspect__aspect_type=data['aspect_type']).annotate(amount=Count('application__date_submitted__year')).order_by()
+        
+        data = queryset
+        
+        return Response(data)
 
 class AssessmentAspectViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = AssessmentAspect.objects.all()

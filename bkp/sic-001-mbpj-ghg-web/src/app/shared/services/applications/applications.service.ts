@@ -118,4 +118,28 @@ export class ApplicationsService {
       catchError(this.handleError)
     );
   }
+
+  doRetrieveTotalRebateApprovalAnalysis(body): Observable<any> {
+    let url = this.applicationsUrl + "get_total_approved_rejected_by_year/";
+    return this.http.post<any>(url, body).pipe(
+      tap((res) => {}),
+      catchError(this.handleError)
+    );
+  }
+
+  doRetrieveTrendAnalysis(body): Observable<any> {
+    let url = this.applicationsUrl + "get_total_app_by_area/";
+    return this.http.post<any>(url, body).pipe(
+      tap((res) => {}),
+      catchError(this.handleError)
+    );
+  }
+
+  doRetrieveTotalApplicationAnalysis(): Observable<any> {
+    let url = this.applicationsUrl + "get_total_app_by_year/";
+    return this.http.get<any>(url).pipe(
+      tap((res) => {}),
+      catchError(this.handleError)
+    );
+  }
 }

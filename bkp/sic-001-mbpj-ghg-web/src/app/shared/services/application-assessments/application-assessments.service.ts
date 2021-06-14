@@ -82,4 +82,19 @@ export class ApplicationAssessmentsService {
     )
   }
 
+  doRetrieveApplicationbyCategoryAnalysis(body): Observable<any> {
+    let url = this.applicationAssessmentsUrl + "get_total_app_by_category/";
+    return this.http.post<any>(url, body).pipe(
+      tap((res) => {}),
+      catchError(this.handleError)
+    );
+  }
+
+  doRetrieveTotalAssessmentAnalysis(body): Observable<any> {
+    let url = this.applicationAssessmentsUrl + "get_total_assessment_by_year/";
+    return this.http.post<any>(url, body).pipe(
+      tap((res) => {}),
+      catchError(this.handleError)
+    );
+  }
 }

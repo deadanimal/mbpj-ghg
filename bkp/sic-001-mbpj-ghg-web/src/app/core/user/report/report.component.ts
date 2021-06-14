@@ -3,6 +3,8 @@ import { LoadingBarService } from "@ngx-loading-bar/core";
 import { environment } from "src/environments/environment";
 import { ToastrService } from "ngx-toastr";
 
+import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
+import { ApplicationAssessmentsService } from "src/app/shared/services/application-assessments/application-assessments.service";
 import { ReportsService } from "src/app/shared/services/reports/reports.service";
 
 import * as am4core from "@amcharts/amcharts4/core";
@@ -18,6 +20,20 @@ am4core.useTheme(am4themes_animated);
 export class ReportComponent implements OnInit {
   // Data
   reportType: string = "";
+  yearTotalRebateApprovalAnalysis: string = new Date().getFullYear().toString();
+  yearTrendAnalysis: string = new Date().getFullYear().toString();
+  yearApplicationbyCategoryAnalysis: string = new Date()
+    .getFullYear()
+    .toString();
+  yearEnergyAssessmentAnalysis: string = new Date().getFullYear().toString();
+  yearWaterAssessmentAnalysis: string = new Date().getFullYear().toString();
+  yearTransportationAssessmentAnalysis: string = new Date()
+    .getFullYear()
+    .toString();
+  yearBiodiversityAssessmentAnalysis: string = new Date()
+    .getFullYear()
+    .toString();
+  yearWasteAssessmentAnalysis: string = new Date().getFullYear().toString();
 
   // DatePicker
   startDate;
@@ -27,6 +43,9 @@ export class ReportComponent implements OnInit {
     containerClass: "theme-dark-blue",
     dateInputFormat: "YYYY-MM-DD",
   };
+
+  // Dropdown
+  year2011tocurrentyear = [];
 
   public chartStatus;
   public chartTrend;
@@ -42,22 +61,35 @@ export class ReportComponent implements OnInit {
     public zone: NgZone,
     public loadingBar: LoadingBarService,
     public toastr: ToastrService,
+    private applicationService: ApplicationsService,
+    private applicationassessmentService: ApplicationAssessmentsService,
     private reportService: ReportsService
-  ) {}
+  ) {
+    // loop through data from 2011 to 2021
+    let currentyear = new Date().getFullYear();
+    let loop = currentyear - 2011;
+    for (let i = 0; i < loop + 1; i++) {
+      let obj = {
+        value: 2011 + i,
+        display_name: (2011 + i).toString(),
+      };
+      this.year2011tocurrentyear.push(obj);
+    }
+  }
 
   ngOnInit() {}
 
   ngAfterViewInit() {
     this.zone.runOutsideAngular(() => {
-      this.initChartCategory();
-      this.initChartStatus();
-      this.initChartTrend();
-      this.initChartApp();
-      this.initChartEnergy();
-      this.initChartWater();
-      this.initChartTransportation();
-      this.initChartWaste();
-      this.initChartBiodiversity();
+      this.findCategory();
+      this.findStatus();
+      this.findTrend();
+      this.findApp();
+      this.findEnergy();
+      this.findWater();
+      this.findTransportation();
+      this.findWaste();
+      this.findBiodiversity();
     });
   }
 
@@ -90,445 +122,441 @@ export class ReportComponent implements OnInit {
     });
   }
 
-  initChartStatus() {
-    this.zone.runOutsideAngular(() => {
-      this.chartStatus = am4core.create("statusdiv", am4charts.PieChart);
-
-      // Add data
-      this.chartStatus.data = [
-        {
-          status: "Approved",
-          amount: 501.9,
+  findStatus() {
+    let body = {
+      year: this.yearTotalRebateApprovalAnalysis,
+    };
+    this.applicationService
+      .doRetrieveTotalRebateApprovalAnalysis(body)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          this.initChartStatus(res);
         },
-        {
-          status: "Rejected",
-          amount: 301.9,
-        },
-      ];
-
-      // Add and configure Series
-      let pieSeries = this.chartStatus.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "amount";
-      pieSeries.dataFields.category = "status";
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-      pieSeries.slices.template.strokeWidth = 2;
-      pieSeries.slices.template.strokeOpacity = 1;
-
-      pieSeries.radius = am4core.percent(60);
-
-      // This creates initial animation
-      pieSeries.hiddenState.properties.opacity = 1;
-      pieSeries.hiddenState.properties.endAngle = -90;
-      pieSeries.hiddenState.properties.startAngle = -90;
-    });
-  }
-
-  initChartTrend() {
-    this.zone.runOutsideAngular(() => {
-      this.chartTrend = am4core.create("trenddiv", am4charts.XYChart);
-      this.chartTrend.data = [
-        {
-          location: "Old Town",
-          amount: 121,
-        },
-        {
-          location: "Bukit Gasing",
-          amount: 134,
-        },
-        {
-          location: "Taman Jaya",
-          amount: 26,
-        },
-        {
-          location: "Taman Gee Huat",
-          amount: 29,
-        },
-        {
-          location: "Taman Paramount",
-          amount: 26,
-        },
-        {
-          location: "Asia Jaya",
-          amount: 65,
-        },
-      ];
-
-      // Create axes
-      let categoryAxis = this.chartTrend.yAxes.push(
-        new am4charts.CategoryAxis()
-      );
-      categoryAxis.dataFields.category = "location";
-      categoryAxis.numberFormatter.numberFormat = "#";
-      categoryAxis.renderer.inversed = true;
-      categoryAxis.renderer.grid.template.location = 0;
-      categoryAxis.renderer.cellStartLocation = 0.1;
-      categoryAxis.renderer.cellEndLocation = 0.9;
-
-      let valueAxis = this.chartTrend.xAxes.push(new am4charts.ValueAxis());
-      valueAxis.renderer.opposite = true;
-
-      let series = this.chartTrend.series.push(new am4charts.ColumnSeries());
-      series.dataFields.valueX = "amount";
-      series.dataFields.categoryY = "location";
-      series.name = name;
-      series.columns.template.tooltipText = "Amount: [bold]{valueX}[/]";
-      series.columns.template.height = am4core.percent(100);
-      series.sequencedInterpolation = true;
-
-      let valueLabel = series.bullets.push(new am4charts.LabelBullet());
-      valueLabel.label.text = "{valueX}";
-      valueLabel.label.horizontalCenter = "left";
-      valueLabel.label.dx = 10;
-      valueLabel.label.hideOversized = false;
-      valueLabel.label.truncate = false;
-
-      let categoryLabel = series.bullets.push(new am4charts.LabelBullet());
-      categoryLabel.label.text = "{name}";
-      categoryLabel.label.horizontalCenter = "right";
-      categoryLabel.label.dx = -10;
-      categoryLabel.label.fill = am4core.color("#fff");
-      categoryLabel.label.hideOversized = false;
-      categoryLabel.label.truncate = false;
-    });
-  }
-
-  initChartCategory() {
-    this.zone.runOutsideAngular(() => {
-      this.chartCategory = am4core.create("categorydiv", am4charts.XYChart);
-
-      // Add data
-      this.chartCategory.data = [
-        {
-          category: "Energy",
-          value: 3025,
-        },
-        {
-          category: "Waste",
-          value: 1882,
-        },
-        {
-          category: "Water",
-          value: 1809,
-        },
-        {
-          category: "Transportation",
-          value: 1322,
-        },
-        {
-          category: "Biodiversity",
-          value: 1122,
-        },
-      ];
-
-      // Create axes
-
-      let categoryAxis = this.chartCategory.xAxes.push(
-        new am4charts.CategoryAxis()
-      );
-      categoryAxis.dataFields.category = "category";
-      categoryAxis.renderer.grid.template.location = 0;
-      categoryAxis.renderer.minGridDistance = 30;
-
-      categoryAxis.renderer.labels.template.adapter.add(
-        "dy",
-        function (dy, target) {
-          if (target.dataItem && target.dataItem.index && 2 == 2) {
-            return dy + 25;
-          }
-          return dy;
+        (err) => {
+          console.error("err", err);
         }
       );
-
-      let valueAxis = this.chartCategory.yAxes.push(new am4charts.ValueAxis());
-
-      // Create series
-      let series = this.chartCategory.series.push(new am4charts.ColumnSeries());
-      series.dataFields.valueY = "value";
-      series.dataFields.categoryX = "category";
-      series.name = "Value";
-      series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
-      series.columns.template.fillOpacity = 0.8;
-
-      let columnTemplate = series.columns.template;
-      columnTemplate.strokeWidth = 2;
-      columnTemplate.strokeOpacity = 1;
-    });
   }
 
-  initChartApp() {
-    this.zone.runOutsideAngular(() => {
-      this.chartApp = am4core.create("appdiv", am4charts.XYChart);
-      this.chartApp.paddingRight = 20;
+  initChartStatus(chartData) {
+    this.chartStatus = am4core.create("statusdiv", am4charts.PieChart);
 
-      let data = [
-        {
-          year: "2011",
-          value: 100,
-        },
-        {
-          year: "2012",
-          value: 200,
-        },
-        {
-          year: "2013",
-          value: 300,
-        },
-        {
-          year: "2014",
-          value: 250,
-        },
-        {
-          year: "2015",
-          value: 500,
-        },
-        {
-          year: "2016",
-          value: 800,
-        },
-        {
-          year: "2017",
-          value: 750,
-        },
-        {
-          year: "2018",
-          value: 879,
-        },
-        {
-          year: "2019",
-          value: 1250,
-        },
-      ];
+    // Add data
+    this.chartStatus.data = chartData;
 
-      this.chartApp.data = data;
-      this.chartApp.dateFormatter.inputDateFormat = "yyyy";
+    // Add and configure Series
+    let pieSeries = this.chartStatus.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "amount";
+    pieSeries.dataFields.category = "status";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
 
-      let dateAxis = this.chartApp.xAxes.push(new am4charts.DateAxis());
-      dateAxis.renderer.minGridDistance = 50;
-      dateAxis.baseInterval = { timeUnit: "year", count: 1 };
+    pieSeries.radius = am4core.percent(60);
 
-      let valueAxis = this.chartApp.yAxes.push(new am4charts.ValueAxis());
-      valueAxis.tooltip.disabled = true;
-
-      let series = this.chartApp.series.push(new am4charts.StepLineSeries());
-      series.dataFields.dateX = "year";
-      series.dataFields.valueY = "value";
-      series.tooltipText = "{valueY.value}";
-      series.strokeWidth = 3;
-
-      this.chartApp.cursor = new am4charts.XYCursor();
-      this.chartApp.cursor.xAxis = dateAxis;
-      this.chartApp.cursor.fullWidthLineX = true;
-      this.chartApp.cursor.lineX.strokeWidth = 0;
-      this.chartApp.cursor.lineX.fill = this.chartApp.colors.getIndex(2);
-      this.chartApp.cursor.lineX.fillOpacity = 0.1;
-
-      this.chartApp.scrollbarX = new am4core.Scrollbar();
-    });
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
   }
 
-  initChartEnergy() {
-    this.zone.runOutsideAngular(() => {
-      this.chartEnergy = am4core.create("chartenergy", am4charts.PieChart);
-      // Add data
-      this.chartEnergy.data = [
-        {
-          aspect: "A1",
-          amount: 501,
-        },
-        {
-          aspect: "A2",
-          amount: 301,
-        },
-        {
-          aspect: "A3",
-          amount: 201,
-        },
-        {
-          aspect: "A4",
-          amount: 165,
-        },
-        {
-          aspect: "A5",
-          amount: 139,
-        },
-        {
-          aspect: "A6",
-          amount: 195,
-        },
-      ];
-
-      // Add and configure Series
-      let pieSeries = this.chartEnergy.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "amount";
-      pieSeries.dataFields.category = "aspect";
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-      pieSeries.slices.template.strokeWidth = 2;
-      pieSeries.slices.template.strokeOpacity = 1;
-
-      pieSeries.radius = am4core.percent(65);
-
-      // This creates initial animation
-      pieSeries.hiddenState.properties.opacity = 1;
-      pieSeries.hiddenState.properties.endAngle = -90;
-      pieSeries.hiddenState.properties.startAngle = -90;
-    });
+  findTrend() {
+    let body = {
+      year: this.yearTrendAnalysis,
+    };
+    this.applicationService.doRetrieveTrendAnalysis(body).subscribe(
+      (res) => {
+        // console.log("res", res);
+        this.initChartTrend(res);
+      },
+      (err) => {
+        console.error("err", err);
+      }
+    );
   }
 
-  initChartWater() {
-    this.zone.runOutsideAngular(() => {
-      this.chartWater = am4core.create("chartwater", am4charts.PieChart);
-      // Add data
-      this.chartWater.data = [
-        {
-          aspect: "B1",
-          amount: 51,
-        },
-        {
-          aspect: "B2",
-          amount: 31,
-        },
-        {
-          aspect: "B3",
-          amount: 21,
-        },
-        {
-          aspect: "B4",
-          amount: 15,
-        },
-        {
-          aspect: "B5",
-          amount: 19,
-        },
-      ];
+  initChartTrend(chartData) {
+    this.chartTrend = am4core.create("trenddiv", am4charts.XYChart);
+    this.chartTrend.data = chartData;
 
-      // Add and configure Series
-      let pieSeries = this.chartWater.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "amount";
-      pieSeries.dataFields.category = "aspect";
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-      pieSeries.slices.template.strokeWidth = 2;
-      pieSeries.slices.template.strokeOpacity = 1;
+    // Create axes
+    let categoryAxis = this.chartTrend.yAxes.push(new am4charts.CategoryAxis());
+    categoryAxis.dataFields.category = "location";
+    categoryAxis.numberFormatter.numberFormat = "#";
+    categoryAxis.renderer.inversed = true;
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.cellStartLocation = 0.1;
+    categoryAxis.renderer.cellEndLocation = 0.9;
 
-      pieSeries.radius = am4core.percent(65);
+    let valueAxis = this.chartTrend.xAxes.push(new am4charts.ValueAxis());
+    valueAxis.renderer.opposite = true;
 
-      // This creates initial animation
-      pieSeries.hiddenState.properties.opacity = 1;
-      pieSeries.hiddenState.properties.endAngle = -90;
-      pieSeries.hiddenState.properties.startAngle = -90;
-    });
+    let series = this.chartTrend.series.push(new am4charts.ColumnSeries());
+    series.dataFields.valueX = "amount";
+    series.dataFields.categoryY = "location";
+    series.name = name;
+    series.columns.template.tooltipText = "Amount: [bold]{valueX}[/]";
+    series.columns.template.height = am4core.percent(100);
+    series.sequencedInterpolation = true;
+
+    let valueLabel = series.bullets.push(new am4charts.LabelBullet());
+    valueLabel.label.text = "{valueX}";
+    valueLabel.label.horizontalCenter = "left";
+    valueLabel.label.dx = 10;
+    valueLabel.label.hideOversized = false;
+    valueLabel.label.truncate = false;
+
+    let categoryLabel = series.bullets.push(new am4charts.LabelBullet());
+    categoryLabel.label.text = "{name}";
+    categoryLabel.label.horizontalCenter = "right";
+    categoryLabel.label.dx = -10;
+    categoryLabel.label.fill = am4core.color("#fff");
+    categoryLabel.label.hideOversized = false;
+    categoryLabel.label.truncate = false;
   }
 
-  initChartTransportation() {
-    this.zone.runOutsideAngular(() => {
-      this.chartTransportation = am4core.create(
-        "charttransportation",
-        am4charts.PieChart
+  findCategory() {
+    let body = {
+      year: this.yearTrendAnalysis,
+    };
+    this.applicationassessmentService
+      .doRetrieveApplicationbyCategoryAnalysis(body)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          this.initChartCategory(res);
+        },
+        (err) => {
+          console.error("err", err);
+        }
       );
-      // Add data
-      this.chartTransportation.data = [
-        {
-          aspect: "D1",
-          amount: 51,
-        },
-        {
-          aspect: "D2",
-          amount: 31,
-        },
-      ];
+  }
 
-      // Add and configure Series
-      let pieSeries = this.chartTransportation.series.push(
-        new am4charts.PieSeries()
+  initChartCategory(chartData) {
+    this.chartCategory = am4core.create("categorydiv", am4charts.XYChart);
+
+    // Add data
+    this.chartCategory.data = chartData;
+
+    // Create axes
+
+    let categoryAxis = this.chartCategory.xAxes.push(
+      new am4charts.CategoryAxis()
+    );
+    categoryAxis.dataFields.category = "category";
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.minGridDistance = 30;
+
+    categoryAxis.renderer.labels.template.adapter.add(
+      "dy",
+      function (dy, target) {
+        if (target.dataItem && target.dataItem.index && 2 == 2) {
+          return dy + 25;
+        }
+        return dy;
+      }
+    );
+
+    let valueAxis = this.chartCategory.yAxes.push(new am4charts.ValueAxis());
+
+    // Create series
+    let series = this.chartCategory.series.push(new am4charts.ColumnSeries());
+    series.dataFields.valueY = "value";
+    series.dataFields.categoryX = "category";
+    series.name = "Value";
+    series.columns.template.tooltipText = "{categoryX}: [bold]{valueY}[/]";
+    series.columns.template.fillOpacity = 0.8;
+
+    let columnTemplate = series.columns.template;
+    columnTemplate.strokeWidth = 2;
+    columnTemplate.strokeOpacity = 1;
+
+    this.chartCategory.scrollbarX = new am4core.Scrollbar();
+  }
+
+  findApp() {
+    this.applicationService.doRetrieveTotalApplicationAnalysis().subscribe(
+      (res) => {
+        // console.log("res", res);
+        let chartData = [];
+        chartData = res.map((item) => {
+          return {
+            year: item.year.toString(),
+            value: item.value,
+          };
+        });
+        this.initChartApp(chartData);
+      },
+      (err) => {
+        console.error("err", err);
+      }
+    );
+  }
+
+  initChartApp(chartData) {
+    this.chartApp = am4core.create("appdiv", am4charts.XYChart);
+    this.chartApp.paddingRight = 20;
+
+    this.chartApp.data = chartData;
+    this.chartApp.dateFormatter.inputDateFormat = "yyyy";
+
+    let dateAxis = this.chartApp.xAxes.push(new am4charts.DateAxis());
+    dateAxis.renderer.minGridDistance = 50;
+    dateAxis.baseInterval = { timeUnit: "year", count: 1 };
+
+    let valueAxis = this.chartApp.yAxes.push(new am4charts.ValueAxis());
+    valueAxis.tooltip.disabled = true;
+
+    let series = this.chartApp.series.push(new am4charts.StepLineSeries());
+    series.dataFields.dateX = "year";
+    series.dataFields.valueY = "value";
+    series.tooltipText = "{valueY.value}";
+    series.strokeWidth = 3;
+
+    this.chartApp.cursor = new am4charts.XYCursor();
+    this.chartApp.cursor.xAxis = dateAxis;
+    this.chartApp.cursor.fullWidthLineX = true;
+    this.chartApp.cursor.lineX.strokeWidth = 0;
+    this.chartApp.cursor.lineX.fill = this.chartApp.colors.getIndex(2);
+    this.chartApp.cursor.lineX.fillOpacity = 0.1;
+
+    this.chartApp.scrollbarX = new am4core.Scrollbar();
+  }
+
+  findEnergy() {
+    let body = {
+      aspect_type: "EN",
+      year: this.yearEnergyAssessmentAnalysis,
+    };
+    this.applicationassessmentService
+      .doRetrieveTotalAssessmentAnalysis(body)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          let chartData = [];
+          chartData = res.map((item) => {
+            return {
+              aspect: item.assessment_aspect__name,
+              amount: item.amount,
+            };
+          });
+          this.initChartEnergy(chartData);
+        },
+        (err) => {
+          console.error("err", err);
+        }
       );
-      pieSeries.dataFields.value = "amount";
-      pieSeries.dataFields.category = "aspect";
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-      pieSeries.slices.template.strokeWidth = 2;
-      pieSeries.slices.template.strokeOpacity = 1;
-
-      pieSeries.radius = am4core.percent(65);
-
-      // This creates initial animation
-      pieSeries.hiddenState.properties.opacity = 1;
-      pieSeries.hiddenState.properties.endAngle = -90;
-      pieSeries.hiddenState.properties.startAngle = -90;
-    });
   }
 
-  initChartWaste() {
-    this.zone.runOutsideAngular(() => {
-      this.chartWaste = am4core.create("chartwaste", am4charts.PieChart);
-      // Add data
-      this.chartWaste.data = [
-        {
-          aspect: "C1",
-          amount: 41,
-        },
-        {
-          aspect: "C2",
-          amount: 31,
-        },
-        {
-          aspect: "C3",
-          amount: 61,
-        },
-        {
-          aspect: "C4",
-          amount: 26,
-        },
-      ];
+  initChartEnergy(chartData) {
+    this.chartEnergy = am4core.create("chartenergy", am4charts.PieChart);
+    // Add data
+    this.chartEnergy.data = chartData;
 
-      // Add and configure Series
-      let pieSeries = this.chartWaste.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "amount";
-      pieSeries.dataFields.category = "aspect";
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-      pieSeries.slices.template.strokeWidth = 2;
-      pieSeries.slices.template.strokeOpacity = 1;
+    // Add and configure Series
+    let pieSeries = this.chartEnergy.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "amount";
+    pieSeries.dataFields.category = "aspect";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
 
-      pieSeries.radius = am4core.percent(65);
+    pieSeries.radius = am4core.percent(65);
 
-      // This creates initial animation
-      pieSeries.hiddenState.properties.opacity = 1;
-      pieSeries.hiddenState.properties.endAngle = -90;
-      pieSeries.hiddenState.properties.startAngle = -90;
-    });
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
   }
 
-  initChartBiodiversity() {
-    this.zone.runOutsideAngular(() => {
-      this.chartWaste = am4core.create("chartbiodiversity", am4charts.PieChart);
-      // Add data
-      this.chartWaste.data = [
-        {
-          aspect: "E1",
-          amount: 41,
+  findWater() {
+    let body = {
+      aspect_type: "WA",
+      year: this.yearWaterAssessmentAnalysis,
+    };
+    this.applicationassessmentService
+      .doRetrieveTotalAssessmentAnalysis(body)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          let chartData = [];
+          chartData = res.map((item) => {
+            return {
+              aspect: item.assessment_aspect__name,
+              amount: item.amount,
+            };
+          });
+          this.initChartWater(chartData);
         },
-        {
-          aspect: "E2",
-          amount: 31,
+        (err) => {
+          console.error("err", err);
+        }
+      );
+  }
+
+  initChartWater(chartData) {
+    this.chartWater = am4core.create("chartwater", am4charts.PieChart);
+    // Add data
+    this.chartWater.data = chartData;
+
+    // Add and configure Series
+    let pieSeries = this.chartWater.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "amount";
+    pieSeries.dataFields.category = "aspect";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
+
+    pieSeries.radius = am4core.percent(65);
+
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
+  }
+
+  findTransportation() {
+    let body = {
+      aspect_type: "TR",
+      year: this.yearTransportationAssessmentAnalysis,
+    };
+    this.applicationassessmentService
+      .doRetrieveTotalAssessmentAnalysis(body)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          let chartData = [];
+          chartData = res.map((item) => {
+            return {
+              aspect: item.assessment_aspect__name,
+              amount: item.amount,
+            };
+          });
+          this.initChartTransportation(chartData);
         },
-        {
-          aspect: "E3",
-          amount: 61,
+        (err) => {
+          console.error("err", err);
+        }
+      );
+  }
+
+  initChartTransportation(chartData) {
+    this.chartTransportation = am4core.create(
+      "charttransportation",
+      am4charts.PieChart
+    );
+    // Add data
+    this.chartTransportation.data = chartData;
+
+    // Add and configure Series
+    let pieSeries = this.chartTransportation.series.push(
+      new am4charts.PieSeries()
+    );
+    pieSeries.dataFields.value = "amount";
+    pieSeries.dataFields.category = "aspect";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
+
+    pieSeries.radius = am4core.percent(65);
+
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
+  }
+
+  findWaste() {
+    let body = {
+      aspect_type: "WE",
+      year: this.yearWasteAssessmentAnalysis,
+    };
+    this.applicationassessmentService
+      .doRetrieveTotalAssessmentAnalysis(body)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          let chartData = [];
+          chartData = res.map((item) => {
+            return {
+              aspect: item.assessment_aspect__name,
+              amount: item.amount,
+            };
+          });
+          this.initChartWaste(chartData);
         },
-      ];
+        (err) => {
+          console.error("err", err);
+        }
+      );
+  }
 
-      // Add and configure Series
-      let pieSeries = this.chartWaste.series.push(new am4charts.PieSeries());
-      pieSeries.dataFields.value = "amount";
-      pieSeries.dataFields.category = "aspect";
-      pieSeries.slices.template.stroke = am4core.color("#fff");
-      pieSeries.slices.template.strokeWidth = 2;
-      pieSeries.slices.template.strokeOpacity = 1;
+  initChartWaste(chartData) {
+    this.chartWaste = am4core.create("chartwaste", am4charts.PieChart);
+    // Add data
+    this.chartWaste.data = chartData;
 
-      pieSeries.radius = am4core.percent(95);
+    // Add and configure Series
+    let pieSeries = this.chartWaste.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "amount";
+    pieSeries.dataFields.category = "aspect";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
 
-      // This creates initial animation
-      pieSeries.hiddenState.properties.opacity = 1;
-      pieSeries.hiddenState.properties.endAngle = -90;
-      pieSeries.hiddenState.properties.startAngle = -90;
-    });
+    pieSeries.radius = am4core.percent(65);
+
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
+  }
+
+  findBiodiversity() {
+    let body = {
+      aspect_type: "BI",
+      year: this.yearBiodiversityAssessmentAnalysis,
+    };
+    this.applicationassessmentService
+      .doRetrieveTotalAssessmentAnalysis(body)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          let chartData = [];
+          chartData = res.map((item) => {
+            return {
+              aspect: item.assessment_aspect__name,
+              amount: item.amount,
+            };
+          });
+          this.initChartBiodiversity(chartData);
+        },
+        (err) => {
+          console.error("err", err);
+        }
+      );
+  }
+
+  initChartBiodiversity(chartData) {
+    this.chartWaste = am4core.create("chartbiodiversity", am4charts.PieChart);
+    // Add data
+    this.chartWaste.data = chartData;
+
+    // Add and configure Series
+    let pieSeries = this.chartWaste.series.push(new am4charts.PieSeries());
+    pieSeries.dataFields.value = "amount";
+    pieSeries.dataFields.category = "aspect";
+    pieSeries.slices.template.stroke = am4core.color("#fff");
+    pieSeries.slices.template.strokeWidth = 2;
+    pieSeries.slices.template.strokeOpacity = 1;
+
+    pieSeries.radius = am4core.percent(95);
+
+    // This creates initial animation
+    pieSeries.hiddenState.properties.opacity = 1;
+    pieSeries.hiddenState.properties.endAngle = -90;
+    pieSeries.hiddenState.properties.startAngle = -90;
   }
 
   generateReport() {
@@ -537,7 +565,7 @@ export class ReportComponent implements OnInit {
     switch (this.reportType) {
       case "application":
         this.loadingBar.complete();
-        window.open(environment.baseUrl + 'v1/reports/report_application/')
+        window.open(environment.baseUrl + "v1/reports/report_application/");
         // this.reportService.getApplicationReport().subscribe(
         //   () => {
         //     this.loadingBar.complete();
@@ -552,7 +580,7 @@ export class ReportComponent implements OnInit {
         break;
       case "approved":
         this.loadingBar.complete();
-        window.open(environment.baseUrl + 'v1/reports/report_approved/')
+        window.open(environment.baseUrl + "v1/reports/report_approved/");
         // this.reportService.getApprovedReport().subscribe(
         //   () => {
         //     this.loadingBar.complete();
@@ -567,7 +595,7 @@ export class ReportComponent implements OnInit {
         break;
       case "building":
         this.loadingBar.complete();
-        window.open(environment.baseUrl + 'v1/reports/report_building/')
+        window.open(environment.baseUrl + "v1/reports/report_building/");
         // this.reportService.getBuildingReport().subscribe(
         //   () => {
         //     this.loadingBar.complete();
@@ -582,7 +610,7 @@ export class ReportComponent implements OnInit {
         break;
       case "town":
         this.loadingBar.complete();
-        window.open(environment.baseUrl + 'v1/reports/report_town/')
+        window.open(environment.baseUrl + "v1/reports/report_town/");
         // this.reportService.getTownReport().subscribe(
         //   () => {
         //     this.loadingBar.complete();

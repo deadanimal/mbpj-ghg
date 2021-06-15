@@ -12,6 +12,8 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 am4core.useTheme(am4themes_animated);
 
+import * as moment from "moment";
+
 @Component({
   selector: "app-report",
   templateUrl: "./report.component.html",
@@ -95,30 +97,15 @@ export class ReportComponent implements OnInit {
 
   ngOnDestroy() {
     this.zone.runOutsideAngular(() => {
-      if (this.chartCategory) {
-        this.chartCategory.dispose();
-      }
-      if (this.chartStatus) {
-        this.chartStatus.dispose();
-      }
-      if (this.chartTrend) {
-        this.chartTrend.dispose();
-      }
-      if (this.chartApp) {
-        this.chartApp.dispose();
-      }
-      if (this.chartEnergy) {
-        this.chartEnergy.dispose();
-      }
-      if (this.chartWater) {
-        this.chartWater.dispose();
-      }
-      if (this.chartTransportation) {
-        this.chartTransportation.dispose();
-      }
-      if (this.chartWaste) {
-        this.chartWaste.dispose();
-      }
+      if (this.chartCategory) this.chartCategory.dispose();
+      if (this.chartStatus) this.chartStatus.dispose();
+      if (this.chartTrend) this.chartTrend.dispose();
+      if (this.chartApp) this.chartApp.dispose();
+      if (this.chartEnergy) this.chartEnergy.dispose();
+      if (this.chartWater) this.chartWater.dispose();
+      if (this.chartTransportation) this.chartTransportation.dispose();
+      if (this.chartWaste) this.chartWaste.dispose();
+      if (this.chartBiodiversity) this.chartBiodiversity.dispose();
     });
   }
 
@@ -159,6 +146,11 @@ export class ReportComponent implements OnInit {
     pieSeries.hiddenState.properties.opacity = 1;
     pieSeries.hiddenState.properties.endAngle = -90;
     pieSeries.hiddenState.properties.startAngle = -90;
+
+    this.chartStatus.exporting.menu = new am4core.ExportMenu();
+    this.chartStatus.exporting.menu.align = "right";
+    this.chartStatus.exporting.menu.verticalAlign = "top";
+    this.chartStatus.exporting.filePrefix = "Total_Rebate_Approval_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findTrend() {
@@ -214,6 +206,11 @@ export class ReportComponent implements OnInit {
     categoryLabel.label.fill = am4core.color("#fff");
     categoryLabel.label.hideOversized = false;
     categoryLabel.label.truncate = false;
+
+    this.chartTrend.exporting.menu = new am4core.ExportMenu();
+    this.chartTrend.exporting.menu.align = "right";
+    this.chartTrend.exporting.menu.verticalAlign = "top";
+    this.chartTrend.exporting.filePrefix = "Trend_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findCategory() {
@@ -273,6 +270,11 @@ export class ReportComponent implements OnInit {
     columnTemplate.strokeOpacity = 1;
 
     this.chartCategory.scrollbarX = new am4core.Scrollbar();
+
+    this.chartCategory.exporting.menu = new am4core.ExportMenu();
+    this.chartCategory.exporting.menu.align = "right";
+    this.chartCategory.exporting.menu.verticalAlign = "top";
+    this.chartCategory.exporting.filePrefix = "Application_by_Category_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findApp() {
@@ -322,6 +324,11 @@ export class ReportComponent implements OnInit {
     this.chartApp.cursor.lineX.fillOpacity = 0.1;
 
     this.chartApp.scrollbarX = new am4core.Scrollbar();
+
+    this.chartApp.exporting.menu = new am4core.ExportMenu();
+    this.chartApp.exporting.menu.align = "right";
+    this.chartApp.exporting.menu.verticalAlign = "top";
+    this.chartApp.exporting.filePrefix = "Total_Application_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findEnergy() {
@@ -368,6 +375,11 @@ export class ReportComponent implements OnInit {
     pieSeries.hiddenState.properties.opacity = 1;
     pieSeries.hiddenState.properties.endAngle = -90;
     pieSeries.hiddenState.properties.startAngle = -90;
+
+    this.chartEnergy.exporting.menu = new am4core.ExportMenu();
+    this.chartEnergy.exporting.menu.align = "right";
+    this.chartEnergy.exporting.menu.verticalAlign = "top";
+    this.chartEnergy.exporting.filePrefix = "Energy_Assessment_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findWater() {
@@ -414,6 +426,11 @@ export class ReportComponent implements OnInit {
     pieSeries.hiddenState.properties.opacity = 1;
     pieSeries.hiddenState.properties.endAngle = -90;
     pieSeries.hiddenState.properties.startAngle = -90;
+
+    this.chartWater.exporting.menu = new am4core.ExportMenu();
+    this.chartWater.exporting.menu.align = "right";
+    this.chartWater.exporting.menu.verticalAlign = "top";
+    this.chartWater.exporting.filePrefix = "Water_Assessment_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findTransportation() {
@@ -465,6 +482,11 @@ export class ReportComponent implements OnInit {
     pieSeries.hiddenState.properties.opacity = 1;
     pieSeries.hiddenState.properties.endAngle = -90;
     pieSeries.hiddenState.properties.startAngle = -90;
+
+    this.chartTransportation.exporting.menu = new am4core.ExportMenu();
+    this.chartTransportation.exporting.menu.align = "right";
+    this.chartTransportation.exporting.menu.verticalAlign = "top";
+    this.chartTransportation.exporting.filePrefix = "Transportation_Assessment_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findWaste() {
@@ -511,6 +533,11 @@ export class ReportComponent implements OnInit {
     pieSeries.hiddenState.properties.opacity = 1;
     pieSeries.hiddenState.properties.endAngle = -90;
     pieSeries.hiddenState.properties.startAngle = -90;
+
+    this.chartWaste.exporting.menu = new am4core.ExportMenu();
+    this.chartWaste.exporting.menu.align = "right";
+    this.chartWaste.exporting.menu.verticalAlign = "top";
+    this.chartWaste.exporting.filePrefix = "Waste_Assessment_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   findBiodiversity() {
@@ -539,12 +566,17 @@ export class ReportComponent implements OnInit {
   }
 
   initChartBiodiversity(chartData) {
-    this.chartWaste = am4core.create("chartbiodiversity", am4charts.PieChart);
+    this.chartBiodiversity = am4core.create(
+      "chartbiodiversity",
+      am4charts.PieChart
+    );
     // Add data
-    this.chartWaste.data = chartData;
+    this.chartBiodiversity.data = chartData;
 
     // Add and configure Series
-    let pieSeries = this.chartWaste.series.push(new am4charts.PieSeries());
+    let pieSeries = this.chartBiodiversity.series.push(
+      new am4charts.PieSeries()
+    );
     pieSeries.dataFields.value = "amount";
     pieSeries.dataFields.category = "aspect";
     pieSeries.slices.template.stroke = am4core.color("#fff");
@@ -557,6 +589,11 @@ export class ReportComponent implements OnInit {
     pieSeries.hiddenState.properties.opacity = 1;
     pieSeries.hiddenState.properties.endAngle = -90;
     pieSeries.hiddenState.properties.startAngle = -90;
+
+    this.chartBiodiversity.exporting.menu = new am4core.ExportMenu();
+    this.chartBiodiversity.exporting.menu.align = "right";
+    this.chartBiodiversity.exporting.menu.verticalAlign = "top";
+    this.chartBiodiversity.exporting.filePrefix = "Biodiversity_Assessment_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
   }
 
   generateReport() {

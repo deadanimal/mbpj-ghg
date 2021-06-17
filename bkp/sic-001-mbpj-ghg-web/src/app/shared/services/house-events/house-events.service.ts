@@ -29,7 +29,7 @@ export class HouseEventsService {
     return this.http.get<HouseEvent[]>(this.urlEvents).pipe(
       tap((res) => {
         this.events = res
-        console.log('House events: ', this.events)
+        // console.log('House events: ', this.events)
       })
     )
   }
@@ -39,7 +39,7 @@ export class HouseEventsService {
     return this.http.get<HouseEvent[]>(filterUrl).pipe(
       tap((res) => {
         this.eventsFiltered = res
-        console.log('House events: ', this.eventsFiltered)
+        // console.log('House events: ', this.eventsFiltered)
       })
     )
   }

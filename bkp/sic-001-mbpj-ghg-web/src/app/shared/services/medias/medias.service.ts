@@ -53,7 +53,7 @@ export class MediasService {
     return this.http.get<Media[]>(this.mediasUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedMedias = res
-        console.log('Medias: ', this.retrievedMedias)
+        // console.log('Medias: ', this.retrievedMedias)
       }),
       catchError(this.handleError)
     )
@@ -63,7 +63,7 @@ export class MediasService {
     let headers = this.createHeader()
     return this.http.post<any>(this.mediasUrl, credentials, {headers: headers}).pipe(
       tap((res) => {
-        console.log('Create media: ', res)
+        // console.log('Create media: ', res)
       }),
       catchError(this.handleError)
     )

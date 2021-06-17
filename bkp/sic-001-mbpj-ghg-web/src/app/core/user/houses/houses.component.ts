@@ -96,8 +96,8 @@ export class HousesComponent implements OnInit, OnDestroy {
       this.initChart();
     });
 
-    console.log("tempHouses", this.tempHouses);
-    console.log("tempUsers", this.tempUsers);
+    // console.log("tempHouses", this.tempHouses);
+    // console.log("tempUsers", this.tempUsers);
 
     this.tempHouses.forEach((house: House) => {
       this.tempUsers.forEach((user: User) => {

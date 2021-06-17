@@ -36,13 +36,13 @@
           <a
             class="btn btn-sm btn-success text-white"
             (click)="doOpenModal(approveRebate)"
-            *ngIf="statusApproveReject.indexOf(tempApplication.status) == -1"
+            *ngIf="statusApproveReject.indexOf(tempApplication?.status) == -1"
             >Approve
           </a>
           <a
             class="btn btn-sm btn-danger text-white"
             (click)="doOpenModal(rejectRebate)"
-            *ngIf="statusApproveReject.indexOf(tempApplication.status) == -1"
+            *ngIf="statusApproveReject.indexOf(tempApplication?.status) == -1"
             >Reject</a
           >
         </div>
@@ -66,59 +66,59 @@
             </div>
             <div class="card-body">
               <h6 class="text-muted text-uppercase ls-1 mb-1">Biodata</h6>
-              <div class="form-group">
+              <div class="form-group" *ngIf="tempApplicant">
                 <label class="form-control-label">Name</label>
                 <input
                   class="form-control form-control-sm"
                   [(ngModel)]="tempApplicant.full_name"
                   type="text"
-                  disabled
+                  readonly
                 />
               </div>
               <div class="row">
                 <div class="col">
-                  <div class="form-group">
+                  <div class="form-group" *ngIf="tempApplicant">
                     <label class="form-control-label">New NRIC</label>
                     <input
                       class="form-control form-control-sm"
                       [(ngModel)]="tempApplicant.new_nric"
                       type="text"
-                      disabled
+                      readonly
                     />
                   </div>
                 </div>
                 <div class="col">
-                  <div class="form-group">
+                  <div class="form-group" *ngIf="tempApplicant">
                     <label class="form-control-label">Old NRIC</label>
                     <input
                       class="form-control form-control-sm"
                       [(ngModel)]="tempApplicant.old_nric"
                       type="text"
-                      disabled
+                      readonly
                     />
                   </div>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" *ngIf="tempApplicant">
                 <label class="form-control-label">Occupation</label>
                 <input
                   class="form-control form-control-sm"
                   [(ngModel)]="tempApplicant.occupation"
                   type="text"
-                  disabled
+                  readonly
                 />
               </div>
-              <div class="form-group">
+              <div class="form-group" *ngIf="tempHouse">
                 <label class="form-control-label">Applying Home Address</label>
                 <textarea
                   class="form-control form-control-sm"
                   type="text"
                   [(ngModel)]="tempHouse.address"
-                  disabled
+                  readonly
                 >
                 </textarea>
               </div>
-              <div class="form-group">
+              <div class="form-group" *ngIf="tempHouse">
                 <label class="form-control-label"
                   >Assessment Tax Account Number</label
                 >
@@ -126,43 +126,39 @@
                   class="form-control form-control-sm"
                   type="text"
                   [(ngModel)]="tempHouse.assessment_tax_account"
-                  disabled
+                  readonly
                 />
               </div>
               <div class="row">
                 <div class="col">
-                  <div class="form-group">
-                    <div class="form-group">
-                      <label class="form-control-label">Type of Building</label>
-                      <input
-                        class="form-control form-control-sm"
-                        [(ngModel)]="tempHouse.building_type"
-                        type="text"
-                        disabled
-                      />
-                    </div>
+                  <div class="form-group" *ngIf="tempHouse">
+                    <label class="form-control-label">Type of Building</label>
+                    <input
+                      class="form-control form-control-sm"
+                      [(ngModel)]="tempHouse.building_type"
+                      type="text"
+                      readonly
+                    />
                   </div>
                 </div>
                 <div class="col">
-                  <div class="form-group">
-                    <div class="form-group">
-                      <label class="form-control-label">No. of Occupants</label>
-                      <div class="input-group input-group-md">
-                        <input
-                          class="form-control form-control-sm"
-                          type="text"
-                          [(ngModel)]="tempHouse.permanent_occupant"
-                          disabled
-                        />
-                        <div class="input-group-append">
-                          <span class="input-group-text"> People </span>
-                        </div>
+                  <div class="form-group" *ngIf="tempHouse">
+                    <label class="form-control-label">No. of Occupants</label>
+                    <div class="input-group input-group-md">
+                      <input
+                        class="form-control form-control-sm"
+                        type="text"
+                        [(ngModel)]="tempHouse.permanent_occupant"
+                        readonly
+                      />
+                      <div class="input-group-append">
+                        <span class="input-group-text"> People </span>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" *ngIf="tempHouse">
                 <label class="form-control-label">Staying duration</label>
                 <div class="row">
                   <div class="col">
@@ -171,7 +167,7 @@
                         class="form-control form-control-sm"
                         [(ngModel)]="tempHouse.staying_duration_years"
                         type="text"
-                        disabled
+                        readonly
                       />
                       <div class="input-group-append">
                         <span class="input-group-text"> Year(s) </span>
@@ -184,7 +180,7 @@
                         class="form-control form-control-sm"
                         [(ngModel)]="tempHouse.staying_duration_months"
                         type="text"
-                        disabled
+                        readonly
                       />
                       <div class="input-group-append">
                         <span class="input-group-text"> Month(s) </span>
@@ -193,7 +189,7 @@
                   </div>
                 </div>
               </div>
-              <div class="form-group">
+              <div class="form-group" *ngIf="tempHouse">
                 <label class="form-control-label">Vehicles</label>
                 <div class="row">
                   <div class="col">
@@ -208,7 +204,7 @@
                         class="form-control form-control-sm"
                         type="text"
                         [(ngModel)]="tempHouse.vehicle_car"
-                        disabled
+                        readonly
                       />
                     </div>
                   </div>
@@ -224,7 +220,7 @@
                         class="form-control form-control-sm"
                         type="text"
                         [(ngModel)]="tempHouse.vehicle_motorcycle"
-                        disabled
+                        readonly
                       />
                     </div>
                   </div>
@@ -240,7 +236,7 @@
                         class="form-control form-control-sm"
                         [(ngModel)]="tempHouse.vehicle_bicycle"
                         type="text"
-                        disabled
+                        readonly
                       />
                     </div>
                   </div>
@@ -256,7 +252,7 @@
                         class="form-control form-control-sm"
                         [(ngModel)]="tempHouse.vehicle_other"
                         type="text"
-                        disabled
+                        readonly
                       />
                     </div>
                   </div>
@@ -264,26 +260,26 @@
               </div>
               <div class="row">
                 <div class="col">
-                  <div class="form-group">
+                  <div class="form-group" *ngIf="tempApplicant">
                     <label class="form-control-label">Email</label>
                     <input
                       class="form-control form-control-sm"
                       [(ngModel)]="tempApplicant.email"
                       type="text"
-                      disabled
+                      readonly
                     />
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="col">
-                  <div class="form-group">
+                  <div class="form-group" *ngIf="tempApplicant">
                     <label class="form-control-label">Mobile No.</label>
                     <input
                       class="form-control form-control-sm"
                       [(ngModel)]="tempApplicant.phone"
                       type="text"
-                      disabled
+                      readonly
                     />
                   </div>
                 </div>
@@ -301,7 +297,7 @@
                   <h4 class="text-uppercase text-white mb-0">Evaluation</h4>
                 </div>
                 <div class="col-auto">
-                  <button
+                  <!-- <button
                     class="btn btn-icon btn-sm btn-2 btn-secondary text-info"
                     type="button"
                     (click)="editEvaluation()"
@@ -309,7 +305,7 @@
                     <span class="btn-inner--icon"
                       ><i class="fas fa-edit"></i> Edit</span
                     >
-                  </button>
+                  </button> -->
                 </div>
               </div>
             </div>
@@ -322,7 +318,7 @@
                     <input
                       class="form-control"
                       formControlName="equipment"
-                      disabled
+                      readonly
                     />
                   </div>
                   <div class="form-group">
@@ -330,7 +326,7 @@
                     <input
                       class="form-control"
                       formControlName="system"
-                      disabled
+                      readonly
                     />
                   </div>
                   <div class="form-group">
@@ -338,20 +334,27 @@
                     <input
                       class="form-control"
                       formControlName="efficiency"
-                      disabled
+                      readonly
                     />
                   </div>
                   <div class="form-group">
-                    <label class="form-control-label">Efficiency</label>
+                    <label class="form-control-label">Remarks</label>
                     <textarea
                       class="form-control"
                       formControlName="remarks"
                       rows="3"
-                      disabled
+                      readonly
                     ></textarea>
                   </div>
                 </ng-container>
               </div>
+
+              <h3>
+                Total evaluation marks by evaluator:
+                <span class="badge badge-success badge-lg"
+                  >{{ totalAll }}%</span
+                >
+              </h3>
             </div>
             <div class="card-body" *ngIf="isEdit">
               <div *ngFor="let evaluation of evaluationFormArray?.controls">
@@ -390,6 +393,44 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header py-2 bg-info">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h4 class="text-uppercase text-white mb-0">
+                    Application Carbon Emission
+                  </h4>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!--<div id="chartdiv" style="width: 100%; height: 500px"></div>-->
+              <div class="row">
+                <div class="col">
+                  <div class="form-group">
+                    <label class="form-control-label"> Electricity </label>
+                    <input readonly value="{{ electriccarbon | number : '1.2-2' }} KgCo2" class="form-control" />
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label class="form-control-label"> Water </label>
+                    <input readonly value="{{ watercarbon | number : '1.2-2' }} KgCo2" class="form-control" />
+                  </div>
+                </div>
+                <!-- <div class="col">
+                  <div class="form-group">
+                    <label class="form-control-label"> Transportation </label>
+                    <input readonly value="11.1 KgCo2" class="form-control" />
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-lg-7 col-sm-12">
       <div class="row">
@@ -399,13 +440,15 @@
               <h4 class="text-uppercase text-white mb-0">Information</h4>
             </div>
             <div class="card-body">
-              <div class="form-group">
-                <label class="form-control-label">Application Status</label>
-                <input
-                  class="form-control form-control-sm"
-                  [(ngModel)]="tempApplication.status"
-                  disabled
-                />
+              <div *ngIf="tempApplication">
+                <div class="form-group">
+                  <label class="form-control-label">Application Status</label>
+                  <input
+                    class="form-control form-control-sm"
+                    [(ngModel)]="tempApplication.status"
+                    readonly
+                  />
+                </div>
               </div>
               <div *ngIf="tempEvaluator">
                 <div class="form-group">
@@ -413,7 +456,7 @@
                   <input
                     class="form-control form-control-sm"
                     [(ngModel)]="tempEvaluator.full_name"
-                    disabled
+                    readonly
                   />
                 </div>
               </div>
@@ -423,7 +466,7 @@
                   <input
                     class="form-control form-control-sm"
                     value="Not assigned yet"
-                    disabled
+                    readonly
                   />
                 </div>
               </div>
@@ -435,7 +478,7 @@
                   <input
                     class="form-control form-control-sm"
                     [(ngModel)]="tempEvaluationSchedule.date"
-                    disabled
+                    readonly
                   />
                 </div>
                 <div class="form-group">
@@ -445,7 +488,7 @@
                   <input
                     class="form-control form-control-sm"
                     [(ngModel)]="tempEvaluationSchedule.session"
-                    disabled
+                    readonly
                   />
                 </div>
               </div>
@@ -457,7 +500,7 @@
                   <input
                     class="form-control form-control-sm"
                     value="Not set yet"
-                    disabled
+                    readonly
                   />
                 </div>
               </div>
@@ -560,45 +603,6 @@
                   ></div>
                 </div>
               </div> -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="col">
-          <div class="card">
-            <div class="card-header py-2 bg-info">
-              <div class="row align-items-center">
-                <div class="col">
-                  <h4 class="text-uppercase text-white mb-0">
-                    Application Carbon Emission
-                  </h4>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-              <!--<div id="chartdiv" style="width: 100%; height: 500px"></div>-->
-              <div class="row">
-                <div class="col">
-                  <div class="form-group">
-                    <label class="form-control-label"> Electricity </label>
-                    <input disabled value="23.9 KgCo2" class="form-control" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <label class="form-control-label"> Water </label>
-                    <input disabled value="31.9 KgCo2" class="form-control" />
-                  </div>
-                </div>
-                <div class="col">
-                  <div class="form-group">
-                    <label class="form-control-label"> Transportation </label>
-                    <input disabled value="11.1 KgCo2" class="form-control" />
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>

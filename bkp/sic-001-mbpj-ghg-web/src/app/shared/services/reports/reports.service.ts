@@ -40,7 +40,7 @@ export class ReportsService {
   doCreateReport(body): any {
     return this.http.post<any>(this.reportsUrl, body).pipe(
       tap((res) => {
-        console.log("Create report: ", res);
+        // console.log("Create report: ", res);
       }),
       catchError(this.handleError)
     );

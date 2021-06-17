@@ -41,7 +41,7 @@ export class AuthService {
   register(body: Form): Observable<any> {
     return this.http.post<any>(this.urlRegister, body).pipe(
       tap((res) => {
-        console.log("Registration: ", res);
+        // console.log("Registration: ", res);
       })
     );
   }
@@ -49,7 +49,7 @@ export class AuthService {
   changePassword(body: Form): Observable<any> {
     return this.http.post<any>(this.urlPasswordChange, body).pipe(
       tap((res) => {
-        console.log("Change password: ", res);
+        // console.log("Change password: ", res);
       })
     );
   }
@@ -57,7 +57,7 @@ export class AuthService {
   resetPassword(body: Form): Observable<any> {
     return this.http.post<any>(this.urlPasswordReset, body).pipe(
       tap((res) => {
-        console.log("Reset password: ", res);
+        // console.log("Reset password: ", res);
       })
     );
   }
@@ -98,7 +98,7 @@ export class AuthService {
     };
     return this.http.post<any>(this.urlTokenRefresh, body).pipe(
       tap((res) => {
-        console.log("Token refresh: ", res);
+        // console.log("Token refresh: ", res);
       })
     );
   }
@@ -106,7 +106,7 @@ export class AuthService {
   verifyToken(body: Form): Observable<any> {
     return this.http.post<any>(this.urlTokenVerify, body).pipe(
       tap((res) => {
-        console.log("Token verify: ", res);
+        // console.log("Token verify: ", res);
       })
     );
   }

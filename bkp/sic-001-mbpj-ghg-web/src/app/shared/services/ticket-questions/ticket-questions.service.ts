@@ -24,7 +24,7 @@ export class TicketQuestionsService {
   create(body: Form): Observable<any> {
     return this.http.post<any>(this.urlQuestion, body).pipe(
       tap((res) => {
-        console.log('Create ticket question: ', res)
+        // console.log('Create ticket question: ', res)
       })
     )
   }
@@ -34,7 +34,7 @@ export class TicketQuestionsService {
     return this.http.get<TicketQuestion[]>(this.urlQuestion).pipe(
       tap((res) => {
         this.questions = res
-        console.log('Ticket questions: ', this.questions)
+        // console.log('Ticket questions: ', this.questions)
       })
     )
   }
@@ -44,7 +44,7 @@ export class TicketQuestionsService {
     return this.http.get<TicketQuestion[]>(urlFIlter).pipe(
       tap((res) => {
         this.questionsFiltered = res
-        console.log('Filtered ticket questions: ', this.questionsFiltered)
+        // console.log('Filtered ticket questions: ', this.questionsFiltered)
       })
     )
   }
@@ -53,7 +53,7 @@ export class TicketQuestionsService {
     let urlUpdate = this.urlQuestion + id  + '/'
     return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
-        //console.log('Updated user: ', res)
+        // console.log('Updated user: ', res)
       })
     )
   }
@@ -62,7 +62,7 @@ export class TicketQuestionsService {
     let urlResolve = this.urlQuestion + id + '/resolve/'
     return this.http.get<any>(urlResolve).pipe(
       tap((res) => {
-        console.log('Ticket resolved')
+        // console.log('Ticket resolved')
       })
     )
   }

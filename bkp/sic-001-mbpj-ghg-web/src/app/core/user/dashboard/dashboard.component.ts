@@ -2,9 +2,10 @@ import { Component, OnInit, TemplateRef, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { BsModalService, BsModalRef } from "ngx-bootstrap";
 import { ToastrService } from "ngx-toastr";
-import * as moment from "moment";
 
+import { Application } from "src/app/shared/services/applications/applications.model";
 import { User } from "src/app/shared/services/auth/auth.model";
+
 import { AuthService } from "src/app/shared/services/auth/auth.service";
 import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
 import { RebatesService } from "src/app/shared/services/rebates/rebates.service";
@@ -13,8 +14,9 @@ import { UsersService } from "src/app/shared/services/users/users.service";
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
-import { Application } from "src/app/shared/services/applications/applications.model";
 am4core.useTheme(am4themes_animated);
+
+import * as moment from "moment";
 
 @Component({
   selector: "app-dashboard",
@@ -41,8 +43,13 @@ export class DashboardComponent implements OnInit {
 
   selectedUser: User;
 
+  yearAverageCarbonEmission: string = new Date().getFullYear().toString();
+
   // Chart
   chartCarbon: am4charts.XYChart3D;
+
+  // Dropdown
+  year2011tocurrentyear = [];
 
   // Modal
   modal: BsModalRef;
@@ -61,7 +68,18 @@ export class DashboardComponent implements OnInit {
     private modalService: BsModalService,
     public toastr: ToastrService,
     private zone: NgZone
-  ) {}
+  ) {
+    // loop through data from 2011 to 2021
+    let currentyear = new Date().getFullYear();
+    let loop = currentyear - 2011;
+    for (let i = 0; i < loop + 1; i++) {
+      let obj = {
+        value: 2011 + i,
+        display_name: (2011 + i).toString(),
+      };
+      this.year2011tocurrentyear.push(obj);
+    }
+  }
 
   ngOnInit() {
     this.initThings();
@@ -72,7 +90,7 @@ export class DashboardComponent implements OnInit {
 
   ngAfterViewInit() {
     this.zone.runOutsideAngular(() => {
-      this.initCarbon();
+      this.findCarbon();
     });
   }
 
@@ -165,23 +183,26 @@ export class DashboardComponent implements OnInit {
     this.modal.hide();
   }
 
-  initCarbon() {
+  findCarbon() {
+    if (this.chartCarbon) this.chartCarbon.dispose();
+    let body = {
+      year: this.yearAverageCarbonEmission,
+    };
+    this.applicationService.doRetrieveAverageCarbonEmission(body).subscribe(
+      (res) => {
+        // console.log("res", res);
+        this.initCarbon(res);
+      },
+      (err) => {
+        console.error("err", err);
+      }
+    );
+  }
+
+  initCarbon(chartData) {
     let chart = am4core.create("chartdiv", am4charts.XYChart3D);
 
-    chart.data = [
-      {
-        usage: "Electric usage",
-        value: this.dataElectricity,
-      },
-      {
-        usage: "Water usage",
-        value: this.dataWater,
-      },
-      {
-        usage: "Transportation usage",
-        value: this.dataTransportation,
-      },
-    ];
+    chart.data = chartData;
 
     // Create axes
     let categoryAxis = chart.xAxes.push(new am4charts.CategoryAxis());
@@ -224,6 +245,12 @@ export class DashboardComponent implements OnInit {
     chart.cursor = new am4charts.XYCursor();
     chart.cursor.lineX.strokeOpacity = 0;
     chart.cursor.lineY.strokeOpacity = 0;
+
+    chart.exporting.menu = new am4core.ExportMenu();
+    chart.exporting.menu.align = "right";
+    chart.exporting.menu.verticalAlign = "top";
+    chart.exporting.filePrefix =
+      "Average_Carbon_Emission_" + moment().format("YYYY-MM-DD_hh_mm_ss");
 
     this.chartCarbon = chart;
   }
@@ -303,18 +330,10 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  viewApplication() {
-    let applicationView: Object = {
-      id: "7a7e3525-2720-4729-a8a1-4f71b263419d",
-      applicant_id: "61ea9667-2643-4cd3-8d44-84e05f807f16",
-      applicant_name: "Syafiq Basr",
-      evaluator_nominated_id: "d43c6c84-ca6b-42a0-9406-6b8f8026ed2c",
-      evaluator_nominated_name: "Amin Redzuan",
-      applied_house_id: "2c7632e4-38b6-4624-ae27-1ffbaf079161",
-      applied_house_assessment_tax_account: "12412412",
-      status: "IE",
-      date_submitted: "2019-12-15",
-    };
-    this.router.navigate(["/applications/details"], applicationView);
+  viewApplication(selectedApplication) {
+    // this.router.navigate(["/applications/details"], selectedApplication);
+    this.router.navigate(["/applications/details"], {
+      queryParams: { application_id: selectedApplication.id },
+    });
   }
 }

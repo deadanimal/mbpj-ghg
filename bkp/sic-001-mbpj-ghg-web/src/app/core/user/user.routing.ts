@@ -17,6 +17,7 @@ import { AssessmentTaxesComponent } from "./assessment-taxes/assessment-taxes.co
 import { UsersComponent } from "./management/users/users.component";
 import { FaqsComponent } from "./management/faqs/faqs.component";
 import { RebatesComponent } from "./rebates/rebates.component";
+import { CarbonEmissionFactorsComponent } from "./carbon-emission-factors/carbon-emission-factors.component";
 
 export const UserRoutes: Routes = [
   {
@@ -62,6 +63,10 @@ export const UserRoutes: Routes = [
       {
         path: "assessment-taxes",
         component: AssessmentTaxesComponent,
+      },
+      {
+        path: "carbon-emission-factors",
+        component: CarbonEmissionFactorsComponent,
       },
       {
         path: "management",

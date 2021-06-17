@@ -176,8 +176,8 @@ export class HelpdeskComponent implements OnInit {
     delete this.selectedQuestion;
     this.answerForm.reset();
     this.modal.hide();
-    //console.log('closed a: ', this.selectedAnswer)
-    //console.log('closed q: ', this.selectedQuestion)
+    // console.log('closed a: ', this.selectedAnswer)
+    // console.log('closed q: ', this.selectedQuestion)
   }
 
   reply() {
@@ -209,9 +209,7 @@ export class HelpdeskComponent implements OnInit {
   changeStatus(tickedId: String) {
     let id = tickedId;
     this.ticketQuestionService.resolve(id).subscribe(
-      (res) => {
-        console.log("Tolong la jadi");
-      },
+      (res) => {},
       () => {},
       () => {
         this.successMessage();

@@ -4,7 +4,9 @@
     <div class="header-body">
       <div class="row align-items-center py-4">
         <div class="col-lg-6 col-7">
-          <h6 class="h2 text-dark d-inline-block mb-0">Assessment Tax</h6>
+          <h6 class="h2 text-dark d-inline-block mb-0">
+            Carbon Emission Factor
+          </h6>
 
           <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
             <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
@@ -15,7 +17,7 @@
               </li>
 
               <li aria-current="page" class="breadcrumb-item active">
-                Assessment Tax
+                Carbon Emission Factor
               </li>
             </ol>
           </nav>
@@ -24,9 +26,9 @@
         <div class="col-lg-6 col-5 text-right">
           <a
             class="btn btn-sm btn-info text-white"
-            (click)="openModal(regAssessmentTax, 'register', '')"
+            (click)="openModal(regCarbon, 'register', '')"
           >
-            Register Assessment Tax
+            Register Carbon Emission Factor
           </a>
         </div>
       </div>
@@ -41,7 +43,7 @@
         <div class="card-header bg-info py-2">
           <div class="row">
             <div class="col my-auto">
-              <h4 class="text-white m-0">Assessment Taxes list</h4>
+              <h4 class="text-white m-0">Carbon Emission Factors list</h4>
             </div>
           </div>
         </div>
@@ -54,7 +56,10 @@
                   <select
                     name="datatable_length"
                     aria-controls="datatable"
-                    class="form-control form-control-sm custom-select custom-select-sm"
+                    class="
+                      form-control form-control-sm
+                      custom-select custom-select-sm
+                    "
                     (change)="entriesChange($event)"
                   >
                     <option value="5" [selected]="tableEntries == 5">5</option>
@@ -107,34 +112,26 @@
             </ngx-datatable-column>
             <ngx-datatable-column>
               <ng-template ngx-datatable-header-template>
-                <span>Name</span>
+                <span>Electric</span>
               </ng-template>
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.name }}
+                {{ row.electric_carbon_emission_factor }}
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column>
               <ng-template ngx-datatable-header-template>
-                <span>Aspect Type</span>
+                <span>Water</span>
               </ng-template>
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ getAspectType(row.aspect_type) }}
+                {{ row.water_carbon_emission_factor }}
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column>
               <ng-template ngx-datatable-header-template>
-                <span>Aspect</span>
+                <span>Year</span>
               </ng-template>
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.aspect }}
-              </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column>
-              <ng-template ngx-datatable-header-template>
-                <span>Incentive (%)</span>
-              </ng-template>
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.incentive }}
+                {{ row.year }}
               </ng-template>
             </ngx-datatable-column>
             <!-- <ngx-datatable-column>
@@ -158,7 +155,7 @@
                 <button
                   class="btn btn-icon btn-2 btn-primary btn-sm"
                   type="button"
-                  (click)="openModal(viewAssessmentTax, 'update', row)"
+                  (click)="openModal(viewCarbon, 'update', row)"
                 >
                   <span class="btn-inner--icon"
                     >Edit <i class="fas fa-edit"></i
@@ -167,7 +164,7 @@
                 <button
                   class="btn btn-icon btn-2 btn-danger btn-sm"
                   type="button"
-                  (click)="deleteAssessmentTax(row)"
+                  (click)="deleteCarbon(row)"
                 >
                   <span class="btn-inner--icon"
                     >Delete <i class="fas fa-trash"></i
@@ -182,11 +179,11 @@
   </div>
 </div>
 
-<ng-template #regAssessmentTax let-c="close" let-d="dismiss">
+<ng-template #regCarbon let-c="close" let-d="dismiss">
   <div class="modal-content">
     <div class="modal-header bg-info">
       <h6 class="modal-title" id="modal-title-default">
-        Register Assessment Tax
+        Register Carbon Emission Factor
       </h6>
       <button
         type="button"
@@ -199,8 +196,11 @@
       </button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="assessmentAspectForm">
-        <div class="form-group" [ngClass]="{ focused: focusName === true }">
+      <form [formGroup]="carbonEmissionFactorForm">
+        <div
+          class="form-group"
+          [ngClass]="{ focused: focusElectricCarbonEmissionFactor === true }"
+        >
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-info">
@@ -209,22 +209,29 @@
             </div>
             <input
               class="form-control text-dark"
-              placeholder="Name*"
-              type="text"
-              formControlName="name"
-              (focus)="focusName = true"
-              (blur)="focusName = false"
+              placeholder="Electric carbon emission factor*"
+              type="number"
+              formControlName="electric_carbon_emission_factor"
+              (focus)="focusElectricCarbonEmissionFactor = true"
+              (blur)="focusElectricCarbonEmissionFactor = false"
             />
           </div>
           <ng-container
-            *ngFor="let validation of assessmentAspectValidationMessage.name"
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.electric_carbon_emission_factor
+            "
           >
             <div
               class="error-message"
               *ngIf="
-                assessmentAspectForm.get('name').hasError(validation.type) &&
-                (assessmentAspectForm.get('name').dirty ||
-                  assessmentAspectForm.get('name').touched)
+                carbonEmissionFactorForm
+                  .get('electric_carbon_emission_factor')
+                  .hasError(validation.type) &&
+                (carbonEmissionFactorForm.get('electric_carbon_emission_factor')
+                  .dirty ||
+                  carbonEmissionFactorForm.get(
+                    'electric_carbon_emission_factor'
+                  ).touched)
               "
             >
               <p>
@@ -235,8 +242,47 @@
         </div>
         <div
           class="form-group"
-          [ngClass]="{ focused: focusAspectType === true }"
+          [ngClass]="{ focused: focusWaterCarbonEmissionFactor === true }"
         >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Electric carbon emission factor*"
+              type="text"
+              formControlName="water_carbon_emission_factor"
+              (focus)="focusWaterCarbonEmissionFactor = true"
+              (blur)="focusWaterCarbonEmissionFactor = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.water_carbon_emission_factor
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                carbonEmissionFactorForm
+                  .get('water_carbon_emission_factor')
+                  .hasError(validation.type) &&
+                (carbonEmissionFactorForm.get('water_carbon_emission_factor')
+                  .dirty ||
+                  carbonEmissionFactorForm.get('water_carbon_emission_factor')
+                    .touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div class="form-group" [ngClass]="{ focused: focusYear === true }">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-info">
@@ -245,105 +291,27 @@
             </div>
             <select
               class="custom-select form-control"
-              formControlName="aspect_type"
-              (focus)="focusAspectType = true"
-              (blur)="focusAspectType = false"
+              formControlName="year"
+              (focus)="focusYear = true"
+              (blur)="focusYear = false"
             >
-              <option selected hidden value="">Select aspect type</option>
-              <option
-                *ngFor="let aspecttype of dropdownAspectTypes"
-                [value]="aspecttype.value"
-              >
-                {{ aspecttype.display_name }}
+              <option selected hidden value="">Select year</option>
+              <option *ngFor="let year of year2011tocurrentyear" [value]="year">
+                {{ year }}
               </option>
             </select>
           </div>
           <ng-container
-            *ngFor="
-              let validation of assessmentAspectValidationMessage.aspect_type
-            "
+            *ngFor="let validation of assessmentAspectValidationMessage.year"
           >
             <div
               class="error-message"
               *ngIf="
-                assessmentAspectForm
-                  .get('aspect_type')
+                carbonEmissionFactorForm
+                  .get('year')
                   .hasError(validation.type) &&
-                (assessmentAspectForm.get('aspect_type').dirty ||
-                  assessmentAspectForm.get('aspect_type').touched)
-              "
-            >
-              <p>
-                <span>*{{ validation.message }}</span>
-              </p>
-            </div>
-          </ng-container>
-        </div>
-        <div class="form-group" [ngClass]="{ focused: focusAspect === true }">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text bg-info">
-                <i class="fas fa-database text-white"></i>
-              </span>
-            </div>
-            <input
-              class="form-control text-dark"
-              placeholder="Aspect*"
-              type="text"
-              formControlName="aspect"
-              (focus)="focusAspect = true"
-              (blur)="focusAspect = false"
-            />
-          </div>
-          <ng-container
-            *ngFor="let validation of assessmentAspectValidationMessage.aspect"
-          >
-            <div
-              class="error-message"
-              *ngIf="
-                assessmentAspectForm.get('aspect').hasError(validation.type) &&
-                (assessmentAspectForm.get('aspect').dirty ||
-                  assessmentAspectForm.get('aspect').touched)
-              "
-            >
-              <p>
-                <span>*{{ validation.message }}</span>
-              </p>
-            </div>
-          </ng-container>
-        </div>
-        <div
-          class="form-group"
-          [ngClass]="{ focused: focusIncentive === true }"
-        >
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text bg-info">
-                <i class="fas fa-database text-white"></i>
-              </span>
-            </div>
-            <input
-              class="form-control text-dark"
-              placeholder="Incentive*"
-              type="number"
-              formControlName="incentive"
-              (focus)="focusIncentive = true"
-              (blur)="focusIncentive = false"
-            />
-          </div>
-          <ng-container
-            *ngFor="
-              let validation of assessmentAspectValidationMessage.incentive
-            "
-          >
-            <div
-              class="error-message"
-              *ngIf="
-                assessmentAspectForm
-                  .get('incentive')
-                  .hasError(validation.type) &&
-                (assessmentAspectForm.get('incentive').dirty ||
-                  assessmentAspectForm.get('incentive').touched)
+                (carbonEmissionFactorForm.get('year').dirty ||
+                  carbonEmissionFactorForm.get('year').touched)
               "
             >
               <p>
@@ -358,8 +326,8 @@
       <button
         type="button"
         class="btn btn-info"
-        (click)="registerAssessmentTax()"
-        [disabled]="!assessmentAspectForm.valid"
+        (click)="registerCarbon()"
+        [disabled]="!carbonEmissionFactorForm.valid"
       >
         Register
       </button>
@@ -375,11 +343,11 @@
   </div>
 </ng-template>
 
-<ng-template #viewAssessmentTax let-c="close" let-d="dismiss">
+<ng-template #viewCarbon let-c="close" let-d="dismiss">
   <div class="modal-content">
     <div class="modal-header bg-info">
       <h6 class="modal-title" id="modal-title-default">
-        Update Assessment Tax
+        Update Carbon Emission Factor
       </h6>
       <button
         type="button"
@@ -392,8 +360,11 @@
       </button>
     </div>
     <div class="modal-body">
-      <form [formGroup]="assessmentAspectForm">
-        <div class="form-group" [ngClass]="{ focused: focusName === true }">
+      <form [formGroup]="carbonEmissionFactorForm">
+        <div
+          class="form-group"
+          [ngClass]="{ focused: focusElectricCarbonEmissionFactor === true }"
+        >
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-info">
@@ -402,22 +373,29 @@
             </div>
             <input
               class="form-control text-dark"
-              placeholder="Name*"
-              type="text"
-              formControlName="name"
-              (focus)="focusName = true"
-              (blur)="focusName = false"
+              placeholder="Electric carbon emission factor*"
+              type="number"
+              formControlName="electric_carbon_emission_factor"
+              (focus)="focusElectricCarbonEmissionFactor = true"
+              (blur)="focusElectricCarbonEmissionFactor = false"
             />
           </div>
           <ng-container
-            *ngFor="let validation of assessmentAspectValidationMessage.name"
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.electric_carbon_emission_factor
+            "
           >
             <div
               class="error-message"
               *ngIf="
-                assessmentAspectForm.get('name').hasError(validation.type) &&
-                (assessmentAspectForm.get('name').dirty ||
-                  assessmentAspectForm.get('name').touched)
+                carbonEmissionFactorForm
+                  .get('electric_carbon_emission_factor')
+                  .hasError(validation.type) &&
+                (carbonEmissionFactorForm.get('electric_carbon_emission_factor')
+                  .dirty ||
+                  carbonEmissionFactorForm.get(
+                    'electric_carbon_emission_factor'
+                  ).touched)
               "
             >
               <p>
@@ -428,8 +406,47 @@
         </div>
         <div
           class="form-group"
-          [ngClass]="{ focused: focusAspectType === true }"
+          [ngClass]="{ focused: focusWaterCarbonEmissionFactor === true }"
         >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-database text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Electric carbon emission factor*"
+              type="text"
+              formControlName="water_carbon_emission_factor"
+              (focus)="focusWaterCarbonEmissionFactor = true"
+              (blur)="focusWaterCarbonEmissionFactor = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of assessmentAspectValidationMessage.water_carbon_emission_factor
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                carbonEmissionFactorForm
+                  .get('water_carbon_emission_factor')
+                  .hasError(validation.type) &&
+                (carbonEmissionFactorForm.get('water_carbon_emission_factor')
+                  .dirty ||
+                  carbonEmissionFactorForm.get('water_carbon_emission_factor')
+                    .touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div class="form-group" [ngClass]="{ focused: focusYear === true }">
           <div class="input-group">
             <div class="input-group-prepend">
               <span class="input-group-text bg-info">
@@ -438,105 +455,27 @@
             </div>
             <select
               class="custom-select form-control"
-              formControlName="aspect_type"
-              (focus)="focusAspectType = true"
-              (blur)="focusAspectType = false"
+              formControlName="year"
+              (focus)="focusYear = true"
+              (blur)="focusYear = false"
             >
-              <option selected hidden value="">Select aspect type</option>
-              <option
-                *ngFor="let aspecttype of dropdownAspectTypes"
-                [value]="aspecttype.value"
-              >
-                {{ aspecttype.display_name }}
+              <option selected hidden value="">Select year</option>
+              <option *ngFor="let year of year2011tocurrentyear" [value]="year">
+                {{ year }}
               </option>
             </select>
           </div>
           <ng-container
-            *ngFor="
-              let validation of assessmentAspectValidationMessage.aspect_type
-            "
+            *ngFor="let validation of assessmentAspectValidationMessage.year"
           >
             <div
               class="error-message"
               *ngIf="
-                assessmentAspectForm
-                  .get('aspect_type')
+                carbonEmissionFactorForm
+                  .get('year')
                   .hasError(validation.type) &&
-                (assessmentAspectForm.get('aspect_type').dirty ||
-                  assessmentAspectForm.get('aspect_type').touched)
-              "
-            >
-              <p>
-                <span>*{{ validation.message }}</span>
-              </p>
-            </div>
-          </ng-container>
-        </div>
-        <div class="form-group" [ngClass]="{ focused: focusAspect === true }">
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text bg-info">
-                <i class="fas fa-database text-white"></i>
-              </span>
-            </div>
-            <input
-              class="form-control text-dark"
-              placeholder="Aspect*"
-              type="text"
-              formControlName="aspect"
-              (focus)="focusAspect = true"
-              (blur)="focusAspect = false"
-            />
-          </div>
-          <ng-container
-            *ngFor="let validation of assessmentAspectValidationMessage.aspect"
-          >
-            <div
-              class="error-message"
-              *ngIf="
-                assessmentAspectForm.get('aspect').hasError(validation.type) &&
-                (assessmentAspectForm.get('aspect').dirty ||
-                  assessmentAspectForm.get('aspect').touched)
-              "
-            >
-              <p>
-                <span>*{{ validation.message }}</span>
-              </p>
-            </div>
-          </ng-container>
-        </div>
-        <div
-          class="form-group"
-          [ngClass]="{ focused: focusIncentive === true }"
-        >
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <span class="input-group-text bg-info">
-                <i class="fas fa-database text-white"></i>
-              </span>
-            </div>
-            <input
-              class="form-control text-dark"
-              placeholder="Incentive*"
-              type="number"
-              formControlName="incentive"
-              (focus)="focusIncentive = true"
-              (blur)="focusIncentive = false"
-            />
-          </div>
-          <ng-container
-            *ngFor="
-              let validation of assessmentAspectValidationMessage.incentive
-            "
-          >
-            <div
-              class="error-message"
-              *ngIf="
-                assessmentAspectForm
-                  .get('incentive')
-                  .hasError(validation.type) &&
-                (assessmentAspectForm.get('incentive').dirty ||
-                  assessmentAspectForm.get('incentive').touched)
+                (carbonEmissionFactorForm.get('year').dirty ||
+                  carbonEmissionFactorForm.get('year').touched)
               "
             >
               <p>
@@ -551,8 +490,8 @@
       <button
         type="button"
         class="btn btn-info"
-        (click)="updateAssessmentTax()"
-        [disabled]="!assessmentAspectForm.valid"
+        (click)="updateCarbon()"
+        [disabled]="!carbonEmissionFactorForm.valid"
       >
         Update
       </button>

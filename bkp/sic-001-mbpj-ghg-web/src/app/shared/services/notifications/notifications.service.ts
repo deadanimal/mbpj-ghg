@@ -25,7 +25,7 @@ export class NotificationsService {
     return this.http.get<Notification[]>(this.url).pipe(
       tap((res: Notification[]) => {
         this.notifications = res;
-        console.log("notifications: ", this.notifications);
+        // console.log("notifications: ", this.notifications);
       })
     );
   }
@@ -35,7 +35,7 @@ export class NotificationsService {
     return this.http.get<Notification[]>(urlFilter).pipe(
       tap((res) => {
         this.notificationsFiltered = res;
-        console.log("Filtered notifications: ", this.notificationsFiltered);
+        // console.log("Filtered notifications: ", this.notificationsFiltered);
       })
     );
   }
@@ -43,7 +43,7 @@ export class NotificationsService {
   register(body): Observable<any> {
     return this.http.post<any>(this.url, body).pipe(
       tap((res) => {
-        console.log(res);
+        // console.log(res);
       })
     );
   }
@@ -52,7 +52,7 @@ export class NotificationsService {
     let urlUpdate = this.url + currentHouseID + "/";
     return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
-        console.log(res);
+        // console.log(res);
         this.get().subscribe();
       })
     );

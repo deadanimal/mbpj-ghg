@@ -11,11 +11,9 @@ import swal from "sweetalert2";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { ToastrService } from "ngx-toastr";
 
-import { Application } from "src/app/shared/services/applications/applications.model";
-import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
+import { CarbonEmissionFactor } from "src/app/shared/services/carbon-emission-factors/carbon-emission-factors.model";
+import { CarbonEmissionFactorsService } from "src/app/shared/services/carbon-emission-factors/carbon-emission-factors.service";
 import { NotifyService } from "src/app/shared/handler/notify/notify.service";
-import { Rebate } from "src/app/shared/services/rebates/rebates.model";
-import { RebatesService } from "src/app/shared/services/rebates/rebates.service";
 
 export enum SelectionType {
   single = "single",
@@ -26,24 +24,25 @@ export enum SelectionType {
 }
 
 @Component({
-  selector: "app-rebates",
-  templateUrl: "./rebates.component.html",
-  styleUrls: ["./rebates.component.scss"],
+  selector: "app-carbon-emission-factors",
+  templateUrl: "./carbon-emission-factors.component.html",
+  styleUrls: ["./carbon-emission-factors.component.scss"],
 })
-export class RebatesComponent implements OnInit {
-  tempApplication = [];
+export class CarbonEmissionFactorsComponent implements OnInit {
+  // Dropdown
+  year2011tocurrentyear = [];
 
   // Focus
-  focusPaymentDate;
-  focusAmountApproved;
-  focusApplicationID;
+  focusElectricCarbonEmissionFactor;
+  focusWaterCarbonEmissionFactor;
+  focusYear;
 
   // FormGroup
-  rebateForm = new FormGroup({
+  carbonEmissionFactorForm = new FormGroup({
     id: new FormControl(""),
-    payment_date: new FormControl("", Validators.required),
-    amount_approved: new FormControl("", Validators.required),
-    application_id: new FormControl("", Validators.required),
+    electric_carbon_emission_factor: new FormControl(0, Validators.required),
+    water_carbon_emission_factor: new FormControl(0, Validators.required),
+    year: new FormControl("", Validators.required),
   });
 
   // Modal
@@ -63,70 +62,82 @@ export class RebatesComponent implements OnInit {
   SelectionType = SelectionType;
 
   // Validation Message
-  rebateValidationMessage = {
-    payment_date: [{ type: "required", message: "Payment Date is required" }],
-    amount_approved: [
-      { type: "required", message: "Amount Approved is required" },
+  carbonEmissionFactorValidationMessage = {
+    electric_carbon_emission_factor: [
+      {
+        type: "required",
+        message: "Electric carbon emission factor is required",
+      },
     ],
-    application_id: [
-      { type: "required", message: "Application ID is required" },
+    water_carbon_emission_factor: [
+      { type: "required", message: "Water carbon emission factor is required" },
     ],
+    year: [{ type: "required", message: "Year is required" }],
   };
 
   constructor(
-    private applicationService: ApplicationsService,
-    private rebateService: RebatesService,
+    private carbonemissionfactorService: CarbonEmissionFactorsService,
     private modalService: BsModalService,
     public toastr: ToastrService,
     private loadingBar: LoadingBarService,
     private notifyService: NotifyService
   ) {
+    // loop through data from 2011 to 2021
+    let currentyear = new Date().getFullYear();
+    let loop = currentyear - 2011;
+    for (let i = 0; i < loop + 1; i++) {
+      let obj = {
+        value: 2011 + i,
+        display_name: (2011 + i).toString(),
+      };
+      this.year2011tocurrentyear.push(obj);
+    }
+
     this.getData();
   }
 
   ngOnInit() {}
 
   getData() {
-    this.applicationService.doRetrieveAllApplications().subscribe(
-      (res) => {
-        this.tempApplication = res;
-      },
-      () => {},
-      () => {}
-    );
-
-    this.rebateService.doRetrieveAllExtendedRebates().subscribe((res) => {
-      this.tableRows = [...res];
-      this.tableTemp = this.tableRows.map((prop, key) => {
-        return {
-          ...prop,
-          no: key + 1,
-        };
+    this.carbonemissionfactorService
+      .doRetrieveAllCarbonEmissionFactors()
+      .subscribe((res) => {
+        this.tableRows = [...res];
+        this.tableTemp = this.tableRows.map((prop, key) => {
+          return {
+            ...prop,
+            no: key + 1,
+          };
+        });
       });
-    });
   }
 
-  registerRebate() {
+  registerCarbon() {
     this.loadingBar.start();
-    this.rebateService.doCreateRebate(this.rebateForm.value).subscribe(
-      (res) => {
-        this.successMessage("register");
-        this.loadingBar.complete();
-      },
-      () => {
-        this.loadingBar.complete();
-      },
-      () => {
-        this.closeModal();
-        this.getData();
-      }
-    );
+    this.carbonemissionfactorService
+      .doCreateCarbonEmissionFactor(this.carbonEmissionFactorForm.value)
+      .subscribe(
+        (res) => {
+          this.successMessage("register");
+          this.loadingBar.complete();
+        },
+        () => {
+          this.loadingBar.complete();
+        },
+        () => {
+          this.closeModal();
+          this.getData();
+        }
+      );
   }
 
-  updateRebate() {
+  updateCarbon() {
     this.loadingBar.start();
-    this.rebateService
-      .doUpdateRebate(this.rebateForm.value, this.rebateForm.value.id)
+    this.carbonemissionfactorService
+      .doUpdateCarbonEmissionFactor(
+        this.carbonEmissionFactorForm.value,
+        this.carbonEmissionFactorForm.value.id
+      )
       .subscribe(
         () => {
           this.loadingBar.complete();
@@ -142,7 +153,7 @@ export class RebatesComponent implements OnInit {
       );
   }
 
-  deleteRebate(row) {
+  deleteCarbon(row) {
     swal
       .fire({
         title: "Are you sure?",
@@ -157,48 +168,50 @@ export class RebatesComponent implements OnInit {
       .then((result) => {
         this.loadingBar.start();
         if (result.value) {
-          this.rebateService.doDeleteRebate(row.id).subscribe(
-            () => {
-              this.loadingBar.complete();
-              this.successMessage("delete");
-            },
-            () => {
-              this.loadingBar.complete();
-            },
-            () => {
-              this.getData();
-            }
-          );
+          this.carbonemissionfactorService
+            .doDeleteCarbonEmissionFactor(row.id)
+            .subscribe(
+              () => {
+                this.loadingBar.complete();
+                this.successMessage("delete");
+              },
+              () => {
+                this.loadingBar.complete();
+              },
+              () => {
+                this.getData();
+              }
+            );
         }
       });
   }
 
   openModal(modalDefault: TemplateRef<any>, process: string, row) {
-    if (process == "register") this.rebateForm.reset();
+    if (process == "register") this.carbonEmissionFactorForm.reset();
     else if (process == "update")
-      this.rebateForm.patchValue({
+      this.carbonEmissionFactorForm.patchValue({
         ...row,
       });
     this.defaultModal = this.modalService.show(modalDefault, this.default);
   }
 
   closeModal() {
-    this.rebateForm.reset();
+    this.carbonEmissionFactorForm.reset();
     this.defaultModal.hide();
   }
 
   successMessage(type: string) {
     if (type == "register") {
       let title = "Success";
-      let message = "Rebate is registered";
+      let message = "Carbon emission factor is registered";
       this.notifyService.openToastr(title, message);
     } else if (type == "update") {
       let title = "Success";
-      let message = "Rebate is updated";
+      let message = "Carbon emission factor is updated";
       this.notifyService.openToastr(title, message);
     } else if (type == "delete") {
       let title = "Success";
-      let message = "Rebate is deleted";
+      let message = "Carbon emission factor is deleted";
       this.notifyService.openToastr(title, message);
     }
   }

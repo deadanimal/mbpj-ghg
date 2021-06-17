@@ -20,7 +20,7 @@ export class HouseDetailsComponent implements OnInit {
     private userService: UsersService
   ) { 
     this.tempHouse = this.router.getCurrentNavigation().extras
-    console.log('tempHouse', this.tempHouse)
+    // console.log('tempHouse', this.tempHouse)
     this.getData()
   }
 

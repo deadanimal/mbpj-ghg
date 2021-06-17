@@ -25,7 +25,7 @@ export class TicketAnswersService {
     return this.http.get<TicketAnswer[]>(this.urlAnswer).pipe(
       tap((res) => {
         this.answers = res
-        console.log('Ticket answers: ', this.answers)
+        // console.log('Ticket answers: ', this.answers)
       })
     )
   }
@@ -33,7 +33,7 @@ export class TicketAnswersService {
   create(body: Form): Observable<any> {
     return this.http.post<any>(this.urlAnswer, body).pipe(
       tap((res) => {
-        console.log('Create ticket answer: ', res)
+        // console.log('Create ticket answer: ', res)
       })
     )
   }
@@ -43,7 +43,7 @@ export class TicketAnswersService {
     return this.http.get<TicketAnswer[]>(filterUrl).pipe(
       tap((res) => {
         this.answersFiltered = res
-        console.log('Filtered ticket answers: ', this.answersFiltered)
+        // console.log('Filtered ticket answers: ', this.answersFiltered)
       })
     )
   }

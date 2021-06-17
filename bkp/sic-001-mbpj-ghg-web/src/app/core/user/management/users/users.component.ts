@@ -291,21 +291,21 @@ export class UsersComponent implements OnInit {
 
   registerUser() {
     this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username;
-    //console.log(this.userRegistrationForm.value)
-    //console.log(this.userInformationForm.value)
+    // console.log(this.userRegistrationForm.value)
+    // console.log(this.userInformationForm.value)
     this.loadingBar.start();
 
     this.authService.register(this.userRegistrationForm.value).subscribe(
       (res) => {
-        //console.log('Registration success: ', res)
+        // console.log('Registration success: ', res)
         this.updateNewUser(res.user);
       },
       () => {
-        //console.log('Registration unsuccessful')
+        // console.log('Registration unsuccessful')
         this.loadingBar.complete();
       },
       () => {
-        //console.log('After that')
+        // console.log('After that')
       }
     );
   }
@@ -330,7 +330,7 @@ export class UsersComponent implements OnInit {
 
   updateRegisteredUser() {
     this.loadingBar.start();
-    //console.log(this.userInformationForm.value)
+    // console.log(this.userInformationForm.value)
     //this.userInformationForm.value.new_nric = this.userInformationForm.value.username
     this.userService
       .update(this.userInformationForm.value, this.tempUser.id)
@@ -402,9 +402,9 @@ export class UsersComponent implements OnInit {
       username: this.tempUser.username,
     });
     this.defaultModal = this.modalService.show(modalDefault, this.default);
-    //console.log(this.userInformationForm.value.email)
-    //console.log(this.userInformationForm)
-    //console.log(user)
+    // console.log(this.userInformationForm.value.email)
+    // console.log(this.userInformationForm)
+    // console.log(user)
   }
 
   closeModalView() {

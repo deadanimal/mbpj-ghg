@@ -30,7 +30,7 @@ export class ApplicationsService {
     return this.http.get<Application[]>(this.applicationsUrl).pipe(
       tap((res) => {
         this.retrievedApplications = res;
-        console.log("Applications: ", this.retrievedApplications);
+        // console.log("Applications: ", this.retrievedApplications);
       }),
       catchError(this.handleError)
     );
@@ -40,7 +40,7 @@ export class ApplicationsService {
     return this.http.get<any>(this.applicationsUrl + "extended/").pipe(
       tap((res) => {
         this.retrievedApplications = res;
-        console.log("Applications: ", this.retrievedApplications);
+        // console.log("Applications: ", this.retrievedApplications);
       }),
       catchError(this.handleError)
     );
@@ -51,10 +51,7 @@ export class ApplicationsService {
     return this.http.get<Application[]>(filterUrl).pipe(
       tap((res) => {
         this.retrievedFilteredApplications = res;
-        console.log(
-          "Filtered applications: ",
-          this.retrievedFilteredApplications
-        );
+        // console.log("Filtered applications: ", this.retrievedFilteredApplications);
       }),
       catchError(this.handleError)
     );
@@ -64,7 +61,7 @@ export class ApplicationsService {
     let assignEvaluatorUrl = this.applicationsUrl + appID + "/";
     return this.http.put<any>(assignEvaluatorUrl, body).pipe(
       tap((res) => {
-        console.log("Assign evaluator response: ", res);
+        // console.log("Assign evaluator response: ", res);
       }),
       catchError(this.handleError)
     );
@@ -74,7 +71,7 @@ export class ApplicationsService {
     let changeStatusUrl = this.applicationsUrl + appID + "/";
     return this.http.put<any>(changeStatusUrl, body).pipe(
       tap((res) => {
-        console.log("Channge status response: ", res);
+        // console.log("Change status response: ", res);
       }),
       catchError(this.handleError)
     );
@@ -138,6 +135,14 @@ export class ApplicationsService {
   doRetrieveTotalApplicationAnalysis(): Observable<any> {
     let url = this.applicationsUrl + "get_total_app_by_year/";
     return this.http.get<any>(url).pipe(
+      tap((res) => {}),
+      catchError(this.handleError)
+    );
+  }
+
+  doRetrieveAverageCarbonEmission(body): Observable<any> {
+    let url = this.applicationsUrl + "get_carbon_emission/";
+    return this.http.post<any>(url, body).pipe(
       tap((res) => {}),
       catchError(this.handleError)
     );

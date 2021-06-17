@@ -1,366 +1,388 @@
 <div class="header bg-transparent pb-6">
-    <div class="container-fluid">
-        <div class="header-body">
-            <div class="row align-items-center py-4">
-                <div class="col-lg-6 col-7">
-                    <h6 class="h2 text-dark d-inline-block mb-0">Audit Trail</h6>
-                    <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
-                        <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
-                            <li class="breadcrumb-item">
-                                <a [routerLink]="['/dashboard']"> <i class="fas fa-home text-dark"> </i> </a>
-                            </li>
+  <div class="container-fluid">
+    <div class="header-body">
+      <div class="row align-items-center py-4">
+        <div class="col-lg-6 col-7">
+          <h6 class="h2 text-dark d-inline-block mb-0">Audit Trail</h6>
+          <nav aria-label="breadcrumb" class="d-none d-md-inline-block ml-md-4">
+            <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
+              <li class="breadcrumb-item">
+                <a [routerLink]="['/dashboard']">
+                  <i class="fas fa-home text-dark"> </i>
+                </a>
+              </li>
 
-                            <li aria-current="page" class=" breadcrumb-item active">
-                                Audit trail
-                            </li>
-                        </ol>
-                    </nav>
-                </div>
-            </div>
+              <li aria-current="page" class="breadcrumb-item active">
+                Audit trail
+              </li>
+            </ol>
+          </nav>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 
 <div class="container-fluid mt--6">
-    <div class="row">
-        <div class="col-12">
-            <tabset type="pills" class="nav-fill flex-column flex-md-row">
-                <tab>
-                    <ng-template tabHeading>
-                        <i class="fas fa-life-ring mr-2"></i> Helpdesk
-                    </ng-template>
-                    <div class="card">
-                        <div class="dataTables_wrapper py-4">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="dataTables_length" id="datatable_length">
-                                        <label>
-                                            Show
-                                            <select 
-                                                name="datatable_length"
-                                                aria-controls="datatable"
-                                                class="form-control form-control-sm custom-select custom-select-sm"
-                                                (change)="entriesChange($event, 'ticket')"
-                                            >
-                                                <option value="5" [selected]="tableEntriesTickets==5">5</option>
-                                                <option value="10" [selected]="tableEntriesTickets==10">10</option>
-                                                <option value="15" [selected]="tableEntriesTickets==15">15</option>
-                                                <option value="-1" [selected]="tableEntriesTickets==-1">All</option>
-                                            </select>
-                                            records
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6">
-                                    <!--
-                                    <div id="datatable_filter" class="dataTables_filter">
-                                        <label>
-                                            <input 
-                                                type="search"
-                                                class="form-control form-control-sm"
-                                                placeholder="Search records"
-                                                aria-controls="datatable"
-                                                (keyup)="filterTable($event, 'ticket')" 
-                                            />
-                                        </label>
-                                    </div>
-                                    -->
-                                </div>
-                            </div>
-        
-                            <ngx-datatable 
-                                class="bootstrap selection-cell"
-                                [columnMode]="'force'"
-                                [headerHeight]="50"
-                                [footerHeight]="50" 
-                                [rowHeight]="'auto'"
-                                [limit]="tableEntriesTickets != -1 ? tableEntriesTickets:undefined"
-                                [rows]="tableTempTickets" 
-                                (activate)="onActivate($event, 'ticket')"
-                            >
-        
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>No.</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.no}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column name="Action"></ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>User</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.action_by_name}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>Date</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.date_time}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                            </ngx-datatable>
-                        </div>
-                    </div>
-                </tab>
+  <div class="row">
+    <div class="col-12">
+      <tabset type="pills" class="nav-fill flex-column flex-md-row">
+        <tab>
+          <ng-template tabHeading>
+            <i class="fas fa-life-ring mr-2"></i> Helpdesk
+          </ng-template>
+          <div class="card">
+            <div class="dataTables_wrapper py-4">
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div class="dataTables_length" id="datatable_length">
+                    <label>
+                      Show
+                      <select
+                        name="datatable_length"
+                        aria-controls="datatable"
+                        class="
+                          form-control form-control-sm
+                          custom-select custom-select-sm
+                        "
+                        (change)="entriesChange($event, 'ticket')"
+                      >
+                        <option value="5" [selected]="tableEntriesTickets == 5">
+                          5
+                        </option>
+                        <option
+                          value="10"
+                          [selected]="tableEntriesTickets == 10"
+                        >
+                          10
+                        </option>
+                        <option
+                          value="15"
+                          [selected]="tableEntriesTickets == 15"
+                        >
+                          15
+                        </option>
+                        <option
+                          value="-1"
+                          [selected]="tableEntriesTickets == -1"
+                        >
+                          All
+                        </option>
+                      </select>
+                      records
+                    </label>
+                  </div>
+                </div>
+              </div>
 
-                <tab>
-                    <ng-template tabHeading>
-                        <i class="fas fa-file-invoice mr-2"></i> Application
-                    </ng-template>
-                    <div class="card">
-                        <div class="dataTables_wrapper py-4">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="dataTables_length" id="datatable_length">
-                                        <label>
-                                            Show
-                                            <select 
-                                                name="datatable_length"
-                                                aria-controls="datatable"
-                                                class="form-control form-control-sm custom-select custom-select-sm"
-                                                (change)="entriesChange($event, 'application')"
-                                            >
-                                                <option value="5" [selected]="tableEntriesApplications==5">5</option>
-                                                <option value="10" [selected]="tableEntriesApplications==10">10</option>
-                                                <option value="15" [selected]="tableEntriesApplications==15">15</option>
-                                                <option value="-1" [selected]="tableEntriesApplications==-1">All</option>
-                                            </select>
-                                            records
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6">
-                                    <!--
-                                    <div id="datatable_filter" class="dataTables_filter">
-                                        <label>
-                                            <input 
-                                                type="search"
-                                                class="form-control form-control-sm"
-                                                placeholder="Search records"
-                                                aria-controls="datatable"
-                                                (keyup)="filterTable($event, 'application')" 
-                                            />
-                                        </label>
-                                    </div>
-                                    -->
-                                </div>
-                            </div>
-        
-                            <ngx-datatable 
-                                class="bootstrap selection-cell"
-                                [columnMode]="'force'"
-                                [headerHeight]="50"
-                                [footerHeight]="50" 
-                                [rowHeight]="'auto'"
-                                [limit]="tableEntriesApplications != -1 ? tableEntriesApplications:undefined"
-                                [rows]="tableTempApplications" 
-                                (activate)="onActivate($event, 'application')"
-                            >
-        
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>No.</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.no}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column name="Action"></ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>User</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.action_by_name}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>Date</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.date_time}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                            </ngx-datatable>
-                        </div>
-                    </div>
-                </tab>
+              <ngx-datatable
+                class="bootstrap selection-cell"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [limit]="
+                  tableEntriesTickets != -1 ? tableEntriesTickets : undefined
+                "
+                [rows]="tableTempTickets"
+                (activate)="onActivate($event, 'ticket')"
+              >
+                <ngx-datatable-column [width]="20">
+                  <ng-template ngx-datatable-header-template>
+                    <span>No.</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.no }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Action"></ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>User</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.action_by_name }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>Date</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.date_time }}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </tab>
 
-                <tab>
-                    <ng-template tabHeading>
-                        <i class="fas fa-home mr-2"></i> House
-                    </ng-template>
-                    <div class="card">
-                        <div class="dataTables_wrapper py-4">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="dataTables_length" id="datatable_length">
-                                        <label>
-                                            Show
-                                            <select 
-                                                name="datatable_length"
-                                                aria-controls="datatable"
-                                                class="form-control form-control-sm custom-select custom-select-sm"
-                                                (change)="entriesChange($event, 'house')"
-                                            >
-                                                <option value="5" [selected]="tableEntriesHouses==5">5</option>
-                                                <option value="10" [selected]="tableEntriesHouses==10">10</option>
-                                                <option value="15" [selected]="tableEntriesHouses==15">15</option>
-                                                <option value="-1" [selected]="tableEntriesHouses==-1">All</option>
-                                            </select>
-                                            records
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6">
-                                    <!--
-                                    <div id="datatable_filter" class="dataTables_filter">
-                                        <label>
-                                            <input 
-                                                type="search"
-                                                class="form-control form-control-sm"
-                                                placeholder="Search records"
-                                                aria-controls="datatable"
-                                                (keyup)="filterTable($event, 'house')" 
-                                            />
-                                        </label>
-                                    </div>
-                                    -->
-                                </div>
-                            </div>
-        
-                            <ngx-datatable 
-                                class="bootstrap selection-cell"
-                                [columnMode]="'force'"
-                                [headerHeight]="50"
-                                [footerHeight]="50" 
-                                [rowHeight]="'auto'"
-                                [limit]="tableEntriesHouses != -1 ? tableEntriesHouses:undefined"
-                                [rows]="tableTempHouses" 
-                                (activate)="onActivate($event, 'house')"
-                            >
-        
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>No.</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.no}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column name="Action"></ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>User</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.action_by_name}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>Date</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.date_time}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                            </ngx-datatable>
-                        </div>
-                    </div>
-                </tab>
-                
-                <tab>
-                    <ng-template tabHeading>
-                        <i class="fas fa-users mr-2"></i> User
-                    </ng-template>
-                    <div class="card">
-                        <div class="dataTables_wrapper py-4">
-                            <div class="row">
-                                <div class="col-sm-12 col-md-6">
-                                    <div class="dataTables_length" id="datatable_length">
-                                        <label>
-                                            Show
-                                            <select 
-                                                name="datatable_length"
-                                                aria-controls="datatable"
-                                                class="form-control form-control-sm custom-select custom-select-sm"
-                                                (change)="entriesChange($event, 'user')"
-                                            >
-                                                <option value="5" [selected]="tableEntriesUsers==5">5</option>
-                                                <option value="10" [selected]="tableEntriesUsers==10">10</option>
-                                                <option value="15" [selected]="tableEntriesUsers==15">15</option>
-                                                <option value="-1" [selected]="tableEntriesUsers==-1">All</option>
-                                            </select>
-                                            records
-                                        </label>
-                                    </div>
-                                </div>
-                                <div class="col-sm-12 col-md-6">
-                                    <!--
-                                    <div id="datatable_filter" class="dataTables_filter">
-                                        <label>
-                                            <input 
-                                                type="search"
-                                                class="form-control form-control-sm"
-                                                placeholder="Search records"
-                                                aria-controls="datatable"
-                                                (keyup)="filterTable($event, 'user')" 
-                                            />
-                                        </label>
-                                    </div>
-                                    -->
-                                </div>
-                            </div>
-        
-                            <ngx-datatable 
-                                class="bootstrap selection-cell"
-                                [columnMode]="'force'"
-                                [headerHeight]="50"
-                                [footerHeight]="50" 
-                                [rowHeight]="'auto'"
-                                [limit]="tableEntriesUsers != -1 ? tableEntriesUsers:undefined"
-                                [rows]="tableTempUsers" 
-                                (activate)="onActivate($event, 'user')"
-                            >
-        
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>No.</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.no}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column name="Action"></ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>User</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.action_by_name}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                                <ngx-datatable-column>
-                                    <ng-template ngx-datatable-header-template>
-                                        <span>Date</span>
-                                    </ng-template>
-                                    <ng-template let-row="row" ngx-datatable-cell-template>
-                                        {{row.date_time}}
-                                    </ng-template>
-                                </ngx-datatable-column>
-                            </ngx-datatable>
-                        </div>
-                    </div>
-                </tab>
-            </tabset>
-        </div>
+        <tab>
+          <ng-template tabHeading>
+            <i class="fas fa-file-invoice mr-2"></i> Application
+          </ng-template>
+          <div class="card">
+            <div class="dataTables_wrapper py-4">
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div class="dataTables_length" id="datatable_length">
+                    <label>
+                      Show
+                      <select
+                        name="datatable_length"
+                        aria-controls="datatable"
+                        class="
+                          form-control form-control-sm
+                          custom-select custom-select-sm
+                        "
+                        (change)="entriesChange($event, 'application')"
+                      >
+                        <option
+                          value="5"
+                          [selected]="tableEntriesApplications == 5"
+                        >
+                          5
+                        </option>
+                        <option
+                          value="10"
+                          [selected]="tableEntriesApplications == 10"
+                        >
+                          10
+                        </option>
+                        <option
+                          value="15"
+                          [selected]="tableEntriesApplications == 15"
+                        >
+                          15
+                        </option>
+                        <option
+                          value="-1"
+                          [selected]="tableEntriesApplications == -1"
+                        >
+                          All
+                        </option>
+                      </select>
+                      records
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <ngx-datatable
+                class="bootstrap selection-cell"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [limit]="
+                  tableEntriesApplications != -1
+                    ? tableEntriesApplications
+                    : undefined
+                "
+                [rows]="tableTempApplications"
+                (activate)="onActivate($event, 'application')"
+              >
+                <ngx-datatable-column [width]="20">
+                  <ng-template ngx-datatable-header-template>
+                    <span>No.</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.no }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Action"></ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>User</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.action_by_name }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>Date</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.date_time }}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </tab>
+
+        <tab>
+          <ng-template tabHeading>
+            <i class="fas fa-home mr-2"></i> House
+          </ng-template>
+          <div class="card">
+            <div class="dataTables_wrapper py-4">
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div class="dataTables_length" id="datatable_length">
+                    <label>
+                      Show
+                      <select
+                        name="datatable_length"
+                        aria-controls="datatable"
+                        class="
+                          form-control form-control-sm
+                          custom-select custom-select-sm
+                        "
+                        (change)="entriesChange($event, 'house')"
+                      >
+                        <option value="5" [selected]="tableEntriesHouses == 5">
+                          5
+                        </option>
+                        <option
+                          value="10"
+                          [selected]="tableEntriesHouses == 10"
+                        >
+                          10
+                        </option>
+                        <option
+                          value="15"
+                          [selected]="tableEntriesHouses == 15"
+                        >
+                          15
+                        </option>
+                        <option
+                          value="-1"
+                          [selected]="tableEntriesHouses == -1"
+                        >
+                          All
+                        </option>
+                      </select>
+                      records
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <ngx-datatable
+                class="bootstrap selection-cell"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [limit]="
+                  tableEntriesHouses != -1 ? tableEntriesHouses : undefined
+                "
+                [rows]="tableTempHouses"
+                (activate)="onActivate($event, 'house')"
+              >
+                <ngx-datatable-column [width]="20">
+                  <ng-template ngx-datatable-header-template>
+                    <span>No.</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.no }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Action"></ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>User</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.action_by_name }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>Date</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.date_time }}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </tab>
+
+        <tab>
+          <ng-template tabHeading>
+            <i class="fas fa-users mr-2"></i> User
+          </ng-template>
+          <div class="card">
+            <div class="dataTables_wrapper py-4">
+              <div class="row">
+                <div class="col-sm-12 col-md-6">
+                  <div class="dataTables_length" id="datatable_length">
+                    <label>
+                      Show
+                      <select
+                        name="datatable_length"
+                        aria-controls="datatable"
+                        class="
+                          form-control form-control-sm
+                          custom-select custom-select-sm
+                        "
+                        (change)="entriesChange($event, 'user')"
+                      >
+                        <option value="5" [selected]="tableEntriesUsers == 5">
+                          5
+                        </option>
+                        <option value="10" [selected]="tableEntriesUsers == 10">
+                          10
+                        </option>
+                        <option value="15" [selected]="tableEntriesUsers == 15">
+                          15
+                        </option>
+                        <option value="-1" [selected]="tableEntriesUsers == -1">
+                          All
+                        </option>
+                      </select>
+                      records
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <ngx-datatable
+                class="bootstrap selection-cell"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [limit]="
+                  tableEntriesUsers != -1 ? tableEntriesUsers : undefined
+                "
+                [rows]="tableTempUsers"
+                (activate)="onActivate($event, 'user')"
+              >
+                <ngx-datatable-column [width]="20">
+                  <ng-template ngx-datatable-header-template>
+                    <span>No.</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.no }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Action"></ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>User</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.action_by_name }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column>
+                  <ng-template ngx-datatable-header-template>
+                    <span>Date</span>
+                  </ng-template>
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.date_time }}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </tab>
+      </tabset>
     </div>
+  </div>
 </div>

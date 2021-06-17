@@ -30,7 +30,7 @@ export class UserEventsService {
     return this.http.get<UserEvent[]>(this.urlEvents).pipe(
       tap((res) => {
         this.events = res
-        console.log('User events: ', this.events)
+        // console.log('User events: ', this.events)
       })
     )
   }
@@ -40,7 +40,7 @@ export class UserEventsService {
     return this.http.get<UserEvent[]>(filterUrl).pipe(
       tap((res) => {
         this.eventsFiltered = res
-        console.log('User events: ', this.eventsFiltered)
+        // console.log('User events: ', this.eventsFiltered)
       })
     )
   }

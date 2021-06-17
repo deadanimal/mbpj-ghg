@@ -31,7 +31,7 @@ export class FaqsService {
     return this.http.get<FAQ[]>(this.faqsUrl).pipe(
       tap((res) => {
         this.retrievedFaqs = res
-        console.log('FAQs: ', this.retrievedFaqs)
+        // console.log('FAQs: ', this.retrievedFaqs)
       }),
       catchError(this.handleError)
     )
@@ -40,7 +40,7 @@ export class FaqsService {
   doCreateFaq(body: Form): Observable<any> {
     return this.http.post<any>(this.faqsUrl,body).pipe(
       tap((res) => {
-        console.log(res)
+        // console.log(res)
       }),
       catchError(this.handleError)
     )
@@ -50,7 +50,7 @@ export class FaqsService {
     let urlUpdate = this.faqsUrl + currentFaq + '/'
     return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
-        console.log(res)
+        // console.log(res)
       }),
       catchError(this.handleError)
     )
@@ -60,7 +60,7 @@ export class FaqsService {
     let urlDelete = this.faqsUrl + currentFaq + "/";
     return this.http.delete<any>(urlDelete).pipe(
       tap((res) => {
-        console.log(res)
+        // console.log(res)
       })
     );
   }
@@ -70,7 +70,7 @@ export class FaqsService {
     return this.http.get<FAQ[]>(urlFilter).pipe(
       tap((res) => {
         this.retrievedFilteredFaqs = res
-        console.log('Filtered faqs: ', this.retrievedFilteredFaqs)
+        // console.log('Filtered faqs: ', this.retrievedFilteredFaqs)
       }),
       catchError(this.handleError)
     )

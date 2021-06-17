@@ -87,8 +87,6 @@ export class ProfileComponent implements OnInit {
       this.userForm.value.new_nric = this.user.new_nric
     }
 
-    console.log(this.userForm.value)
-
     this.loadingBar.start()
     this.userService.update(this.userForm.value, this.user.id).subscribe(
       () => {

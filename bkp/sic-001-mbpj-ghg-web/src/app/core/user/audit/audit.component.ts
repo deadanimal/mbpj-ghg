@@ -186,7 +186,7 @@ export class AuditComponent implements OnInit {
                   action: ticket.action,
                   action_by_id: ticket.action_by,
                   action_by_name: user.full_name,
-                  date_time: moment(ticket.date_time).format('DD/MM/YYYY')
+                  date_time: moment(ticket.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
                 })
               }
             }
@@ -199,12 +199,12 @@ export class AuditComponent implements OnInit {
             action: ticket.action,
             action_by_id: ticket.action_by,
             action_by_name: 'NA',
-            date_time: moment(ticket.date_time).format('DD/MM/YYYY')
+            date_time: moment(ticket.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
           })
         }
         counter++
         if (counter === this.ticketEventService.events.length){
-          console.log('Ticket: ', this.ticketEventsMerged)
+          // console.log('Ticket: ', this.ticketEventsMerged)
           this.tableRowsTickets = this.ticketEventsMerged
           this.tableTempTickets = this.tableRowsTickets.map((prop, key) => {
             return {
@@ -231,7 +231,7 @@ export class AuditComponent implements OnInit {
                   action: application.action,
                   action_by_id: application.action_by,
                   action_by_name: user.full_name,
-                  date_time: moment(application.date_time).format('DD/MM/YYYY')
+                  date_time: moment(application.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
                 })
               }
             }
@@ -244,12 +244,12 @@ export class AuditComponent implements OnInit {
             action: application.action,
             action_by_id: application.action_by,
             action_by_name: 'NA',
-            date_time: moment(application.date_time).format('DD/MM/YYYY')
+            date_time: moment(application.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
           })
         }
         counter++
         if (counter === this.applicationEventService.events.length){
-          console.log('Application: ', this.applicationsEventMerged)
+          // console.log('Application: ', this.applicationsEventMerged)
           this.tableRowsApplications = this.applicationsEventMerged
           this.tableTempApplications = this.tableRowsApplications.map((prop, key) => {
             return {
@@ -257,7 +257,7 @@ export class AuditComponent implements OnInit {
               id: key
             };
           });
-          console.log('Application: ', this.applicationsEventMerged)
+          // console.log('Application: ', this.applicationsEventMerged)
         }
       }
     )
@@ -277,7 +277,7 @@ export class AuditComponent implements OnInit {
                   action: house.action,
                   action_by_id: house.action_by,
                   action_by_name: user.full_name,
-                  date_time: moment(house.date_time).format('DD/MM/YYYY')
+                  date_time: moment(house.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
                 })
               }
             }
@@ -290,12 +290,12 @@ export class AuditComponent implements OnInit {
             action: house.action,
             action_by_id: house.action_by,
             action_by_name: 'NA',
-            date_time: moment(house.date_time).format('DD/MM/YYYY')
+            date_time: moment(house.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
           })
         }
         counter++
         if (counter === this.houseEventService.events.length){
-          console.log('House: ', this.houseEventsMerged)
+          // console.log('House: ', this.houseEventsMerged)
           this.tableRowsHouses = this.houseEventsMerged
           this.tableTempHouses = this.tableRowsHouses.map((prop, key) => {
             return {
@@ -322,7 +322,7 @@ export class AuditComponent implements OnInit {
                   action: event.action,
                   action_by_id: event.action_by,
                   action_by_name: user.full_name,
-                  date_time: moment(event.date_time).format('DD/MM/YYYY')
+                  date_time: moment(event.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
                 })
               }
             }
@@ -335,12 +335,12 @@ export class AuditComponent implements OnInit {
             action: event.action,
             action_by_id: event.action_by,
             action_by_name: 'NA',
-            date_time: moment(event.date_time).format('DD/MM/YYYY')
+            date_time: moment(event.date_time).format("dddd, MMMM Do YYYY, h:mm:ss a")
           })
         }
         counter++
         if (counter === this.userEventService.events.length){
-          console.log('User: ', this.userEventsMerged)
+          // console.log('User: ', this.userEventsMerged)
           this.tableRowsUsers = this.userEventsMerged
           this.tableTempUsers = this.tableRowsUsers.map((prop, key) => {
             return {

@@ -54,7 +54,7 @@ export class EvaluationsService {
     return this.http.get<Evaluation[]>(this.evaluationsUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedEvaluations = res
-        console.log('Evaluations: ', this.retrievedEvaluations)
+        // console.log('Evaluations: ', this.retrievedEvaluations)
       }),
       catchError(this.handleError)
     )
@@ -64,7 +64,7 @@ export class EvaluationsService {
     let headers = this.createHeader()
     return this.http.post<any>(this.evaluationsUrl, credentials, {headers: headers}).pipe(
       tap((res) => {
-        console.log('Create evaluation response: ', res)
+        // console.log('Create evaluation response: ', res)
       }),
       catchError(this.handleError)
     )
@@ -76,7 +76,7 @@ export class EvaluationsService {
     return this.http.get<Evaluation[]>(filterUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedFilteredEvaluations = res
-        console.log('Filtered evaluations: ', this.retrievedFilteredEvaluations)
+        // console.log('Filtered evaluations: ', this.retrievedFilteredEvaluations)
       }),
       catchError(this.handleError)
     )
@@ -86,7 +86,7 @@ export class EvaluationsService {
     let urlUpdate = this.evaluationsUrl + id  + '/'
     return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
-        //console.log('Updated user: ', res)
+        // console.log('Updated user: ', res)
       })
     )
   }

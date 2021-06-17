@@ -53,7 +53,7 @@ export class OrganisationsService {
     return this.http.get<Organisation[]>(this.organisationsUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedOrganisations = res
-        console.log('Organisations: ', this.retrievedOrganisations)
+        // console.log('Organisations: ', this.retrievedOrganisations)
       }),
       catchError(this.handleError)
     )
@@ -63,7 +63,7 @@ export class OrganisationsService {
     let headers = this.createHeader()
     return this.http.post<any>(this.organisationsUrl, credentials, {headers: headers}).pipe(
       tap((res) => {
-        console.log('Create organisation: ', res)
+        // console.log('Create organisation: ', res)
       }),
       catchError(this.handleError)
     )

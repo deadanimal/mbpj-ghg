@@ -30,7 +30,7 @@ export class TicketEventsService {
     return this.http.get<TicketEvent[]>(this.urlEvents).pipe(
       tap((res) => {
         this.events = res
-        console.log('Ticket events: ', this.events)
+        // console.log('Ticket events: ', this.events)
       })
     )
   }
@@ -40,7 +40,7 @@ export class TicketEventsService {
     return this.http.get<TicketEvent[]>(filterUrl).pipe(
       tap((res) => {
         this.eventsFiltered = res
-        console.log('Ticket events: ', this.eventsFiltered)
+        // console.log('Ticket events: ', this.eventsFiltered)
       })
     )
   }

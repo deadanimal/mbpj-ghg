@@ -50,10 +50,7 @@ export class EvaluationSchedulesService {
       .pipe(
         tap((res) => {
           this.retrievedEvaluationSchedules = res;
-          console.log(
-            "Evaluation schedules: ",
-            this.retrievedEvaluationSchedules
-          );
+          // console.log("Evaluation schedules: ", this.retrievedEvaluationSchedules);
         }),
         catchError(this.handleError)
       );
@@ -65,7 +62,7 @@ export class EvaluationSchedulesService {
       .post<any>(this.evaluationSchedulesUrl, credentials, { headers: headers })
       .pipe(
         tap((res) => {
-          console.log("Create evaluation schedule response: ", res);
+          // console.log("Create evaluation schedule response: ", res);
         }),
         catchError(this.handleError)
       );
@@ -79,10 +76,7 @@ export class EvaluationSchedulesService {
       .pipe(
         tap((res) => {
           this.retrievedFilteredEvaluationSchedules = res;
-          console.log(
-            "Filtered evaluation schedules: ",
-            this.retrievedFilteredEvaluationSchedules
-          );
+          // console.log("Filtered evaluation schedules: ", this.retrievedFilteredEvaluationSchedules);
         }),
         catchError(this.handleError)
       );

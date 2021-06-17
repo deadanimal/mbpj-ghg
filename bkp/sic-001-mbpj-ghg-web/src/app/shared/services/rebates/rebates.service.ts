@@ -26,7 +26,7 @@ export class RebatesService {
     return this.http.get<Rebate[]>(this.rebatesUrl).pipe(
       tap((res) => {
         this.retrievedRebates = res;
-        console.log("Rebates: ", this.retrievedRebates);
+        // console.log("Rebates: ", this.retrievedRebates);
       }),
       catchError(this.handleError)
     );
@@ -36,7 +36,7 @@ export class RebatesService {
     return this.http.get<any>(this.rebatesUrl + "extended/").pipe(
       tap((res) => {
         this.retrievedRebates = res;
-        console.log("Rebates: ", this.retrievedRebates);
+        // console.log("Rebates: ", this.retrievedRebates);
       }),
       catchError(this.handleError)
     );
@@ -45,7 +45,7 @@ export class RebatesService {
   doCreateRebate(body: Form): Observable<any> {
     return this.http.post<any>(this.rebatesUrl, body).pipe(
       tap((res) => {
-        console.log("Create rebate: ", res);
+        // console.log("Create rebate: ", res);
       }),
       catchError(this.handleError)
     );
@@ -55,7 +55,7 @@ export class RebatesService {
     let urlUpdate = this.rebatesUrl + currentRebate + "/";
     return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
-        console.log("Update rebate response: ", res);
+        // console.log("Update rebate response: ", res);
       }),
       catchError(this.handleError)
     );
@@ -65,7 +65,7 @@ export class RebatesService {
     let urlDelete = this.rebatesUrl + currentRebate + "/";
     return this.http.delete<any>(urlDelete).pipe(
       tap((res) => {
-        console.log(res);
+        // console.log(res);
       })
     );
   }
@@ -75,7 +75,7 @@ export class RebatesService {
     return this.http.get<Rebate[]>(filterUrl).pipe(
       tap((res) => {
         this.retrievedFilteredRebates = res;
-        console.log("Filtered rebates: ", this.retrievedFilteredRebates);
+        // console.log("Filtered rebates: ", this.retrievedFilteredRebates);
       }),
       catchError(this.handleError)
     );

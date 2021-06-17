@@ -97,7 +97,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
         });
       },
       (err) => {
-        console.log("err", err);
+        console.error("err", err);
       },
       () => {
         this.initChart();
@@ -321,7 +321,10 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   }
 
   viewDetail(selectedApplication) {
-    this.router.navigate(["/applications/details"], selectedApplication);
+    // this.router.navigate(["/applications/details"], selectedApplication);
+    this.router.navigate(["/applications/details"], {
+      queryParams: { application_id: selectedApplication.id },
+    });
   }
 
   deleteApplication(row) {

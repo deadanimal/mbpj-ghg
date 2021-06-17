@@ -29,7 +29,7 @@ export class ApplicationEventsService {
     return this.http.get<ApplicationEvent[]>(this.urlEvents).pipe(
       tap((res) => {
         this.events = res
-        console.log('Application events: ', this.events)
+        // console.log('Application events: ', this.events)
       })
     )
   }
@@ -39,7 +39,7 @@ export class ApplicationEventsService {
     return this.http.get<ApplicationEvent[]>(filterUrl).pipe(
       tap((res) => {
         this.eventsFiltered = res
-        console.log('Application events: ', this.eventsFiltered)
+        // console.log('Application events: ', this.eventsFiltered)
       })
     )
   }

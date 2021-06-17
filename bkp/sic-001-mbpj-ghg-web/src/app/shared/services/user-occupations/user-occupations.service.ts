@@ -53,7 +53,7 @@ export class UserOccupationsService {
     return this.http.get<UserOccupation[]>(this.userOccupationsUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedUserOccupations = res
-        console.log('User occupations: ', this.retrievedUserOccupations)
+        // console.log('User occupations: ', this.retrievedUserOccupations)
       }),
       catchError(this.handleError)
     )
@@ -63,7 +63,7 @@ export class UserOccupationsService {
     let headers = this.createHeader()
     return this.http.post<any>(this.userOccupationsUrl, credentials, {headers: headers}).pipe(
       tap((res) => {
-        console.log('Create user occupation: ', res)
+        // console.log('Create user occupation: ', res)
       }),
       catchError(this.handleError)
     )

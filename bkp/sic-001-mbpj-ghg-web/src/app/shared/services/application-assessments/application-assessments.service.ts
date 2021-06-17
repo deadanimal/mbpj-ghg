@@ -54,7 +54,7 @@ export class ApplicationAssessmentsService {
     return this.http.get<ApplicationAssessment[]>(this.applicationAssessmentsUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedApplicationAssessments = res
-        console.log('Application assessments: ', this.retrievedApplicationAssessments)
+        // console.log('Application assessments: ', this.retrievedApplicationAssessments)
       }),
       catchError(this.handleError)
     )
@@ -64,7 +64,7 @@ export class ApplicationAssessmentsService {
     let headers = this.createHeader()
     return this.http.post<any>(this.applicationAssessmentsUrl, credentials, {headers: headers}).pipe(
       tap((res) => {
-        console.log('Create application assessment response: ', res)
+        // console.log('Create application assessment response: ', res)
       }),
       catchError(this.handleError)
     )
@@ -76,7 +76,7 @@ export class ApplicationAssessmentsService {
     return this.http.get<ApplicationAssessment[]>(filterUrl, {headers: headers}).pipe(
       tap((res) => {
         this.retrievedFilteredApplicationAssessments = res
-        console.log('Filtered application assessments: ', this.retrievedFilteredApplicationAssessments)
+        // console.log('Filtered application assessments: ', this.retrievedFilteredApplicationAssessments)
       }),
       catchError(this.handleError)
     )

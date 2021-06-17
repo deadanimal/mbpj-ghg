@@ -39,7 +39,7 @@ export class HousesService {
     return this.http.get<House[]>(this.housesUrl).pipe(
       tap((res) => {
         this.retrievedHouses = res;
-        console.log("Houses: ", this.retrievedHouses);
+        // console.log("Houses: ", this.retrievedHouses);
         this.retrievedHouses.forEach((house) => {
           if (house.building_type == "CD") {
             this.condominium.push(house);
@@ -64,23 +64,21 @@ export class HousesService {
   register(body: Form): Observable<any> {
     return this.http.post<any>(this.housesUrl, body).pipe(
       tap((res) => {
-        console.log(res);
+        // console.log(res);
       })
     );
   }
 
   update(body: Form, currentHouseID: string): Observable<any> {
-    console.log("House ID: ", currentHouseID);
     let updateHouseUrl = this.housesUrl + currentHouseID + "/";
     return this.http.put<any>(updateHouseUrl, body).pipe(
       tap((res) => {
-        console.log(res);
+        // console.log(res);
       })
     );
   }
 
   delete(currentHouseID: string): Observable<any> {
-    console.log("House ID: ", currentHouseID);
     let deleteHouseUrl = this.housesUrl + currentHouseID + "/";
     return this.http.delete<any>(deleteHouseUrl).pipe(
       tap((res) => {
@@ -94,7 +92,7 @@ export class HousesService {
     return this.http.get<House[]>(filterUrl).pipe(
       tap((res) => {
         this.retrievedFilteredHouses = res;
-        console.log("Filtered houses: ", this.retrievedFilteredHouses);
+        // console.log("Filtered houses: ", this.retrievedFilteredHouses);
       })
     );
   }

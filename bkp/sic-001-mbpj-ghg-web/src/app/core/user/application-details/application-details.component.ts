@@ -1,6 +1,6 @@
 import { Component, OnInit, TemplateRef, NgZone } from "@angular/core";
 import { FormArray, FormGroup, FormControl } from "@angular/forms";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { BsModalService, BsModalRef } from "ngx-bootstrap/modal";
 import { ToastrService } from "ngx-toastr";
@@ -10,6 +10,7 @@ import { UsersService } from "src/app/shared/services/users/users.service";
 import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
 import { ApplicationAssessmentsService } from "src/app/shared/services/application-assessments/application-assessments.service";
 import { AssessmentAspectsService } from "src/app/shared/services/assessment-aspects/assessment-aspects.service";
+import { CarbonEmissionFactorsService } from "src/app/shared/services/carbon-emission-factors/carbon-emission-factors.service";
 import { EvaluationsService } from "src/app/shared/services/evaluations/evaluations.service";
 import { EvaluationSchedulesService } from "src/app/shared/services/evaluation-schedules/evaluation-schedules.service";
 import { RebatesService } from "src/app/shared/services/rebates/rebates.service";
@@ -23,6 +24,7 @@ import * as am4charts from "@amcharts/amcharts4/charts";
 import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 am4core.useTheme(am4themes_animated);
 
+import { Application } from "src/app/shared/services/applications/applications.model";
 import { ApplicationAssessment } from "src/app/shared/services/application-assessments/application-assessments.model";
 import { AssessmentAspect } from "src/app/shared/services/assessment-aspects/assessment-aspects.model";
 import { House } from "src/app/shared/services/houses/houses.model";
@@ -48,7 +50,9 @@ import { EvaluationSchedule } from "src/app/shared/services/evaluation-schedules
   styleUrls: ["./application-details.component.scss"],
 })
 export class ApplicationDetailsComponent implements OnInit {
-  public tempApplication;
+  public electriccarbon: number = 0;
+  public watercarbon: number = 0;
+  public tempApplication: Application;
   public tempApplicant: User;
   public tempApplicationAssessment: ApplicationAssessment[] = [];
   public tempAssessmentAspect: AssessmentAspect[] = [];
@@ -58,7 +62,29 @@ export class ApplicationDetailsComponent implements OnInit {
   public tempEvaluation: Evaluation[] = [];
   public tempEvaluationSchedule: EvaluationSchedule;
   public statusApproveReject = ["Completed", "Rejected", "Paid"];
-  public focus;
+
+  aspectTypes = [
+    {
+      value: "EN",
+      display_name: "Energy",
+    },
+    {
+      value: "WA",
+      display_name: "Water",
+    },
+    {
+      value: "TR",
+      display_name: "Transportation",
+    },
+    {
+      value: "BI",
+      display_name: "Biodiversity",
+    },
+    {
+      value: "WE",
+      display_name: "Waste",
+    },
+  ];
 
   evaluatorForm = new FormGroup({
     evaluator_nominated: new FormControl(""),
@@ -82,6 +108,7 @@ export class ApplicationDetailsComponent implements OnInit {
   });
 
   evaluationFormArray = new FormArray([]);
+  totalAll: number = 0;
 
   defaultModal: BsModalRef;
   default = {
@@ -102,6 +129,7 @@ export class ApplicationDetailsComponent implements OnInit {
     private applicationService: ApplicationsService,
     private applicationAssessmentService: ApplicationAssessmentsService,
     private assessmentAspectService: AssessmentAspectsService,
+    private carbonemissionfactorService: CarbonEmissionFactorsService,
     private evaluationService: EvaluationsService,
     private evaluationScheduleService: EvaluationSchedulesService,
     private houseService: HousesService,
@@ -109,14 +137,30 @@ export class ApplicationDetailsComponent implements OnInit {
     private rebateService: RebatesService,
     private notificationService: NotificationsService,
     private modalService: BsModalService,
+    private route: ActivatedRoute,
     private router: Router,
     public toastr: ToastrService,
     public zone: NgZone,
     public loadingBar: LoadingBarService
   ) {
-    this.tempApplication = this.router.getCurrentNavigation().extras;
-    console.log("tempApplication", this.tempApplication);
-    this.initData();
+    // this.tempApplication = this.router.getCurrentNavigation().extras;
+    this.route.queryParamMap.subscribe((params) => {
+      let obj = { ...params.keys, ...params };
+      if (obj["params"].application_id) {
+        this.applicationService
+          .retrieveFilteredApplications("id=" + obj["params"].application_id)
+          .subscribe(
+            (res) => {
+              // console.log("res", res);
+              this.tempApplication = res[0];
+              this.initData();
+            },
+            (err) => {
+              console.error("err", err);
+            }
+          );
+      }
+    });
   }
 
   ngOnInit() {}
@@ -130,6 +174,8 @@ export class ApplicationDetailsComponent implements OnInit {
       remarks: new FormControl(""),
       application_assessment: new FormControl(""),
       assessment_aspect_name: new FormControl(""),
+      incentive: new FormControl(0),
+      total_evaluation: new FormControl(0),
     });
   }
 
@@ -138,7 +184,6 @@ export class ApplicationDetailsComponent implements OnInit {
       .doRetrieveAllAssessmentAspects()
       .subscribe((assessment_aspect) => {
         this.tempAssessmentAspect = assessment_aspect;
-        // console.log("tempAssessmentAspect", this.tempAssessmentAspect)
       });
 
     if (this.tempApplication.status == "CM") {
@@ -159,38 +204,84 @@ export class ApplicationDetailsComponent implements OnInit {
       this.tempApplication.status = "Submitted";
     }
 
-    this.houseService.retrievedHouses.forEach((house) => {
-      if (house.id == this.tempApplication.applied_house_id) {
-        this.tempHouse = house;
-        if (this.tempHouse.building_type == "CD") {
-          this.tempHouse.building_type = "Condominium";
-        } else if (this.tempHouse.building_type == "FL") {
-          this.tempHouse.building_type = "Flat";
-        } else if (this.tempHouse.building_type == "TO") {
-          this.tempHouse.building_type = "Townhouse";
-        } else if (this.tempHouse.building_type == "TE") {
-          this.tempHouse.building_type = "Terrace House";
-        } else if (this.tempHouse.building_type == "BS") {
-          this.tempHouse.building_type = "Bungalow / Semidetached";
-        } else if (this.tempHouse.building_type == "AS") {
-          this.tempHouse.building_type = "Apartment / Service Apartment";
-        } else if (this.tempHouse.building_type == "OT") {
-          this.tempHouse.building_type = "Other";
+    this.houseService
+      .filter("id=" + this.tempApplication.applied_house)
+      .subscribe(
+        (res) => {
+          // console.log("res", res);
+          this.tempHouse = res[0];
+          if (this.tempHouse.building_type == "CD") {
+            this.tempHouse.building_type = "Condominium";
+          } else if (this.tempHouse.building_type == "FL") {
+            this.tempHouse.building_type = "Flat";
+          } else if (this.tempHouse.building_type == "TO") {
+            this.tempHouse.building_type = "Townhouse";
+          } else if (this.tempHouse.building_type == "TE") {
+            this.tempHouse.building_type = "Terrace House";
+          } else if (this.tempHouse.building_type == "BS") {
+            this.tempHouse.building_type = "Bungalow / Semidetached";
+          } else if (this.tempHouse.building_type == "AS") {
+            this.tempHouse.building_type = "Apartment / Service Apartment";
+          } else if (this.tempHouse.building_type == "OT") {
+            this.tempHouse.building_type = "Other";
+          }
+        },
+        (err) => {
+          console.error("err", err);
+        },
+        () => {
+          let year = this.tempApplication.date_submitted.substring(0, 4);
+          this.carbonemissionfactorService
+            .doRetrieveFilteredCarbonEmissionFactors("year=" + year)
+            .subscribe(
+              (res) => {
+                // console.log("res", res);
+                // to calculate electric carbon emission factor for this application
+                let electric_sum_bill =
+                  this.tempHouse.electricity_bill_1_usage +
+                  this.tempHouse.electricity_bill_2_usage +
+                  this.tempHouse.electricity_bill_3_usage;
+
+                this.electriccarbon =
+                  (electric_sum_bill *
+                    +res[0].electric_carbon_emission_factor) /
+                  this.tempHouse.permanent_occupant;
+
+                // to calculate water carbon emission factor for this application
+                let water_sum_bill =
+                  this.tempHouse.water_bill_1_usage +
+                  this.tempHouse.water_bill_2_usage +
+                  this.tempHouse.water_bill_3_usage;
+
+                this.watercarbon =
+                  (water_sum_bill * +res[0].water_carbon_emission_factor) /
+                  this.tempHouse.permanent_occupant;
+              },
+              (err) => {
+                console.error("err", err);
+              }
+            );
         }
-        // console.log('tempHouse: ', this.tempHouse)
+      );
+    this.userService.getAll().subscribe(
+      (res) => {
+        // console.log("res", res);
+        res.forEach((user) => {
+          if (user.id == this.tempApplication.applicant) {
+            this.tempApplicant = user;
+          }
+          if (user.id == this.tempApplication.evaluator_nominated) {
+            this.tempEvaluator = user;
+          }
+          if (user.user_type == "EV") {
+            this.tempEvaluatorList.push(user);
+          }
+        });
+      },
+      (err) => {
+        console.error("err", err);
       }
-    });
-    this.userService.users.forEach((user) => {
-      if (user.id == this.tempApplication.applicant_id) {
-        this.tempApplicant = user;
-      }
-      if (user.id == this.tempApplication.evaluator_nominated_id) {
-        this.tempEvaluator = user;
-      }
-      if (user.user_type == "EV") {
-        this.tempEvaluatorList.push(user);
-      }
-    });
+    );
     this.applicationAssessmentService
       .doRetrieveFilteredApplicationAssessments(
         "application=" + this.tempApplication.id
@@ -215,7 +306,12 @@ export class ApplicationDetailsComponent implements OnInit {
               );
             });
             this.tempApplicationAssessment[index].assessment_aspect_name =
-              result.name + ". " + result.aspect;
+              this.getAspectType(result.aspect_type) +
+              " - " +
+              result.name +
+              " " +
+              result.aspect +
+              ` (${result.incentive}%)`;
 
             this.evaluationService
               .doRetrieveFilteredEvaluations(
@@ -233,12 +329,29 @@ export class ApplicationDetailsComponent implements OnInit {
                 },
                 () => {
                   this.evaluationFormArray.push(this.initEvaluation());
-                  if (this.evaluationFormArray.length > 0)
+                  if (this.evaluationFormArray.length > 0) {
+                    let total_evaluation =
+                      ((this.tempEvaluation[index].equipment +
+                        this.tempEvaluation[index].system +
+                        this.tempEvaluation[index].efficiency) /
+                        100) *
+                      result.incentive;
+
                     this.evaluationFormArray.at(index).patchValue({
                       ...this.tempEvaluation[index],
                       assessment_aspect_name:
-                        result.name + ". " + result.aspect,
+                        result.name +
+                        ". " +
+                        this.getAspectType(result.aspect_type) +
+                        " - " +
+                        result.aspect +
+                        ` (${result.incentive}%)`,
+                      incentive: result.incentive,
+                      total_evaluation,
                     });
+
+                    this.totalAll += total_evaluation;
+                  }
                 }
               );
           }
@@ -273,14 +386,14 @@ export class ApplicationDetailsComponent implements OnInit {
   }
 
   doAssignEvaluator() {
-    console.log(this.evaluatorForm);
+    // console.log(this.evaluatorForm);
     this.scheduleForm.value.date = moment(
       new Date(this.scheduleForm.value.date)
     ).format("YYYY-MM-DD");
     this.scheduleForm.value.application = this.tempApplication.id;
     this.evaluatorForm.value.status = "IE";
     this.defaultModal.hide();
-    console.log("schedule: ", this.scheduleForm.value);
+    // console.log("schedule: ", this.scheduleForm.value);
     this.applicationService
       .doAssignEvaluator(this.evaluatorForm.value, this.tempApplication.id)
       .subscribe(
@@ -316,11 +429,22 @@ export class ApplicationDetailsComponent implements OnInit {
             date_send: moment().format("YYYY-MM-DD"),
           };
           this.notificationService.register(obj).subscribe(
-            (res) => console.log("res", res),
-            (err) => console.error("err", err)
+            (res) => {
+              // console.log("res", res);
+            },
+            (err) => {
+              console.error("err", err);
+            }
           );
         }
       );
+  }
+
+  getAspectType(value: string) {
+    let result = this.aspectTypes.find((obj) => {
+      return obj.value == value;
+    });
+    return result.display_name;
   }
 
   editEvaluation() {
@@ -382,7 +506,7 @@ export class ApplicationDetailsComponent implements OnInit {
         .doUpdateEvaluation(formarray.value, formarray.value.id)
         .subscribe(
           (res) => {
-            console.log("res", res);
+            // console.log("res", res);
           },
           (err) => {
             console.error("err", err);

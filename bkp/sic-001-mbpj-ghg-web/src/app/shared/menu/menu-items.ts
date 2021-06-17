@@ -55,6 +55,12 @@ export const ROUTES: RouteInfo[] = [
     icontype: "fas fa-percent text-info",
   },
   {
+    path: "/carbon-emission-factors",
+    title: "Carbon Emission Factor",
+    type: "link",
+    icontype: "fas fa-times text-info",
+  },
+  {
     path: "/helpdesk",
     title: "Helpdesk",
     type: "link",

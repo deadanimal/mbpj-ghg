@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     'tickets',
     'users',
     'notifications',
+    'carbonemissionfactors',
 
     'django_cleanup.apps.CleanupConfig',
 ]

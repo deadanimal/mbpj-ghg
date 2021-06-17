@@ -159,6 +159,14 @@ notifications_router = router.register(
     'notifications', NotificationViewSet
 )
 
+from carbonemissionfactors.views import (
+    CarbonEmissionFactorViewSet
+)
+
+carbon_emission_factors_router = router.register(
+    'carbon-emission-factors', CarbonEmissionFactorViewSet
+)
+
 
 urlpatterns = [
     url(r'v1/', include(router.urls)),

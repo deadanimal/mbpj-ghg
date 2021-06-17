@@ -62,6 +62,9 @@ class Application(models.Model):
     applied_house = models.ForeignKey(House, on_delete=models.CASCADE, null=True, related_name='applied_house_id')
     date_submitted = models.DateField(null=True)
     date_approved = models.DateField(null=True)
+    
+    past_application = models.BooleanField(default=False)
+    past_application_number = models.CharField(max_length=4, blank=True, null=True)
 
     def save(self,*args, **kwargs):
         timezone_ = pytz.timezone('Asia/Kuala_Lumpur')

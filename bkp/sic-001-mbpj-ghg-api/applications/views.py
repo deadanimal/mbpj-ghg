@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.db.models import F, Q, Count
+from django.db.models import F, Q, Count, Sum
 from django.db.models.functions import ExtractYear
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -23,6 +23,8 @@ from .models import (
     ApplicationEvent
 )
 
+from carbonemissionfactors.models import CarbonEmissionFactor
+
 from houses.models import (
     House
 )
@@ -41,7 +43,7 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = Application.objects.all()
     serializer_class = ApplicationSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
-    filterset_fields = ['status', 'applied_house', 'evaluator_nominated', 'applicant']
+    filterset_fields = ['id', 'status', 'applied_house', 'evaluator_nominated', 'applicant']
 
     def get_permissions(self):
         if self.action == 'list':
@@ -194,6 +196,36 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
 
         data = queryset
 
+        return Response(data)
+    
+    @action(methods=['POST'], detail=False)
+    def get_carbon_emission(self, request):
+
+        data = request.data
+
+        year = ''
+        if data['year'] != '':
+            year = data['year']
+        else:
+            year = datetime.now().strftime("%Y")
+            
+        queryset_electric = Application.objects.filter(date_submitted__year=year).values('applied_house__electricity_bill_1_usage', 'applied_house__electricity_bill_2_usage', 'applied_house__electricity_bill_3_usage').aggregate(total_electric_month1=Sum('applied_house__electricity_bill_1_usage'), total_electric_month2=Sum('applied_house__electricity_bill_2_usage'), total_electric_month3=Sum('applied_house__electricity_bill_3_usage'))
+        queryset_water = Application.objects.filter(date_submitted__year=year).values('applied_house__water_bill_1_usage', 'applied_house__water_bill_2_usage', 'applied_house__water_bill_3_usage').aggregate(total_electric_month1=Sum('applied_house__water_bill_1_usage'), total_electric_month2=Sum('applied_house__water_bill_2_usage'), total_electric_month3=Sum('applied_house__water_bill_3_usage'))
+        
+        queryset_carbon = CarbonEmissionFactor.objects.filter(year=year).values('electric_carbon_emission_factor', 'water_carbon_emission_factor')
+        
+        electric = 0 if not all(queryset_electric.values()) else sum(queryset_electric.values())
+        water = 0 if not all(queryset_water.values()) else sum(queryset_water.values())
+        
+        data = [{
+            'usage': "Electric usage",
+            'value': electric * queryset_carbon[0]['electric_carbon_emission_factor']
+        },
+        {
+            'usage': "Water usage",
+            'value': water * queryset_carbon[0]['water_carbon_emission_factor']
+        }]
+        
         return Response(data)
 
 class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):

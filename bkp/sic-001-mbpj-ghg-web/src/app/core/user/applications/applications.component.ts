@@ -255,16 +255,16 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
         value: this.applicationCR ? this.applicationCR.length : 0,
         // color: am4core.color("#28b463")
       },
-      {
-        country: "In Progress",
-        value: this.applicationIP ? this.applicationIP.length : 0,
-        // color: am4core.color("#28b463")
-      },
-      {
-        country: "Paid",
-        value: this.applicationPD ? this.applicationPD.length : 0,
-        // color: am4core.color("#28b463")
-      },
+      // {
+      //   country: "In Progress",
+      //   value: this.applicationIP ? this.applicationIP.length : 0,
+      //   // color: am4core.color("#28b463")
+      // },
+      // {
+      //   country: "Paid",
+      //   value: this.applicationPD ? this.applicationPD.length : 0,
+      //   // color: am4core.color("#28b463")
+      // },
       {
         country: "Rejected",
         value: this.applicationRJ ? this.applicationRJ.length : 0,

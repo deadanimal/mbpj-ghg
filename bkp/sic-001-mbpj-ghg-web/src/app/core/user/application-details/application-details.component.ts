@@ -399,11 +399,7 @@ export class ApplicationDetailsComponent implements OnInit {
       .subscribe(
         () => {
           this.successfulRegisterEvaluatorMessage();
-        },
-        () => {
-          this.unsuccessfulRegisterEvaluatorMessage();
-        },
-        () => {
+
           this.evaluationScheduleService
             .doCreateEvaluationSchedule(this.scheduleForm.value)
             .subscribe(
@@ -422,13 +418,14 @@ export class ApplicationDetailsComponent implements OnInit {
           if (this.scheduleForm.value.session == "AM") session = "Morning";
           else if (this.scheduleForm.value.session == "PM") session = "Evening";
 
-          let obj = {
-            title: "Evaluator Assign",
-            message: `Evaluator will come to your house at ${this.scheduleForm.value.date} (${session})`,
-            to_user: this.tempApplicant.id,
-            date_send: moment().format("YYYY-MM-DD"),
+          // send notification IE to evaluator
+          let body = {
+            title: "Assign",
+            message: `You has been nominated for application ${this.tempHouse.assessment_tax_account} schedule on ${this.scheduleForm.value.date} (${session}) slot`,
+            to_user: this.evaluatorForm.value.evaluator_nominated,
+            date_sent: moment().format("YYYY-MM-DD"),
           };
-          this.notificationService.register(obj).subscribe(
+          this.notificationService.register(body).subscribe(
             (res) => {
               // console.log("res", res);
             },
@@ -436,7 +433,27 @@ export class ApplicationDetailsComponent implements OnInit {
               console.error("err", err);
             }
           );
-        }
+
+          // send notification IE to applicant
+          let badan = {
+            title: "In Evaluation",
+            message: `Mr/Mrs have been nominated to evaluate your application. Schedule on ${this.scheduleForm.value.date} (${session}) slot. Make sure you are prepared for evaluation purposes.`,
+            to_user: this.tempApplicant.id,
+            date_sent: moment().format("YYYY-MM-DD"),
+          };
+          this.notificationService.register(badan).subscribe(
+            (res) => {
+              // console.log("res", res);
+            },
+            (err) => {
+              console.error("err", err);
+            }
+          );
+        },
+        () => {
+          this.unsuccessfulRegisterEvaluatorMessage();
+        },
+        () => {}
       );
   }
 
@@ -460,11 +477,39 @@ export class ApplicationDetailsComponent implements OnInit {
     this.rebateService.doCreateRebate(this.rebateForm.value).subscribe(
       () => {
         this.loadingBar.complete();
-      },
-      () => {
-        this.loadingBar.complete();
-      },
-      () => {
+
+        // send notification CM to evaluator
+        let body = {
+          title: "Completed",
+          message: `Your evaluation for application ${this.tempHouse.assessment_tax_account} has been completed`,
+          to_user: this.tempEvaluator.id,
+          date_sent: moment().format("YYYY-MM-DD"),
+        };
+        this.notificationService.register(body).subscribe(
+          (res) => {
+            // console.log("res", res);
+          },
+          (err) => {
+            console.error("err", err);
+          }
+        );
+
+        // send notification CM to applicant
+        let badan = {
+          title: "Completed",
+          message: `Your application has been approved. Please contact us at email adminrebat@mbpj.gov.my for more details.`,
+          to_user: this.tempApplicant.id,
+          date_sent: moment().format("YYYY-MM-DD"),
+        };
+        this.notificationService.register(badan).subscribe(
+          (res) => {
+            // console.log("res", res);
+          },
+          (err) => {
+            console.error("err", err);
+          }
+        );
+
         this.successfulApproveRebateMessage();
         this.applicationService
           .doChangeStatus(this.statusForm.value, this.tempApplication.id)
@@ -475,7 +520,11 @@ export class ApplicationDetailsComponent implements OnInit {
               this.refreshData();
             }
           );
-      }
+      },
+      () => {
+        this.loadingBar.complete();
+      },
+      () => {}
     );
   }
 
@@ -488,6 +537,38 @@ export class ApplicationDetailsComponent implements OnInit {
       .subscribe(
         () => {
           this.loadingBar.complete();
+
+          // send notification RJ to evaluator
+          let body = {
+            title: "Rejected",
+            message: `Your evaluation for application ${this.tempHouse.assessment_tax_account} has been rejected`,
+            to_user: this.tempEvaluator.id,
+            date_sent: moment().format("YYYY-MM-DD"),
+          };
+          this.notificationService.register(body).subscribe(
+            (res) => {
+              // console.log("res", res);
+            },
+            (err) => {
+              console.error("err", err);
+            }
+          );
+
+          // send notification RJ to applicant
+          let badan = {
+            title: "Rejected",
+            message: `Your application has been rejected. Please contact us at email adminrebat@mbpj.gov.my for more details.`,
+            to_user: this.tempApplicant.id,
+            date_sent: moment().format("YYYY-MM-DD"),
+          };
+          this.notificationService.register(badan).subscribe(
+            (res) => {
+              // console.log("res", res);
+            },
+            (err) => {
+              console.error("err", err);
+            }
+          );
         },
         () => {
           this.loadingBar.complete();

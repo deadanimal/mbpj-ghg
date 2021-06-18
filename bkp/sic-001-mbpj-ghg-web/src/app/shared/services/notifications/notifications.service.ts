@@ -48,8 +48,8 @@ export class NotificationsService {
     );
   }
 
-  update(body, currentHouseID: string): Observable<any> {
-    let urlUpdate = this.url + currentHouseID + "/";
+  update(body, currentNotificationID: string): Observable<any> {
+    let urlUpdate = this.url + currentNotificationID + "/";
     return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
         // console.log(res);

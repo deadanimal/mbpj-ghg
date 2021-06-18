@@ -640,6 +640,19 @@ export class EvaluateComponent implements OnInit {
                 (res) => {
                   // console.log("res", res);
                   if (res.length > 0) {
+                    let body = {
+                      status: "SM",
+                    };
+                    this.applicationService
+                      .assign(body, this.tempApplication.id)
+                      .subscribe(
+                        (res) => {
+                          // console.log("res", res);
+                        },
+                        (err) => {
+                          console.error("err", err);
+                        }
+                      );
                     this.successfulToast();
                     this.router.navigate(["/evaluator/home"]);
                   }

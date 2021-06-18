@@ -22,6 +22,7 @@ import { ApplicationsService } from "src/app/shared/services/applications/applic
 import { ApplicationAssessmentsService } from "src/app/shared/services/application-assessments/application-assessments.service";
 import { AssessmentAspect } from "src/app/shared/services/assessment-aspects/assessment-aspects.model";
 import { AssessmentAspectsService } from "src/app/shared/services/assessment-aspects/assessment-aspects.service";
+import { NotificationsService } from "src/app/shared/services/notifications/notifications.service";
 import { NotifyService } from "src/app/shared/handler/notify/notify.service";
 
 import * as moment from "moment";
@@ -60,6 +61,7 @@ export class ApplyFormComponent implements OnInit {
     private applicationService: ApplicationsService,
     private applicationAssessmentService: ApplicationAssessmentsService,
     private assessmentAspectService: AssessmentAspectsService,
+    private notificationService: NotificationsService,
     private notifyService: NotifyService,
     public activatedRoute: ActivatedRoute,
     public actionSheetController: ActionSheetController,
@@ -210,20 +212,33 @@ export class ApplyFormComponent implements OnInit {
     this.applicationService.create(this.applicationForm.value).subscribe(
       (data) => {
         this.tempApplication = data;
+        let body = {
+          title: "Created",
+          message: "Your application was successfully submitted",
+          date_sent: moment().format("YYYY-MM-DD"),
+          to_user: this.authService.userID,
+        };
+        this.notificationService.register(body).subscribe(
+          (res) => {
+            // console.log("res", res);
+          },
+          (err) => {
+            console.error("err", err);
+          }
+        );
+        this.submitAssessment();
       },
       () => {
         this.notifyService.openToastrError(
           this.translate.instant("APPLYFORM.unsuccessMessage")
         );
       },
-      () => {
-        this.submitAssessment();
-      }
+      () => {}
     );
   }
 
   submitAssessment() {
-    console.log(this.formGroup)
+    console.log(this.formGroup);
     this.formGroup.value.form.forEach((singleForm, ind, arr) => {
       //element.supporting_doc = this.imageSrc[calc]
       singleForm.application = this.tempApplication.id;

@@ -40,7 +40,7 @@ export class NotificationsService {
     );
   }
 
-  register(body: Form): Observable<any> {
+  register(body): Observable<any> {
     return this.http.post<any>(this.url, body).pipe(
       tap((res) => {
         console.log(res);
@@ -48,8 +48,8 @@ export class NotificationsService {
     );
   }
 
-  update(body: Form, currentHouseID: string): Observable<any> {
-    let urlUpdate = this.url + currentHouseID + "/";
+  update(body, currentNotificationID: string): Observable<any> {
+    let urlUpdate = this.url + currentNotificationID + "/";
     return this.http.put<any>(urlUpdate, body).pipe(
       tap((res) => {
         console.log(res);

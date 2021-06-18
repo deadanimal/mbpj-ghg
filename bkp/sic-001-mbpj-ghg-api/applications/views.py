@@ -227,6 +227,17 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         }]
         
         return Response(data)
+    
+    @action(methods=['POST'], detail=False)
+    def get_filter_one_application_per_year(self, request):
+        
+        data = request.data
+        
+        queryset = Application.objects.filter(date_submitted__year=data['year'], applied_house=data['house']).count()
+        
+        data = queryset
+        
+        return Response(data)
 
 class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = ApplicationAssessment.objects.all()

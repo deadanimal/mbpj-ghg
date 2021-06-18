@@ -67,7 +67,7 @@
           <ion-item mode="ios" lines="none" *ngIf="tempImageEncoded[0] && !tempHouse.assessment_tax_doc">
             <ion-img class="text-center" [src]="tempImageEncoded[0]"></ion-img>
           </ion-item>
-          <ion-item mode="ios" lines="none">
+          <ion-item mode="ios" lines="none" *ngIf="checkHouseApplication">
             <ion-row>
               <ion-col size="auto">
                 <div class="btn-upload-item">
@@ -193,7 +193,7 @@
             <ion-item mode="ios" lines="none" *ngIf="tempImageEncoded[1] && !tempHouse.electricity_bill_1_doc">
               <ion-img class="text-center" [src]="tempImageEncoded[1]"></ion-img>
             </ion-item>
-            <ion-item mode="ios" lines="none">
+            <ion-item mode="ios" lines="none" *ngIf="checkHouseApplication">
               <ion-row>
                 <ion-col size="auto">
                   <div class="btn-upload-item">
@@ -227,7 +227,7 @@
             <ion-item mode="ios" lines="none" *ngIf="tempImageEncoded[2] && !tempHouse.electricity_bill_2_doc">
               <ion-img class="text-center" [src]="tempImageEncoded[2]"></ion-img>
             </ion-item>
-            <ion-item mode="ios" lines="none">
+            <ion-item mode="ios" lines="none" *ngIf="checkHouseApplication">
               <ion-row>
                 <ion-col size="auto">
                   <div class="btn-upload-item">
@@ -261,7 +261,7 @@
             <ion-item mode="ios" lines="none" *ngIf="tempImageEncoded[3] && !tempHouse.electricity_bill_3_doc">
               <ion-img class="text-center" [src]="tempImageEncoded[3]"></ion-img>
             </ion-item>
-            <ion-item mode="ios" lines="none">
+            <ion-item mode="ios" lines="none" *ngIf="checkHouseApplication">
               <ion-row>
                 <ion-col size="auto">
                   <div class="btn-upload-item">
@@ -295,7 +295,7 @@
             <ion-item mode="ios" lines="none" *ngIf="tempImageEncoded[4] && !tempHouse.water_bill_1_doc">
               <ion-img class="text-center" [src]="tempImageEncoded[4]"></ion-img>
             </ion-item>
-            <ion-item mode="ios" lines="none">
+            <ion-item mode="ios" lines="none" *ngIf="checkHouseApplication">
               <ion-row>
                 <ion-col size="auto">
                   <div class="btn-upload-item">
@@ -329,7 +329,7 @@
             <ion-item mode="ios" lines="none" *ngIf="tempImageEncoded[5] && !tempHouse.water_bill_2_doc">
               <ion-img class="text-center" [src]="tempImageEncoded[5]"></ion-img>
             </ion-item>
-            <ion-item mode="ios" lines="none">
+            <ion-item mode="ios" lines="none" *ngIf="checkHouseApplication">
               <ion-row>
                 <ion-col size="auto">
                   <div class="btn-upload-item">
@@ -363,7 +363,7 @@
             <ion-item mode="ios" lines="none" *ngIf="tempImageEncoded[6] && !tempHouse.water_bill_3_doc">
               <ion-img class="text-center" [src]="tempImageEncoded[6]"></ion-img>
             </ion-item>
-            <ion-item mode="ios" lines="none">
+            <ion-item mode="ios" lines="none" *ngIf="checkHouseApplication">
               <ion-row>
                 <ion-col size="auto">
                   <div class="btn-upload-item">
@@ -379,7 +379,7 @@
           </ion-item-group>
 
         </form>
-        <ion-item lines="none">
+        <ion-item lines="none" *ngIf="checkHouseApplication">
           <ion-button class="btn-green-lg mt-1" (click)="updateHouse()">{{'HOUSEDETAIL.update' | translate}}</ion-button>
         </ion-item>
       </ion-col>

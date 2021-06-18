@@ -54,7 +54,7 @@ export class HouseAddNewComponent implements OnInit {
     this.houseForm = this.formBuilder.group({
       applicant: new FormControl(''),
       address: new FormControl('', Validators.required),
-      postcode: new FormControl('', Validators.required),
+      postcode: new FormControl('', Validators.compose([Validators.required, Validators.maxLength(5)])),
       area: new FormControl('', Validators.required),
       assessment_tax_account: new FormControl('', Validators.required),
       assessment_tax_doc: new FormControl(''),

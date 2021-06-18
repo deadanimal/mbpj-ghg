@@ -250,7 +250,9 @@
         "confirmHeader": "Pengesahan",
         "confirmMessage": "Anda hanya boleh memohon satu rumah setahun. Adakah anda ingin teruskan?",
         "confirmCancelButton": "Batal",
-        "confirmButton": "Pasti, sila teruskan"
+        "confirmButton": "Pasti, sila teruskan",
+        "restrictOneHeader": "Maaf",
+        "restrictOneMessage": "Anda telah memohon rebat untuk tahun semasa untuk rumah anda di alamat "
     },
     "APPLYFORM": {
         "applyForm": "Borang eRebat",

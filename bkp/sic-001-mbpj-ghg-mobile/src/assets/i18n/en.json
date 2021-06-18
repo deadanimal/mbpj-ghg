@@ -250,7 +250,9 @@
         "confirmHeader": "Confirmation",
         "confirmMessage": "You can only apply for one house per year. Do you wish to continue?",
         "confirmCancelButton": "Cancel",
-        "confirmButton": "Confirm, please proceed"
+        "confirmButton": "Confirm, please proceed",
+        "restrictOneHeader": "Sorry",
+        "restrictOneMessage": "You have already applied for a rebate for the current year for your home at the address "
     },
     "APPLYFORM": {
         "applyForm": "eRebate Form",

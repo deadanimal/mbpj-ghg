@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { Router } from "@angular/router";
-import { AlertController } from "@ionic/angular";
+
 import { AuthService } from "src/app/shared/services/auth/auth.service";
 import { NotificationsService } from "src/app/shared/services/notifications/notifications.service";
+
+import * as moment from "moment";
 
 @Component({
   selector: "app-notification",
@@ -34,6 +35,12 @@ export class NotificationComponent implements OnInit {
       (res) => {
         // console.log("res", res);
         this.notifications = res;
+        this.notifications.forEach((notification) => {
+          notification.date_sent = moment(
+            notification.date_sent,
+            "YYYY-MM-DD"
+          ).format("DD-MM-YYYY");
+        });
         if (this.notifications.length > 0) this.isGotNotification = true;
       },
       (err) => {

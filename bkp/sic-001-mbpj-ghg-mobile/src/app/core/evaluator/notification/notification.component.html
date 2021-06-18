@@ -1,36 +1,34 @@
 <ion-header mode="ios">
   <ion-toolbar mode="ios">
     <ion-buttons slot="start">
-      <!--<ion-menu-button color="ghg-green"></ion-menu-button>-->
       <ion-back-button color="ghg-green"></ion-back-button>
     </ion-buttons>
-    <!--<ion-buttons slot="end">
-      <fa-icon [icon]="['fas','info-circle']"></fa-icon>
-    </ion-buttons>-->
   </ion-toolbar>
   <ion-title>
-    Notification
+    {{ "NOTIFICATION.notification" | translate }}
   </ion-title>
 </ion-header>
 
 <ion-content>
   <div *ngIf="!isGotNotification; else gotNotification" class="error-section">
     <ion-img [src]="imgNotFound"></ion-img>
-    <p>No notification found</p>
+    <p>{{ "NOTIFICATION.noNotification" | translate }}</p>
   </div>
   <ng-template #gotNotification>
-    <ion-row>
+    <ion-row *ngFor="let notification of notifications">
       <ion-col>
         <ion-card mode="ios">
           <ion-card-content>
             <ion-item class="history">
               <ion-label class="ion-text-wrap">
-                <p>#421231</p>
-                <p>You has been nominated to evaluate an application, please check on To Evaluate page</p>
+                <!-- <p>#818128</p> -->
+                <h2 style="font-weight: bold;">{{ notification.title }}</h2>
+                <p>{{ notification.message }}</p>
               </ion-label>
-              <ion-thumbnail slot="end">
-                <img [src]="imgNotiThumbnail">
-              </ion-thumbnail>
+              <ion-chip class="chip-green">{{ notification.date_sent }}</ion-chip>
+              <!-- <ion-thumbnail slot="end">
+                <img [src]="imgNotiThumbnail" />
+              </ion-thumbnail> -->
             </ion-item>
           </ion-card-content>
         </ion-card>
@@ -38,4 +36,3 @@
     </ion-row>
   </ng-template>
 </ion-content>
-

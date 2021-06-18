@@ -1,9 +1,11 @@
 import { Component, OnInit } from "@angular/core";
-import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
-import { Application } from "src/app/shared/services/applications/applications.model";
-import { AuthService } from "src/app/shared/services/auth/auth.service";
-import { AlertController } from "@ionic/angular";
 import { Router } from "@angular/router";
+import { AlertController } from "@ionic/angular";
+
+import { Application } from "src/app/shared/services/applications/applications.model";
+import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
+import { AuthService } from "src/app/shared/services/auth/auth.service";
+
 import * as moment from "moment";
 
 @Component({

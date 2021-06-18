@@ -385,7 +385,7 @@
         <ion-item lines="none">
           <ion-button 
             class="btn-green-lg mt-1" 
-            [disabled]="houseForm.status == 'INVALID'" 
+            [disabled]="!houseForm.valid" 
             (click)="addNewHouse()">
               {{'HOUSEADD.add' | translate}}
           </ion-button>

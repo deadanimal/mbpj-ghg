@@ -6,7 +6,7 @@ from django.utils.formats import get_format
 from django.contrib.gis.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
-#from mbpj_ghg_api.helpers import PathAndRename
+#from ghg.helpers import PathAndRename
 
 from users.models import (
     CustomUser

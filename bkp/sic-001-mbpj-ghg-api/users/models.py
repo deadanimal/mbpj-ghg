@@ -7,7 +7,7 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from api.helpers import PathAndRename
+from ghg.helpers import PathAndRename
 
 
 class UserOccupation(models.Model):

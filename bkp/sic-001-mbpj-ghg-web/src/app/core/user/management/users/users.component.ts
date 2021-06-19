@@ -86,7 +86,10 @@ export class UsersComponent implements OnInit {
   );
 
   userInformationForm = new FormGroup({
-    email: new FormControl("", Validators.compose([Validators.email])),
+    email: new FormControl(
+      "",
+      Validators.compose([Validators.required, Validators.email])
+    ),
     full_name: new FormControl("", Validators.compose([Validators.required])),
     phone: new FormControl(
       "",
@@ -130,7 +133,10 @@ export class UsersComponent implements OnInit {
       { type: "maxlength", message: "Eh, too long" },
       { type: "pattern", message: "Numbers only.." },
     ],
-    email: [{ type: "email", message: "Need a valid email.." }],
+    email: [
+      { type: "email", message: "Need a valid email.." },
+      { type: "required", message: "Email is required" },
+    ],
     full_name: [{ type: "required", message: "Please enter full name" }],
     user_type: [{ type: "required", message: "User type is required" }],
   };
@@ -290,7 +296,14 @@ export class UsersComponent implements OnInit {
   }
 
   registerUser() {
-    this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username;
+    if (this.userInformationForm.value.user_type != "AD") {
+      this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username;
+      this.userInformationForm.value.username = this.userRegistrationForm.value.username;
+    }
+    else {
+      this.userInformationForm.value.username = this.userInformationForm.value.email;
+      this.userRegistrationForm.value.username = this.userInformationForm.value.email;
+    }
     // console.log(this.userRegistrationForm.value)
     // console.log(this.userInformationForm.value)
     this.loadingBar.start();
@@ -311,8 +324,13 @@ export class UsersComponent implements OnInit {
   }
 
   updateNewUser(user) {
-    this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username;
-    this.userInformationForm.value.username = this.userRegistrationForm.value.username;
+    if (this.userInformationForm.value.user_type != "AD") {
+      this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username;
+      this.userInformationForm.value.username = this.userRegistrationForm.value.username;
+    }
+    else {
+      this.userInformationForm.value.username = this.userInformationForm.value.email;
+    }
     this.userService.update(this.userInformationForm.value, user.pk).subscribe(
       () => {
         this.successMessage("register");
@@ -329,6 +347,12 @@ export class UsersComponent implements OnInit {
   }
 
   updateRegisteredUser() {
+    if (this.userInformationForm.value.user_type != "AD") {
+      this.userInformationForm.value.new_nric = this.userInformationForm.value.username;
+    }
+    else {
+      this.userInformationForm.value.username = this.userInformationForm.value.email;
+    }
     this.loadingBar.start();
     // console.log(this.userInformationForm.value)
     //this.userInformationForm.value.new_nric = this.userInformationForm.value.username

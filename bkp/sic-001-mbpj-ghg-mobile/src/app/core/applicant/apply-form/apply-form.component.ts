@@ -36,10 +36,15 @@ export class ApplyFormComponent implements OnInit {
   public formGroup: FormGroup;
   public form: FormArray;
 
+  past_application: boolean = false;
+  past_application_number: string = "";
+
   applicationForm = new FormGroup({
     date_submitted: new FormControl(""),
     applicant: new FormControl(""),
     applied_house: new FormControl(""),
+    past_application: new FormControl(false),
+    past_application_number: new FormControl(""),
   });
 
   public tempImageData: string[] = [];
@@ -49,12 +54,8 @@ export class ApplyFormComponent implements OnInit {
   public tempAssessmentAspects: AssessmentAspect[] = [];
   public tempSelectedHouse;
 
-  public energySaving: number = 0;
   public consumptionElectricity: number = 0;
   public consumptionWater: number = 0;
-
-  public assessmentName: string;
-  public assessmentType: string;
 
   constructor(
     private authService: AuthService,
@@ -96,10 +97,13 @@ export class ApplyFormComponent implements OnInit {
     return this.formBuilder.group({
       application: new FormControl(""),
       assessment_aspect: new FormControl("", Validators.required),
+      assessment_name: new FormControl(""),
+      assessment_type: new FormControl(""),
       remarks: new FormControl(""),
       supporting_doc: new FormControl(""),
       total_led: new FormControl(0),
       total_lamp: new FormControl(0),
+      energy_saving: new FormControl(0),
     });
   }
 
@@ -185,10 +189,9 @@ export class ApplyFormComponent implements OnInit {
         this.encodeFile64(formNumber);
       },
       (err) => {
-        console.log(err);
+        console.error(err);
       }
     );
-    /**/
   }
 
   encodeFile64(formNumber: number) {
@@ -200,7 +203,7 @@ export class ApplyFormComponent implements OnInit {
         console.log(this.tempImageEncoded[formNumber]);
       },
       (err) => {
-        console.log(err);
+        console.error(err);
       }
     );
   }
@@ -208,6 +211,8 @@ export class ApplyFormComponent implements OnInit {
   submitApplication() {
     this.applicationForm.patchValue({
       date_submitted: moment().format("YYYY-MM-DD"),
+      past_application: this.past_application,
+      past_application_number: this.past_application_number,
     });
     this.applicationService.create(this.applicationForm.value).subscribe(
       (data) => {
@@ -290,15 +295,18 @@ export class ApplyFormComponent implements OnInit {
     await alert.present();
   }
 
-  calculateA3(eventIndex) {
-    console.log("led ", this.formGroup.value.form[eventIndex].total_led);
-    console.log("lamp ", this.formGroup.value.form[eventIndex].total_lamp);
-    this.energySaving =
-      (this.formGroup.value.form[eventIndex].total_led /
-        (this.formGroup.value.form[eventIndex].total_lamp +
-          this.formGroup.value.form[eventIndex].total_led)) *
+  calculateA3(index, formArray) {
+    this.formGroup.value.form[index].energy_saving =
+      (this.formGroup.value.form[index].total_led /
+        (this.formGroup.value.form[index].total_lamp +
+          this.formGroup.value.form[index].total_led)) *
       100;
-    console.log(this.energySaving);
+
+    formArray.patchValue({
+      total_led: this.formGroup.value.form[index].total_led,
+      total_lamp: this.formGroup.value.form[index].total_lamp,
+      energy_saving: this.formGroup.value.form[index].energy_saving,
+    });
   }
 
   calculateConsumption() {
@@ -312,24 +320,21 @@ export class ApplyFormComponent implements OnInit {
         this.tempSelectedHouse.water_bill_2_usage +
         this.tempSelectedHouse.water_bill_3_usage) /
       3;
-    console.log("average water ", averageWater);
-    console.log(
-      "permanent occupant ",
-      this.tempSelectedHouse.permanent_occupant
-    );
     this.consumptionElectricity =
       averagelectricity / this.tempSelectedHouse.permanent_occupant;
     this.consumptionWater =
       (averageWater * 1000) / (this.tempSelectedHouse.permanent_occupant * 30);
   }
 
-  changeAssessmentAspect(ev) {
+  changeAssessmentAspect(event, index, formArray) {
     let result = this.tempAssessmentAspects.find((obj) => {
-      return obj.id == ev.target.value;
+      return obj.id == event.target.value;
     });
     if (result) {
-      this.assessmentName = result.name;
-      this.assessmentType = result.aspect_type;
+      formArray.patchValue({
+        assessment_name: result.name,
+        assessment_type: result.aspect_type,
+      });
     }
   }
 }

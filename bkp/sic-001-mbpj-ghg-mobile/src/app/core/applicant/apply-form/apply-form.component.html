@@ -49,7 +49,7 @@
                   >
                   <ion-select
                     formControlName="assessment_aspect"
-                    (ionChange)="changeAssessmentAspect($event)"
+                    (ionChange)="changeAssessmentAspect($event, i, ind)"
                     placeholder="{{
                       'APPLYFORM.assessmentAspectPlaceholder' | translate
                     }}"
@@ -115,7 +115,12 @@
                     </ng-container>
                   </ion-select>
                 </ion-item>
-                <div *ngIf="assessmentName == 'A3' && assessmentType == 'EN'">
+                <div
+                  *ngIf="
+                    ind.get('assessment_name').value == 'A3' &&
+                    ind.get('assessment_type').value == 'EN'
+                  "
+                >
                   <ion-item lines="none" mode="ios">
                     <ion-label position="stacked" class="ion-text-wrap"
                       >No. of lamp in house</ion-label
@@ -124,7 +129,7 @@
                       type="number"
                       formControlName="total_lamp"
                       placeholder="E.g.: 10"
-                      (ionChange)="calculateA3(i)"
+                      (ionChange)="calculateA3(i, ind)"
                     ></ion-input>
                   </ion-item>
                   <ion-item lines="none" mode="ios">
@@ -135,7 +140,7 @@
                       type="number"
                       formControlName="total_led"
                       placeholder="E.g.: 10"
-                      (ionChange)="calculateA3(i)"
+                      (ionChange)="calculateA3(i, ind)"
                     ></ion-input>
                   </ion-item>
                   <ion-item lines="none" mode="ios">
@@ -144,7 +149,7 @@
                     >
                     <ion-input
                       type="number"
-                      [value]="energySaving.toFixed(2)"
+                      formControlName="energy_saving"
                       readonly
                     ></ion-input>
                   </ion-item>
@@ -152,7 +157,10 @@
                 <ion-item
                   lines="none"
                   mode="ios"
-                  *ngIf="assessmentName == 'A6' && assessmentType == 'EN'"
+                  *ngIf="
+                    ind.get('assessment_name').value == 'A6' &&
+                    ind.get('assessment_type').value == 'EN'
+                  "
                 >
                   <ion-label position="stacked" class="ion-text-wrap"
                     >Consumption of electricity (kWh/capita/month)</ion-label
@@ -166,7 +174,10 @@
                 <ion-item
                   lines="none"
                   mode="ios"
-                  *ngIf="assessmentName == 'B3' && assessmentType == 'WA'"
+                  *ngIf="
+                    ind.get('assessment_name').value == 'B3' &&
+                    ind.get('assessment_type').value == 'WA'
+                  "
                 >
                   <ion-label position="stacked" class="ion-text-wrap"
                     >Consumption of water (L/capita/day)</ion-label
@@ -236,7 +247,10 @@
             <ion-label class="ion-text-wrap"
               >{{ "APPLYFORM.everSubmitted" | translate }}
             </ion-label>
-            <ion-checkbox checked="false"></ion-checkbox>
+            <ion-checkbox
+              [(ngModel)]="past_application"
+              [ngModelOptions]="{ standalone: true }"
+            ></ion-checkbox>
           </ion-item>
           <ion-item lines="none" mode="ios">
             <ion-label position="stacked" class="ion-text-wrap">{{
@@ -245,6 +259,8 @@
             <ion-input
               type="text"
               placeholder="{{ 'APPLYFORM.example' | translate }}: 2015"
+              [(ngModel)]="past_application_number"
+              [ngModelOptions]="{ standalone: true }"
             ></ion-input>
           </ion-item>
           <ion-item lines="none">

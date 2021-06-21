@@ -83,7 +83,6 @@ export class ApplyStartComponent implements OnInit {
               {
                 text: this.translate.instant("APPLY.confirmButton"),
                 handler: () => {
-                  console.log("house: ", house);
                   this.router.navigate(["/applicant/apply-form"], house);
                 },
               },

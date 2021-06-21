@@ -17,7 +17,7 @@ spec:
       containers:
       - name: mbpj-ghg-api
         # image: syafiqpipe/mbpj-ghg-api:1.0.12 #boleh tambah version
-        image: afizihusaini/mbpj-ghg-api:1.1.15
+        image: afizihusaini/mbpj-ghg-api:1.1.16
         imagePullPolicy: Always
         ports:
         - containerPort: 5000

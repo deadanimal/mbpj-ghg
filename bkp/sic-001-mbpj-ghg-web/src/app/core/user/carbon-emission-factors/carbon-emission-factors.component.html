@@ -218,7 +218,7 @@
           </div>
           <ng-container
             *ngFor="
-              let validation of assessmentAspectValidationMessage.electric_carbon_emission_factor
+              let validation of carbonEmissionFactorValidationMessage.electric_carbon_emission_factor
             "
           >
             <div
@@ -252,7 +252,7 @@
             </div>
             <input
               class="form-control text-dark"
-              placeholder="Electric carbon emission factor*"
+              placeholder="Water carbon emission factor*"
               type="text"
               formControlName="water_carbon_emission_factor"
               (focus)="focusWaterCarbonEmissionFactor = true"
@@ -261,7 +261,7 @@
           </div>
           <ng-container
             *ngFor="
-              let validation of assessmentAspectValidationMessage.water_carbon_emission_factor
+              let validation of carbonEmissionFactorValidationMessage.water_carbon_emission_factor
             "
           >
             <div
@@ -296,13 +296,13 @@
               (blur)="focusYear = false"
             >
               <option selected hidden value="">Select year</option>
-              <option *ngFor="let year of year2011tocurrentyear" [value]="year">
-                {{ year }}
+              <option *ngFor="let year of year2011tocurrentyear" [value]="year.value">
+                {{ year.display_name }}
               </option>
             </select>
           </div>
           <ng-container
-            *ngFor="let validation of assessmentAspectValidationMessage.year"
+            *ngFor="let validation of carbonEmissionFactorValidationMessage.year"
           >
             <div
               class="error-message"
@@ -382,7 +382,7 @@
           </div>
           <ng-container
             *ngFor="
-              let validation of assessmentAspectValidationMessage.electric_carbon_emission_factor
+              let validation of carbonEmissionFactorValidationMessage.electric_carbon_emission_factor
             "
           >
             <div
@@ -416,7 +416,7 @@
             </div>
             <input
               class="form-control text-dark"
-              placeholder="Electric carbon emission factor*"
+              placeholder="Water carbon emission factor*"
               type="text"
               formControlName="water_carbon_emission_factor"
               (focus)="focusWaterCarbonEmissionFactor = true"
@@ -425,7 +425,7 @@
           </div>
           <ng-container
             *ngFor="
-              let validation of assessmentAspectValidationMessage.water_carbon_emission_factor
+              let validation of carbonEmissionFactorValidationMessage.water_carbon_emission_factor
             "
           >
             <div
@@ -460,13 +460,13 @@
               (blur)="focusYear = false"
             >
               <option selected hidden value="">Select year</option>
-              <option *ngFor="let year of year2011tocurrentyear" [value]="year">
-                {{ year }}
+              <option *ngFor="let year of year2011tocurrentyear" [value]="year.value">
+                {{ year.display_name }}
               </option>
             </select>
           </div>
           <ng-container
-            *ngFor="let validation of assessmentAspectValidationMessage.year"
+            *ngFor="let validation of carbonEmissionFactorValidationMessage.year"
           >
             <div
               class="error-message"

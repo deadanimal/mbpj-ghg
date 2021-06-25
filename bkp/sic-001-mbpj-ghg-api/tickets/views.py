@@ -31,7 +31,7 @@ class TicketAnswerViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = TicketAnswer.objects.all()
     serializer_class = TicketAnswerSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
-    filterset_fields = ['submitted_by', 'date_submitted']
+    filterset_fields = ['question_id', 'submitted_by', 'date_submitted']
 
     def get_permissions(self):
         if self.action == 'list':

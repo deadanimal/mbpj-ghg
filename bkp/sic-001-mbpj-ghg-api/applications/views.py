@@ -108,6 +108,22 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def extended(self, request, *args, **kwargs):
 
         queryset = Application.objects.all()
+        id = request.query_params.get('id', None)
+        status = request.query_params.get('status', None)
+        applicant = request.query_params.get('applicant', None)
+        evaluator_nominated = request.query_params.get('evaluator_nominated', None)
+        applied_house = request.query_params.get('applied_house', None)
+
+        if id is not None:
+            queryset = queryset.filter(id=id)
+        if status is not None:
+            queryset = queryset.filter(status=status)
+        if applicant is not None:
+            queryset = queryset.filter(applicant=applicant)
+        if evaluator_nominated is not None:
+            queryset = queryset.filter(evaluator_nominated=evaluator_nominated)
+        if applied_house is not None:
+            queryset = queryset.filter(applied_house=applied_house)
 
         serializer_class = ApplicationExtendedSerializer(
             queryset, many=True)

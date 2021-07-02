@@ -34,6 +34,16 @@ export class HousesService {
     )
   }
 
+  filter(filterField): Observable<any> {
+    let urlFilter = this.urlHouses + '?' + filterField
+    return this.http.get<House[]>(urlFilter).pipe(
+      tap((res) => {
+        this.housesFiltered = res
+        console.log('Filtered houses: ', this.housesFiltered)
+      })
+    )
+  }
+
   filterApplicant(id: string){
     this.houses.forEach(
       (data) => {

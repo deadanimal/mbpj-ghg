@@ -5,50 +5,59 @@
       <ion-back-button color="ghg-green"></ion-back-button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-title>
-    History
-  </ion-title>
+  <ion-title> History </ion-title>
 </ion-header>
 
 <ion-content>
-
   <ion-grid>
-
     <ion-row>
       <ion-col>
         <div class="section-title">
-          <h3>Past evaluation</h3>
+          <h3>{{ "HISTORY.evaluations" | translate }}</h3>
         </div>
       </ion-col>
     </ion-row>
 
-    <ion-row>
-      <ion-col>
-        <ion-card>
-          <ion-card-header color="light">
-            <ion-card-subtitle>
-              <p class="m-0">16 December 2019</p>
-            </ion-card-subtitle>
-          </ion-card-header>
-          <ion-card-content>
-            <ion-item lines="none" class="history-list">
-              <ion-thumbnail slot="start">
-                <img [src]="imgHistoryThumbnail">
-              </ion-thumbnail>
-              <ion-label class="ion-text-wrap">
-                <p>Syafiq Basri</p>
-                <h5>No. 420, Tingkat 5,  Flat A1, Petaling Jaya</h5>
-              </ion-label>
-            </ion-item>
-            <ion-chip class="chip-dark-green">
-              <ion-icon name="checkmark-circle-outline" color="white" disabled></ion-icon>
-              <ion-label>Evaluated</ion-label>
-            </ion-chip>
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
+    <div
+      *ngIf="evaluatedApplications.length == 0; else gotHistory"
+      class="error-section"
+    >
+      <ion-img [src]="imgNotFound"></ion-img>
+      <p>{{ "HISTORY.noHistory" | translate }}</p>
+    </div>
 
+    <ng-template #gotHistory>
+      <ion-row>
+        <ion-col>
+          <ion-card *ngFor="let evaluation of evaluatedApplications" mode="ios">
+            <ion-card-header color="light">
+              <ion-card-subtitle>
+                <p class="m-0">{{ evaluation.date_approved | date:'fullDate' }}</p>
+              </ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+              <ion-item lines="none" class="history-list">
+                <ion-thumbnail slot="start">
+                  <img [src]="imgHistoryThumbnail" />
+                </ion-thumbnail>
+                <ion-label class="ion-text-wrap">
+                  <p>{{ evaluation.applicant.full_name }}</p>
+                  <h5>{{ evaluation.applied_house.address +', '+ evaluation.applied_house.postcode }}</h5>
+                  <h5>{{ evaluation.applied_house.area }}</h5>
+                </ion-label>
+              </ion-item>
+              <ion-chip class="chip-dark-green">
+                <ion-icon
+                  name="checkmark-circle-outline"
+                  color="white"
+                  disabled
+                ></ion-icon>
+                <ion-label>Evaluated</ion-label>
+              </ion-chip>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ng-template>
   </ion-grid>
-
 </ion-content>

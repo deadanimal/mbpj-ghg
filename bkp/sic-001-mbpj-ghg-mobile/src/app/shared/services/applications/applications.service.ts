@@ -52,6 +52,18 @@ export class ApplicationsService {
     );
   }
 
+  extended(filterField): Observable<any> {
+    let extendedUrl = "";
+    if (filterField)
+      extendedUrl = this.urlApplication + "extended/?" + filterField;
+    else extendedUrl = this.urlApplication + "extended";
+    return this.http.get<Application[]>(extendedUrl).pipe(
+      tap((res) => {
+        // console.log("Filtered applications: ", this.applicationsFiltered);
+      })
+    );
+  }
+
   assign(body, appID): Observable<any> {
     let urlAssign = this.urlApplication + appID + "/";
     return this.http.put<any>(urlAssign, body).pipe(

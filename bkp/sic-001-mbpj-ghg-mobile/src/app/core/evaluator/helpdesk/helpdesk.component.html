@@ -23,7 +23,7 @@
 
     <ion-row>
       <ion-col>
-        <form [formGroup]="ticketQuestionForm">
+        <form [formGroup]="ticketForm">
           <ion-item mode="ios">
             <ion-label position="stacked" mode="ios">{{'HELPDESK.comment'| translate}}</ion-label>
             <ion-textarea placeholder="{{'HELPDESK.commentBox'| translate}}" formControlName="question">
@@ -41,27 +41,29 @@
       </ion-col>
     </ion-row>
 
-    <ion-row *ngFor="let ticket of loadedTicketQuestions">
+    <ion-row *ngFor="let question of questions">
       <ion-col>
         <ion-card>
           <ion-card-header color="light">
             <ion-card-subtitle>
-              <p class="m-0">{{ticket.date_submitted}}</p>
+              <p class="m-0">{{'HELPDESK.submittedDate' | translate}} - {{question.date_submitted}}</p>
             </ion-card-subtitle>
           </ion-card-header>
+
           <ion-card-content>
-            <ion-item class="ticket-list">
+            <ion-item lines="none" class="ticket-list">
               <ion-text class="ion-text-wrap">
                 <h5 style="color: #a9a9a9;">{{'HELPDESK.question'| translate}}</h5>
-                <p>{{ticket.question}}</p>
+                <p>{{question.question}}</p>
               </ion-text>
             </ion-item>
-            <div *ngFor="let reply of loadedTicketAnswers">
-              <div *ngIf="ticket.id == reply.question_id">
+            
+            <div *ngFor="let answer of answers">
+              <div *ngIf="question.id == answer?.question_id">
                 <ion-item lines="none" class="ticket-list">
                   <ion-text class="ion-text-wrap">
-                    <h5 style="color: #a9a9a9;">{{'HELPDESK.reply'| translate}}</h5>
-                    <p>{{reply.answer}}</p>
+                    <h5 style="color: #a9a9a9;">{{'HELPDESK.reply'| translate}} - {{'HELPDESK.replyingDate' | translate}} ({{answer.date_submitted}})</h5>
+                    <p>{{answer.answer}}</p>
                   </ion-text>
                 </ion-item>
               </div>

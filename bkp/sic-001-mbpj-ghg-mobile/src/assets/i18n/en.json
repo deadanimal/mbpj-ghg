@@ -231,6 +231,7 @@
     "HISTORY": {
         "history": "History",
         "title": "Past applications",
+        "evaluations": "Past evaluations",
         "noHistory": "No history found",
         "viewButton": "View"
     },

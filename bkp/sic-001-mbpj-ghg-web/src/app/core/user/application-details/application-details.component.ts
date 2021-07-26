@@ -230,7 +230,7 @@ export class ApplicationDetailsComponent implements OnInit {
           console.error("err", err);
         },
         () => {
-          let year = this.tempApplication.date_submitted.substring(0, 4);
+          let year = this.tempApplication.year_application;
           this.carbonemissionfactorService
             .doRetrieveFilteredCarbonEmissionFactors("year=" + year)
             .subscribe(

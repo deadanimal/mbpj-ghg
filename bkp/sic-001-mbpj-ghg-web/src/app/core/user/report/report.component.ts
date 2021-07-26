@@ -110,6 +110,7 @@ export class ReportComponent implements OnInit {
   }
 
   findStatus() {
+    if (this.chartStatus) this.chartStatus.dispose();
     let body = {
       year: this.yearTotalRebateApprovalAnalysis,
     };
@@ -154,6 +155,7 @@ export class ReportComponent implements OnInit {
   }
 
   findTrend() {
+    if (this.chartTrend) this.chartTrend.dispose();
     let body = {
       year: this.yearTrendAnalysis,
     };
@@ -180,6 +182,7 @@ export class ReportComponent implements OnInit {
     categoryAxis.renderer.grid.template.location = 0;
     categoryAxis.renderer.cellStartLocation = 0.1;
     categoryAxis.renderer.cellEndLocation = 0.9;
+    categoryAxis.renderer.minGridDistance = 10;
 
     let valueAxis = this.chartTrend.xAxes.push(new am4charts.ValueAxis());
     valueAxis.renderer.opposite = true;
@@ -214,8 +217,9 @@ export class ReportComponent implements OnInit {
   }
 
   findCategory() {
+    if (this.chartCategory) this.chartCategory.dispose();
     let body = {
-      year: this.yearTrendAnalysis,
+      year: this.yearApplicationbyCategoryAnalysis,
     };
     this.applicationassessmentService
       .doRetrieveApplicationbyCategoryAnalysis(body)
@@ -243,7 +247,7 @@ export class ReportComponent implements OnInit {
     );
     categoryAxis.dataFields.category = "category";
     categoryAxis.renderer.grid.template.location = 0;
-    categoryAxis.renderer.minGridDistance = 30;
+    categoryAxis.renderer.minGridDistance = 10;
 
     categoryAxis.renderer.labels.template.adapter.add(
       "dy",
@@ -278,6 +282,7 @@ export class ReportComponent implements OnInit {
   }
 
   findApp() {
+    if (this.chartApp) this.chartApp.dispose();
     this.applicationService.doRetrieveTotalApplicationAnalysis().subscribe(
       (res) => {
         // console.log("res", res);
@@ -332,6 +337,7 @@ export class ReportComponent implements OnInit {
   }
 
   findEnergy() {
+    if (this.chartEnergy) this.chartEnergy.dispose();
     let body = {
       aspect_type: "EN",
       year: this.yearEnergyAssessmentAnalysis,
@@ -383,6 +389,7 @@ export class ReportComponent implements OnInit {
   }
 
   findWater() {
+    if (this.chartWater) this.chartWater.dispose();
     let body = {
       aspect_type: "WA",
       year: this.yearWaterAssessmentAnalysis,
@@ -434,6 +441,7 @@ export class ReportComponent implements OnInit {
   }
 
   findTransportation() {
+    if (this.chartTransportation) this.chartTransportation.dispose();
     let body = {
       aspect_type: "TR",
       year: this.yearTransportationAssessmentAnalysis,
@@ -490,6 +498,7 @@ export class ReportComponent implements OnInit {
   }
 
   findWaste() {
+    if (this.chartWaste) this.chartWaste.dispose();
     let body = {
       aspect_type: "WE",
       year: this.yearWasteAssessmentAnalysis,
@@ -541,6 +550,7 @@ export class ReportComponent implements OnInit {
   }
 
   findBiodiversity() {
+    if (this.chartBiodiversity) this.chartBiodiversity.dispose();
     let body = {
       aspect_type: "BI",
       year: this.yearBiodiversityAssessmentAnalysis,

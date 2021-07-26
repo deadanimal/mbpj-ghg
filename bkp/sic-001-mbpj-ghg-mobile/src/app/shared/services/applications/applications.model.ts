@@ -5,6 +5,10 @@ export class Application {
     public applied_house: string
     public status: string
     public date_submitted: string
+    public date_approved: string
+    public year_application: string
+    public past_application: boolean
+    public past_application_number: string
 
     constructor(
         id: string,
@@ -12,7 +16,11 @@ export class Application {
         evaluator_nominated: string,
         applied_house: string,
         status: string,
-        date_submitted: string
+        date_submitted: string,
+        date_approved: string,
+        year_application: string,
+        past_application: boolean,
+        past_application_number: string
     ){
         this.id = id
         this.applicant = applicant
@@ -20,6 +28,10 @@ export class Application {
         this.applied_house = applied_house
         this.status = status
         this.date_submitted = date_submitted
+        this.date_approved = date_approved
+        this.year_application = year_application
+        this.past_application = past_application
+        this.past_application_number = past_application_number
     }
 }
 

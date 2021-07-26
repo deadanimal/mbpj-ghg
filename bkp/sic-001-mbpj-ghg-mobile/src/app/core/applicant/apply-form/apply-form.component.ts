@@ -45,6 +45,7 @@ export class ApplyFormComponent implements OnInit {
     applied_house: new FormControl(""),
     past_application: new FormControl(false),
     past_application_number: new FormControl(""),
+    year_application: new FormControl(""),
   });
 
   public tempImageData: string[] = [];
@@ -88,6 +89,7 @@ export class ApplyFormComponent implements OnInit {
       applicant: this.authService.userID,
       applied_house: this.tempSelectedHouse.id,
       date_submitted: moment(new Date()).format("YYYY-MM-DD"),
+      year_application: moment(new Date()).format("YYYY"),
     });
     this.calculateConsumption();
   }
@@ -213,6 +215,7 @@ export class ApplyFormComponent implements OnInit {
       date_submitted: moment().format("YYYY-MM-DD"),
       past_application: this.past_application,
       past_application_number: this.past_application_number,
+      year_application: moment(new Date()).format("YYYY"),
     });
     this.applicationService.create(this.applicationForm.value).subscribe(
       (data) => {

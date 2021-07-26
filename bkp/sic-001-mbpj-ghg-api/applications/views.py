@@ -141,7 +141,7 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def get_total_app_received_current_year(self, request):
 
         now = datetime.now()
-        queryset = Application.objects.filter(date_submitted__year=now.strftime("%Y")).count()
+        queryset = Application.objects.filter(year_application=now.strftime("%Y")).count()
 
         return Response(queryset)
 
@@ -172,8 +172,8 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
             year = datetime.now().strftime("%Y")
 
         # PENDING
-        queryset_approved = Application.objects.filter(date_submitted__year=year, status='CM').count()
-        queryset_rejected = Application.objects.filter(date_submitted__year=year, status='RJ').count()
+        queryset_approved = Application.objects.filter(year_application=year, status='CM').count()
+        queryset_rejected = Application.objects.filter(year_application=year, status='RJ').count()
 
         data = [
             {
@@ -199,7 +199,7 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         else:
             year = datetime.now().strftime("%Y")
 
-        queryset = Application.objects.filter(date_submitted__year=year).values('applied_house__area').annotate(location=F('applied_house__area'), amount=Count('applied_house__area')).order_by()
+        queryset = Application.objects.filter(year_application=year).values('applied_house__area').annotate(location=F('applied_house__area'), amount=Count('applied_house__area')).order_by()
 
         data = queryset
 
@@ -208,7 +208,8 @@ class ApplicationViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     @action(methods=['GET'], detail=False)
     def get_total_app_by_year(self, request):
 
-        queryset = Application.objects.values('date_submitted__year').annotate(year=ExtractYear('date_submitted'), value=Count('date_submitted__year')).order_by()
+        # queryset = Application.objects.values('date_submitted__year').annotate(year=ExtractYear('date_submitted'), value=Count('date_submitted__year')).order_by()
+        queryset = Application.objects.values('year_application').annotate(year=F('year_application'), value=Count('year_application')).order_by()
 
         data = queryset
 
@@ -298,11 +299,11 @@ class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         else:
             year = datetime.now().strftime("%Y")
             
-        queryset_energy = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='EN').count()
-        queryset_water = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='WA').count()
-        queryset_transportation = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='TR').count()
-        queryset_biodiversity = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='BI').count()
-        queryset_waste = ApplicationAssessment.objects.filter(application__date_submitted__year=year, assessment_aspect__aspect_type='WE').count()
+        queryset_energy = ApplicationAssessment.objects.filter(application__year_application=year, assessment_aspect__aspect_type='EN').count()
+        queryset_water = ApplicationAssessment.objects.filter(application__year_application=year, assessment_aspect__aspect_type='WA').count()
+        queryset_transportation = ApplicationAssessment.objects.filter(application__year_application=year, assessment_aspect__aspect_type='TR').count()
+        queryset_biodiversity = ApplicationAssessment.objects.filter(application__year_application=year, assessment_aspect__aspect_type='BI').count()
+        queryset_waste = ApplicationAssessment.objects.filter(application__year_application=year, assessment_aspect__aspect_type='WE').count()
         
         data = [
             {
@@ -340,7 +341,7 @@ class ApplicationAssessmentViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
         else:
             year = datetime.now().strftime("%Y")
             
-        queryset = ApplicationAssessment.objects.values('assessment_aspect__name').filter(application__date_submitted__year=year, assessment_aspect__aspect_type=data['aspect_type']).annotate(amount=Count('application__date_submitted__year')).order_by()
+        queryset = ApplicationAssessment.objects.values('assessment_aspect__name').filter(application__year_application=year, assessment_aspect__aspect_type=data['aspect_type']).annotate(amount=Count('application__year_application')).order_by()
         
         data = queryset
         

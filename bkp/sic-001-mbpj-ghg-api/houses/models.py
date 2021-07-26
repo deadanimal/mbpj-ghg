@@ -50,6 +50,7 @@ class House(models.Model):
     electricity_bill_3_month = models.CharField(max_length=100, default='NA')
     electricity_bill_3_usage = models.IntegerField(default=0)
     electricity_bill_3_doc = models.ImageField(null=True, upload_to=PathAndRename('bills'))
+    electricity_total_usage = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
     water_bill_1_month = models.CharField(max_length=100, default='NA')
     water_bill_1_usage = models.IntegerField(default=0)
@@ -60,6 +61,7 @@ class House(models.Model):
     water_bill_3_month = models.CharField(max_length=100, default='NA')
     water_bill_3_usage = models.IntegerField(default=0)
     water_bill_3_doc = models.ImageField(null=True, upload_to=PathAndRename('bills'))
+    water_total_usage = models.DecimalField(max_digits=10, decimal_places=2, null=True)
 
     def __str__(self):
         return self.assessment_tax_account

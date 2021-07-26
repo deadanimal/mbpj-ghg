@@ -46,6 +46,13 @@ class Application(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=True)
     applicant = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='application_applicant')
     evaluator_nominated = models.ForeignKey(CustomUser, on_delete=models.CASCADE, null=True, related_name='application_evaluator_nominated')
+    
+    # Status
+    # 1. CR - pemohon hantar permohonan rebat ke dalam sistem
+    # 2. IE - pentadbir sistem menugaskan penilai terhadap permohonan baru
+    # 3. SM - penilai selesai memberi markah kepada penilaian
+    # 4. CM - pentadbir sistem terima permohonan
+    # 5. RJ - pentadbir sistem tolak permohonan
 
     STATUS = [
         ('CM', 'Completed'),
@@ -62,6 +69,7 @@ class Application(models.Model):
     applied_house = models.ForeignKey(House, on_delete=models.CASCADE, null=True, related_name='applied_house_id')
     date_submitted = models.DateField(null=True)
     date_approved = models.DateField(null=True)
+    year_application = models.CharField(max_length=4, blank=True, null=True)
     
     past_application = models.BooleanField(default=False)
     past_application_number = models.CharField(max_length=4, blank=True, null=True)

@@ -31,8 +31,6 @@ export enum SelectionType {
   styleUrls: ["./rebates.component.scss"],
 })
 export class RebatesComponent implements OnInit {
-  tempApplication = [];
-
   // Focus
   focusPaymentDate;
   focusAmountApproved;
@@ -87,15 +85,9 @@ export class RebatesComponent implements OnInit {
   ngOnInit() {}
 
   getData() {
-    this.applicationService.doRetrieveAllApplications().subscribe(
-      (res) => {
-        this.tempApplication = res;
-      },
-      () => {},
-      () => {}
-    );
-
+    this.loadingBar.start();
     this.rebateService.doRetrieveAllExtendedRebates().subscribe((res) => {
+      this.loadingBar.complete();
       this.tableRows = [...res];
       this.tableTemp = this.tableRows.map((prop, key) => {
         return {
@@ -103,6 +95,8 @@ export class RebatesComponent implements OnInit {
           no: key + 1,
         };
       });
+    }, () => {
+      this.loadingBar.complete();
     });
   }
 

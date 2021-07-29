@@ -17,6 +17,8 @@
         "resetHere": "Reset your password here",
         "email": "Email",
         "resetPassword": "Reset password",
+        "resetPasswordInstruction": "Input the detail to reset the password",
+        "resetPasswordSubmit": "Submit",
         "ready": "Ready to help save the",
         "earth": "earth",
         "btnLoginEvaluator": "Login as evaluator"

@@ -5,8 +5,13 @@ import { RegisterComponent } from './register/register.component';
 import { LoginApplicantComponent } from './login-applicant/login-applicant.component';
 import { LoginEvaluatorComponent } from './login-evaluator/login-evaluator.component';
 import { ForgotComponent } from './forgot/forgot.component';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 export const AuthRoutes: Routes = [
+    {
+        path: 'change-password',
+        component: ChangePasswordComponent
+    },
     {
         path: 'forgot',
         component: ForgotComponent

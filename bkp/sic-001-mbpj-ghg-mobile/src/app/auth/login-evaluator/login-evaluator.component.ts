@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationExtras } from '@angular/router';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
 import { LoadingController } from '@ionic/angular';
 
@@ -126,6 +126,15 @@ export class LoginEvaluatorComponent implements OnInit {
     this.ticketAnswerService.getUser(this.authService.userID).subscribe()
     this.ticketQuestionService.getUser(this.authService.userID).subscribe()
     this.applicationService.getEvaluator(this.authService.userID).subscribe()
+  }
+
+  forgotPassword(user_type) {
+    let navigationExtras: NavigationExtras = {
+      state: {
+        user_type
+      }
+    };
+    this.router.navigate(['auth/forgot'], navigationExtras);
   }
 
 }

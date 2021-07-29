@@ -19,6 +19,7 @@ export class AuthService {
   private urlTokenObtain: string = environment.baseUrl + 'auth/obtain/'
   private urlTokenRefresh: string = environment.baseUrl + 'auth/refresh/'
   private urlTokenVerify: string = environment.baseUrl + 'auth/verify/'
+  private urlChangePassword: string = environment.baseUrl + 'auth/change_password/'
 
   // Data
   public users: User[] = []
@@ -117,6 +118,24 @@ export class AuthService {
       tap((res) => {
         console.log('Self detail: ', res)
         this.userSelfDetail = res
+      })
+    )
+  }
+
+  filterUser(field: string): Observable<User[]>{
+    let urlFilter = this.urlUser + '?' + field
+    return this.http.get<User[]>(urlFilter).pipe(
+      tap((res) => {
+        // console.log('Filter user: ', res)
+      })
+    )
+  }
+
+  changePasswordUser(body: any, id: string): Observable<any[]>{
+    let urlChangePassword = this.urlChangePassword + id + '/'
+    return this.http.put<any[]>(urlChangePassword, body).pipe(
+      tap((res) => {
+        // console.log('Filter user: ', res)
       })
     )
   }

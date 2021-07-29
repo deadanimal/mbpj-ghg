@@ -21,6 +21,7 @@ export class AuthService {
   public urlTokenRefresh: string = environment.baseUrl + "auth/refresh/";
   public urlTokenVerify: string = environment.baseUrl + "auth/verify/";
   public urlUser: string = environment.baseUrl + "v1/users/";
+  private urlChangePassword: string = environment.baseUrl + 'auth/change_password/'
 
   // Data
   public token: TokenResponse;
@@ -160,4 +161,13 @@ export class AuthService {
     )
   }
   */
+
+  changePasswordUser(body: any, id: string): Observable<any[]>{
+    let urlChangePassword = this.urlChangePassword + id + '/'
+    return this.http.put<any[]>(urlChangePassword, body).pipe(
+      tap((res) => {
+        // console.log('Filter user: ', res)
+      })
+    )
+  }
 }

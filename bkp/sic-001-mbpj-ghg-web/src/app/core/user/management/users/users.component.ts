@@ -85,6 +85,23 @@ export class UsersComponent implements OnInit {
     }
   );
 
+  changePasswordForm = new FormGroup(
+    {
+      id: new FormControl("", Validators.compose([Validators.required])),
+      password1: new FormControl(
+        "",
+        Validators.compose([
+          Validators.required,
+          Validators.pattern("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9]).{8,}$"),
+        ])
+      ),
+      password2: new FormControl("", Validators.compose([Validators.required])),
+    },
+    {
+      validators: this.passwordConfirming,
+    }
+  );
+
   userInformationForm = new FormGroup({
     email: new FormControl(
       "",
@@ -297,12 +314,15 @@ export class UsersComponent implements OnInit {
 
   registerUser() {
     if (this.userInformationForm.value.user_type != "AD") {
-      this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username;
-      this.userInformationForm.value.username = this.userRegistrationForm.value.username;
-    }
-    else {
-      this.userInformationForm.value.username = this.userInformationForm.value.email;
-      this.userRegistrationForm.value.username = this.userInformationForm.value.email;
+      this.userInformationForm.value.new_nric =
+        this.userRegistrationForm.value.username;
+      this.userInformationForm.value.username =
+        this.userRegistrationForm.value.username;
+    } else {
+      this.userInformationForm.value.username =
+        this.userInformationForm.value.email;
+      this.userRegistrationForm.value.username =
+        this.userInformationForm.value.email;
     }
     // console.log(this.userRegistrationForm.value)
     // console.log(this.userInformationForm.value)
@@ -325,11 +345,13 @@ export class UsersComponent implements OnInit {
 
   updateNewUser(user) {
     if (this.userInformationForm.value.user_type != "AD") {
-      this.userInformationForm.value.new_nric = this.userRegistrationForm.value.username;
-      this.userInformationForm.value.username = this.userRegistrationForm.value.username;
-    }
-    else {
-      this.userInformationForm.value.username = this.userInformationForm.value.email;
+      this.userInformationForm.value.new_nric =
+        this.userRegistrationForm.value.username;
+      this.userInformationForm.value.username =
+        this.userRegistrationForm.value.username;
+    } else {
+      this.userInformationForm.value.username =
+        this.userInformationForm.value.email;
     }
     this.userService.update(this.userInformationForm.value, user.pk).subscribe(
       () => {
@@ -348,10 +370,11 @@ export class UsersComponent implements OnInit {
 
   updateRegisteredUser() {
     if (this.userInformationForm.value.user_type != "AD") {
-      this.userInformationForm.value.new_nric = this.userInformationForm.value.username;
-    }
-    else {
-      this.userInformationForm.value.username = this.userInformationForm.value.email;
+      this.userInformationForm.value.new_nric =
+        this.userInformationForm.value.username;
+    } else {
+      this.userInformationForm.value.username =
+        this.userInformationForm.value.email;
     }
     this.loadingBar.start();
     // console.log(this.userInformationForm.value)
@@ -373,6 +396,29 @@ export class UsersComponent implements OnInit {
       );
   }
 
+  changePasswordRegisteredUser() {
+    this.loadingBar.start();
+    this.authService
+      .changePasswordUser(
+        this.changePasswordForm.value,
+        this.changePasswordForm.value.id
+      )
+      .subscribe(
+        (res) => {
+          this.loadingBar.complete();
+          // console.log("res", res);
+          if (res) {
+            this.successMessage("change-password");
+            this.defaultModal.hide();
+          }
+        },
+        (err) => {
+          this.loadingBar.complete();
+          // console.error("err", err);
+        }
+      );
+  }
+
   deleteRegisteredUser(row) {
     swal
       .fire({
@@ -386,8 +432,8 @@ export class UsersComponent implements OnInit {
         buttonsStyling: false,
       })
       .then((result) => {
-        this.loadingBar.start();
         if (result.value) {
+          this.loadingBar.start();
           this.userService.delete(row.id).subscribe(
             () => {
               this.loadingBar.complete();
@@ -414,13 +460,16 @@ export class UsersComponent implements OnInit {
     this.defaultModal.hide();
   }
 
-  async openModalView(modalDefault: TemplateRef<any>, user) {
+  openModalView(modalDefault: TemplateRef<any>, user) {
     this.tempUser = user;
     this.userInformationForm.setValue({
       email: this.tempUser.email,
       full_name: this.tempUser.full_name,
       phone: this.tempUser.phone,
-      new_nric: this.tempUser.new_nric,
+      new_nric:
+        this.tempUser.new_nric != ""
+          ? this.tempUser.new_nric
+          : this.tempUser.username,
       user_type: this.tempUser.user_type,
       is_active: this.tempUser.is_active,
       username: this.tempUser.username,
@@ -429,6 +478,13 @@ export class UsersComponent implements OnInit {
     // console.log(this.userInformationForm.value.email)
     // console.log(this.userInformationForm)
     // console.log(user)
+  }
+
+  openModalChangePassword(modalDefault: TemplateRef<any>, user) {
+    this.changePasswordForm.patchValue({
+      id: user.id,
+    });
+    this.defaultModal = this.modalService.show(modalDefault, this.default);
   }
 
   closeModalView() {
@@ -451,6 +507,10 @@ export class UsersComponent implements OnInit {
     } else if (type == "delete") {
       let title = "Success";
       let message = "User is deleted";
+      this.notifyService.openToastr(title, message);
+    } else if (type == "change-password") {
+      let title = "Success";
+      let message = "Change password is successful";
       this.notifyService.openToastr(title, message);
     }
   }

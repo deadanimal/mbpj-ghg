@@ -67,7 +67,10 @@
                   <select
                     name="datatable_length"
                     aria-controls="datatable"
-                    class="form-control form-control-sm custom-select custom-select-sm"
+                    class="
+                      form-control form-control-sm
+                      custom-select custom-select-sm
+                    "
                     (change)="entriesChange($event)"
                   >
                     <option value="5" [selected]="tableEntries == 5">5</option>
@@ -123,7 +126,10 @@
                 <span>NRIC</span>
               </ng-template>
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.new_nric }}
+                <div *ngIf="row.new_nric != ''; else row_username">
+                  {{ row.new_nric }}
+                </div>
+                <ng-template #row_username>{{ row.username }}</ng-template>
               </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column>
@@ -168,24 +174,35 @@
                 <span>Action</span>
               </ng-template>
               <ng-template let-row="row" ngx-datatable-cell-template>
-                <button
-                  class="btn btn-icon btn-2 btn-primary btn-sm"
-                  type="button"
-                  (click)="openModalView(viewUser, row)"
-                >
-                  <span class="btn-inner--icon"
-                    >Edit <i class="fas fa-edit"></i
-                  ></span>
-                </button>
-                <button
-                  class="btn btn-icon btn-2 btn-danger btn-sm"
-                  type="button"
-                  (click)="deleteRegisteredUser(row)"
-                >
-                  <span class="btn-inner--icon"
-                    >Delete <i class="fas fa-trash"></i
-                  ></span>
-                </button>
+                <div class="btn-group dropdown" dropdown>
+                  <button
+                    class="btn btn-sm btn-info dropdown-toggle"
+                    type="button"
+                    id="dropdownMenuButton"
+                    dropdownToggle
+                  >
+                    Activity
+                  </button>
+                  <div
+                    aria-labelledby="dropdownMenuButton"
+                    *dropdownMenu
+                    class="dropdown-menu dropdown-menu-right"
+                  >
+                    <a
+                      class="dropdown-item"
+                      (click)="openModalView(viewUser, row)"
+                      >Update Profile</a
+                    >
+                    <a
+                      class="dropdown-item"
+                      (click)="openModalChangePassword(changePasswordUser, row)"
+                      >Change Password</a
+                    >
+                    <a class="dropdown-item" (click)="deleteRegisteredUser(row)"
+                      >Delete User</a
+                    >
+                  </div>
+                </div>
               </ng-template>
             </ngx-datatable-column>
           </ngx-datatable>
@@ -588,6 +605,7 @@
                 formControlName="new_nric"
                 (focus)="focusNRIC = true"
                 (blur)="focusNRIC = false"
+                readonly
               />
             </div>
             <ng-container
@@ -623,7 +641,7 @@
               </div>
               <input
                 class="form-control"
-                placeholder="Email"
+                placeholder="Email*"
                 type="email"
                 value="tempUser.email"
                 formControlName="email"
@@ -752,6 +770,132 @@
         [disabled]="!userInformationForm.valid"
       >
         Update
+      </button>
+      <button
+        type="button"
+        class="btn btn-link-info ml-auto"
+        data-dismiss="modal"
+        (click)="defaultModal.hide()"
+      >
+        Close
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #changePasswordUser let-c="close" let-d="dismiss">
+  <div class="modal-content">
+    <div class="modal-header bg-info">
+      <h6 class="modal-title" id="modal-title-default">Change password</h6>
+      <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="defaultModal.hide()"
+      >
+        <span aria-hidden="true">×</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <form [formGroup]="changePasswordForm">
+        <div class="form-group" [ngClass]="{ focused: focusPassword === true }">
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-key text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Password*"
+              type="password"
+              formControlName="password1"
+              (focus)="focusPassword = true"
+              (blur)="focusPassword = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of userRegistrationValidationMessage.password1
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                userRegistrationForm
+                  .get('password1')
+                  .hasError(validation.type) &&
+                (userRegistrationForm.get('password1').dirty ||
+                  userRegistrationForm.get('password1').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+        </div>
+        <div
+          class="form-group"
+          [ngClass]="{ focused: focusConfirmPassword === true }"
+        >
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <span class="input-group-text bg-info">
+                <i class="fas fa-key text-white"></i>
+              </span>
+            </div>
+            <input
+              class="form-control text-dark"
+              placeholder="Confirm password*"
+              type="password"
+              formControlName="password2"
+              (focus)="focusConfirmPassword = true"
+              (blur)="focusConfirmPassword = false"
+            />
+          </div>
+          <ng-container
+            *ngFor="
+              let validation of userRegistrationValidationMessage.password2
+            "
+          >
+            <div
+              class="error-message"
+              *ngIf="
+                userRegistrationForm
+                  .get('password2')
+                  .hasError(validation.type) &&
+                (userRegistrationForm.get('password2').dirty ||
+                  userRegistrationForm.get('password2').touched)
+              "
+            >
+              <p>
+                <span>*{{ validation.message }}</span>
+              </p>
+            </div>
+          </ng-container>
+          <ng-container
+            *ngIf="
+              userRegistrationForm.value.password1 !=
+              userRegistrationForm.value.password2
+            "
+          >
+            <p class="error-text">
+              <span> *Password doesn't match </span>
+            </p>
+          </ng-container>
+        </div>
+      </form>
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-info"
+        (click)="changePasswordRegisteredUser()"
+        [disabled]="!changePasswordForm.valid"
+      >
+        Change password
       </button>
       <button
         type="button"

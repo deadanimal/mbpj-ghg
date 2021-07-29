@@ -26,7 +26,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework import viewsets, status
+from rest_framework import viewsets, status, generics
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from django_filters.rest_framework import DjangoFilterBackend
@@ -40,14 +40,15 @@ from .models import (
 from .serializers import (
     CustomUserSerializer,
     UserOccupationSerializer,
-    UserEventSerializer
+    UserEventSerializer,
+    ChangePasswordSerializer
 )
 
 class CustomUserViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
     filter_backends = (DjangoFilterBackend, SearchFilter, OrderingFilter)
-    filterset_fields = ['user_type', 'gender', 'occupation', 'relationship_type']
+    filterset_fields = ['new_nric', 'email', 'user_type', 'gender', 'occupation', 'relationship_type']
 
     def get_permissions(self):
         if self.action == 'list':
@@ -141,4 +142,10 @@ class UserEventViewSet(NestedViewSetMixin, viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = UserEvent.objects.all()
         return queryset
+    
+class ChangePasswordView(generics.UpdateAPIView):
+    
+    queryset = CustomUser.objects.all()
+    permission_classes = [AllowAny]
+    serializer_class = ChangePasswordSerializer
         

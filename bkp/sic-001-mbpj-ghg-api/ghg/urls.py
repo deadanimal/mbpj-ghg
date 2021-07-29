@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib.gis import admin
+from django.urls import path
 
 from rest_framework import routers
 from rest_framework_extensions.routers import NestedRouterMixin
@@ -14,7 +15,8 @@ from rest_framework_simplejwt.views import (
 )
 
 from users.views import (
-    MyTokenObtainPairView
+    MyTokenObtainPairView,
+    ChangePasswordView
 )
 
 class NestedDefaultRouter(NestedRouterMixin, routers.DefaultRouter):
@@ -176,4 +178,5 @@ urlpatterns = [
     url('auth/obtain/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     url('auth/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     url('auth/verify/', TokenVerifyView.as_view(), name='token_verify'),
+    path('auth/change_password/<uuid:pk>/', ChangePasswordView.as_view(), name='auth_change_password'),
 ]

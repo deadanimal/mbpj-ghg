@@ -9,6 +9,8 @@ import { ApplicationAssessmentsService } from "src/app/shared/services/applicati
 import { AssessmentAspectsService } from "src/app/shared/services/assessment-aspects/assessment-aspects.service";
 import { EvaluationsService } from "src/app/shared/services/evaluations/evaluations.service";
 import { HousesService } from "src/app/shared/services/houses/houses.service";
+import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
+
 //import { ApplicationEvaluationsService } from 'src/app/shared/services/application-evaluations/application-evaluations.service';
 import { Camera } from "@ionic-native/camera/ngx";
 
@@ -334,6 +336,7 @@ export class EvaluateComponent implements OnInit {
     private evaluationService: EvaluationsService,
     private houseService: HousesService,
     private camera: Camera,
+    private photoViewer: PhotoViewer,
 
     public alertController: AlertController,
     public router: Router,
@@ -667,5 +670,10 @@ export class EvaluateComponent implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+  detailViewPhoto(target) {
+    this.photoViewer.show(target.target.src)
+    console.log("TARGET", target.target);
   }
 }

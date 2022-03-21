@@ -125,6 +125,7 @@
         "detail": "House detail",
         "address": "Home address",
         "assessmentTaxAcc": "Assessment tax account number",
+        "TaxAmount": "Tax Amount",
         "uploadTaxBill": "Upload assessment tax bill",
         "buildingType": "Type of building",
         "stayingDuration": "Duration of staying",

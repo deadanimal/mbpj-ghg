@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   imgMBPJ = 'assets/img/logo/mbpj-logo.png'
   imgSmartPJ = 'assets/img/logo/smart-pj.png'
   imgHouse = 'assets/img/custom/green-house.png'
+  imgSponsor = 'assets/img/custom/mbpj-icon.png'
   selectedUserType: string = 'AP'
 
   constructor(

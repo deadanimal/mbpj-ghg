@@ -15,10 +15,20 @@
 		</ion-item>
 		<ion-button class="btn-green-lg" (click)="goToUserLogin()">{{ 'LOGIN.btnLogin' | translate}}</ion-button>
 	</div>
+	<br>
+	<br>
+	<p>
+		<span style="" class="text-white"><strong>Funded By</strong></span>
+	</p>
+	<img style="margin-top: 10px;" width="150px" height="100px;" [src]="imgSponsor">
+
 	<div class="login-footer">
 		<p>
 			<span (click)="changeLanguageBM()">Bahasa Melayu</span> | <span (click)="changeLanguageEN()">English</span>
 		</p>
+
+
+		
 		<span>Hak cipta terpelihara Majlis Bandaraya Petaling Jaya</span>
 	</div>
 </ion-content>

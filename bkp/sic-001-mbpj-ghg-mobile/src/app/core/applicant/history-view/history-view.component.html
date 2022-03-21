@@ -41,6 +41,7 @@
                 style="padding-top: 1rem"
                 *ngIf="application_assessment.supporting_doc"
                 class="text-center"
+                (click)="detailViewPhoto($event)"
                 [src]="
                   'https://sgp1.digitaloceanspaces.com/pipeline-project/' +
                   application_assessment.supporting_doc

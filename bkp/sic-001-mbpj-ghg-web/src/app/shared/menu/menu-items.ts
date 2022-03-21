@@ -83,6 +83,7 @@ export const ROUTES: RouteInfo[] = [
       { path: "users", title: "Users", type: "link" },
       { path: "faqs", title: "FAQ", type: "link" },
       { path: "audit", title: "Audit Trail", type: "link" },
+      { path: "advertisement", title: "Advertisement", type: "link" },
     ],
   },
 ];

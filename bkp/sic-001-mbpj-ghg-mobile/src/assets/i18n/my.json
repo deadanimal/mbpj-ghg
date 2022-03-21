@@ -124,6 +124,7 @@
     "HOUSEDETAIL": { 
         "register": "Daftar rumah baru",
         "address": "Alamat rumah",
+        "TaxAmount": "Jumlah Cukai",
         "assessmentTaxAcc": "No. akaun cukai penilaian",
         "uploadTaxBill": "Muat naik bil cukai penilaian",
         "buildingType": "Jenis rumah",

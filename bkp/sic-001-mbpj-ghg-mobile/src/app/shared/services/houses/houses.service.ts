@@ -34,6 +34,14 @@ export class HousesService {
     )
   }
 
+  getHouseExtended(applicant_id): Observable<any[]>{
+    return this.http.get<any[]>(this.urlHouses + `/house_extended?applicant_id=${applicant_id}`).pipe(
+      tap((res: any[]) => {
+        this.houses = res
+      })
+    )
+  }
+
   filter(filterField): Observable<any> {
     let urlFilter = this.urlHouses + '?' + filterField
     return this.http.get<House[]>(urlFilter).pipe(

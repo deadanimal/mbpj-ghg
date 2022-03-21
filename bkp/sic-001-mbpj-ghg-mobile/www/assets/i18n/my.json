@@ -17,6 +17,8 @@
         "resetHere": "Set semula kata laluan disini",
         "email": "Emel",
         "resetPassword": "Set semula kata laluan",
+        "resetPasswordInstruction": "Masukkan butiran untuk menetapkan semula kata laluan",
+        "resetPasswordSubmit": "Hantar",
         "ready": "Siap sedia untuk menolong menyelamatkan",
         "earth": "bumi",
         "btnLoginEvaluator": "Log masuk sebagai penilai"
@@ -122,6 +124,7 @@
     "HOUSEDETAIL": { 
         "register": "Daftar rumah baru",
         "address": "Alamat rumah",
+        "TaxAmount": "Jumlah Cukai",
         "assessmentTaxAcc": "No. akaun cukai penilaian",
         "uploadTaxBill": "Muat naik bil cukai penilaian",
         "buildingType": "Jenis rumah",
@@ -231,6 +234,7 @@
     "HISTORY": {
         "history": "Sejarah",
         "title": "Permohonan lepas",
+        "evaluations": "Penilaian lepas",
         "noHistory": "Tiada permohonan dijumpai",
         "viewButton": "Lihat"
     },

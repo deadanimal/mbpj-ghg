@@ -15,11 +15,17 @@ import { ProfileComponent } from './profile/profile.component';
 import { ApplyComponent } from './apply/apply.component';
 import { ApplyStartComponent } from './apply-start/apply-start.component';
 import { ApplyFormComponent } from './apply-form/apply-form.component';
+import { ImageviewerComponent } from './imageviewer/imageviewer.component';
+
 
 export const ApplicantRoutes: Routes = [
     {
         path:'',
         children: [
+            {
+                path: 'imageviewer',
+                component: ImageviewerComponent
+            },
             {
                 path: 'faq',
                 component: FaqComponent

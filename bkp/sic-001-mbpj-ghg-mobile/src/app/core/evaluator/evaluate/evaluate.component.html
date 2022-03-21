@@ -47,6 +47,7 @@
             *ngIf="applicationAssessment.supporting_doc"
             class="text-center"
             [src]="applicationAssessment.supporting_doc"
+            (click)="detailViewPhoto($event)"
           ></ion-img>
         </ion-item>
       </ion-col>

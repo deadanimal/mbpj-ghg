@@ -161,4 +161,20 @@ export class ApplicationsService {
         })
       );
   }
+
+  get_application_status() {
+    let url = environment.baseUrl + "v1/application-control/";
+    return this.http.get<any>(url).pipe(
+      tap((res) => {
+        console.log("Filtered applications: ", this.applicationsFiltered);
+      })
+    );
+  }
+  checkHouseApplication(id) {
+    let urlTemp = this.urlApplication + `check_house_application_status?house_id=${id}`
+    return this.http.get<any>(urlTemp).pipe(
+      tap((res: any) => {
+      })
+    )
+  }
 }

@@ -85,4 +85,14 @@ export class ReportsService {
       })
     );
   }
+
+  getYearReport() {
+    let headers = this.createHeader()
+    let urlTemp = this.reportsUrl + "report_yearly";
+    return this.http.get<any>(urlTemp, {headers: headers}).pipe(
+      tap((res) => {
+        // console.log('Town: ', res)
+      })
+    );
+  }
 }

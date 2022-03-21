@@ -6,6 +6,7 @@ export class House {
     public area: string
     public assessment_tax_account: string
     public assessment_tax_doc: string
+    public tax_amount: string
     public building_type: string
     public staying_duration_years: number
     public staying_duration_months: number
@@ -41,6 +42,7 @@ export class House {
         area: string,
         assessment_tax_account: string,
         assessment_tax_doc: string,
+        tax_amount: string,
         building_type: string,
         staying_duration_years: number,
         staying_duration_months: number,
@@ -75,6 +77,7 @@ export class House {
         this.area = area
         this.assessment_tax_account = assessment_tax_account
         this.assessment_tax_doc = assessment_tax_doc
+        this.tax_amount = tax_amount
         this.building_type = building_type
         this.staying_duration_years = staying_duration_years
         this.staying_duration_months = staying_duration_months

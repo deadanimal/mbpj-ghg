@@ -17,6 +17,8 @@
         "resetHere": "Reset your password here",
         "email": "Email",
         "resetPassword": "Reset password",
+        "resetPasswordInstruction": "Input the detail to reset the password",
+        "resetPasswordSubmit": "Submit",
         "ready": "Ready to help save the",
         "earth": "earth",
         "btnLoginEvaluator": "Login as evaluator"
@@ -123,6 +125,7 @@
         "detail": "House detail",
         "address": "Home address",
         "assessmentTaxAcc": "Assessment tax account number",
+        "TaxAmount": "Tax Amount",
         "uploadTaxBill": "Upload assessment tax bill",
         "buildingType": "Type of building",
         "stayingDuration": "Duration of staying",
@@ -231,6 +234,7 @@
     "HISTORY": {
         "history": "History",
         "title": "Past applications",
+        "evaluations": "Past evaluations",
         "noHistory": "No history found",
         "viewButton": "View"
     },

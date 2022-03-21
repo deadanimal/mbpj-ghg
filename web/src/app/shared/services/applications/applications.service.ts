@@ -224,4 +224,13 @@ export class ApplicationsService {
     )
   }
 
+  checkHouseApplication(id) {
+    let urlTemp = this.urlApplication + `check_house_application_status?house_id=${id}`
+    return this.http.get<any>(urlTemp).pipe(
+      tap((res: any) => {
+        console.log('Status: ', this.statistics)
+      })
+    )
+  }
+
 }

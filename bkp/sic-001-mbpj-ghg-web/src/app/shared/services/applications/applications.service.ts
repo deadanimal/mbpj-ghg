@@ -147,4 +147,21 @@ export class ApplicationsService {
       catchError(this.handleError)
     );
   }
+
+  // method to update application control data 
+  doGetApplicationStatus() {
+    let url = environment.baseUrl + "v1/application-control/";
+    return this.http.get<any>(url).pipe(
+      tap((res) => {
+      })
+    );
+  }
+
+  doUpdateApplicationStatus(id, body) {
+    let url = environment.baseUrl + `v1/application-control/${id}/` ;
+    return this.http.put<any>(url, body).pipe(
+      tap((res) => {
+      })
+    );
+  }
 }

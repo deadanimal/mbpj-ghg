@@ -10,6 +10,9 @@ import { AuthService } from "src/app/shared/services/auth/auth.service";
 import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
 import { RebatesService } from "src/app/shared/services/rebates/rebates.service";
 import { UsersService } from "src/app/shared/services/users/users.service";
+import { HousesService } from "src/app/shared/services/houses/houses.service";
+import { House } from "src/app/shared/services/houses/houses.model";
+
 
 import * as am4core from "@amcharts/amcharts4/core";
 import * as am4charts from "@amcharts/amcharts4/charts";
@@ -32,12 +35,14 @@ export class DashboardComponent implements OnInit {
   totalApprovedRebatesSince2011: number = 0;
   totalApprovedApplications: number = 0;
   totalApprovedApplicationsSince2011: number = 0;
+  houses: House[] = [];
 
   dataElectricity: number = 0;
   dataTransportation: number = 0;
   dataWater: number = 0;
 
   latestApplications: Application[] = [];
+  latestApplicationsEdited: []= [];
   latestRegisteredApplicants: User[] = [];
   latestEvaluatedApplications: Application[] = [];
 
@@ -67,7 +72,8 @@ export class DashboardComponent implements OnInit {
     public router: Router,
     private modalService: BsModalService,
     public toastr: ToastrService,
-    private zone: NgZone
+    private zone: NgZone,
+    private housesService: HousesService
   ) {
     // loop through data from 2011 to 2021
     let currentyear = new Date().getFullYear();
@@ -103,26 +109,40 @@ export class DashboardComponent implements OnInit {
   }
 
   retrieveLatestApplication() {
-    let filterUrl: string = "status=CR";
-    let tempApplication;
-    this.applicationService.retrieveFilteredApplications(filterUrl).subscribe(
+    this.housesService.getAll().subscribe(
       (res) => {
-        tempApplication = res;
-      },
-      () => {},
-      () => {
-        let counter = 0;
-        tempApplication.forEach((application: Application) => {
-          application.date_submitted = moment(
-            application.date_submitted
-          ).format("DD-MM-YYYY");
-          if (this.latestApplications.length < 5) {
-            this.latestApplications.push(application);
+        this.houses = res;
+        let filterUrl: string = "status=CR";
+        let tempApplication;
+        this.applicationService.retrieveFilteredApplications(filterUrl).subscribe(
+          (res) => {
+            
+            console.log("retrieveLatestApplication", res);
+            tempApplication = res;
+          },
+          () => {},
+          () => {
+            let counter = 0;
+            tempApplication.forEach((application) => {
+              application.date_submitted = moment(
+                application.date_submitted
+              ).format("DD-MM-YYYY");
+              if (this.latestApplications.length < 5) {
+                //TODO
+                console.log("app", application);
+                application.tax_number = this.houses.find((obj)=> obj.id == application.applied_house).assessment_tax_account;
+                this.latestApplications.push(application);
+              }
+            });
+            // console.log('latest app: ', this.latestApplications)
           }
-        });
-        // console.log('latest app: ', this.latestApplications)
+        );
+      },
+      (err) => {
+
       }
     );
+    
   }
 
   retrieveLatestRegistration() {
@@ -149,27 +169,42 @@ export class DashboardComponent implements OnInit {
   }
 
   retrieveLatestEvaluated() {
-    let filterUrl: string = "status=CR";
-    let tempApplication;
-    this.applicationService.retrieveFilteredApplications(filterUrl).subscribe(
+    
+
+    this.housesService.getAll().subscribe(
       (res) => {
-        tempApplication = res;
-      },
-      () => {},
-      () => {
-        let counter = 0;
-        tempApplication.forEach((application: Application) => {
-          application.date_submitted = moment(
-            application.date_submitted
-          ).format("DD-MM-YYYY");
-          if (this.latestEvaluatedApplications.length < 5) {
-            this.latestEvaluatedApplications.push(application);
+        this.houses = res;
+        let filterUrl: string = "status=CR";
+        let tempApplication;
+        this.applicationService.retrieveFilteredApplications(filterUrl).subscribe(
+          (res) => {
+            tempApplication = res;
+            console.log("tempApplication", tempApplication)
+          },
+          () => {},
+          () => {
+            let counter = 0;
+            tempApplication.forEach((application) => {
+              let a = this.houses.find((obj)=> obj.id == application.applied_house);
+              application.date_submitted = moment(
+                application.date_submitted
+              ).format("DD-MM-YYYY");
+              application.tax_number = a.assessment_tax_account;
+              if (this.latestEvaluatedApplications.length < 5) {
+                this.latestEvaluatedApplications.push(application);
+              }
+            });
+            // console.log('evaluated app: ', this.latestApplications)
           }
-        });
-        // console.log('evaluated app: ', this.latestApplications)
-      }
+        );
+      },
+      (err) => {},
+      ()=> {}
     );
+    
   }
+
+  
 
   openModal(modalRef: TemplateRef<any>, user) {
     this.selectedUser = user;

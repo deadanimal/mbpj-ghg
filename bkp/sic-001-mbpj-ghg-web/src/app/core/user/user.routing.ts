@@ -16,6 +16,7 @@ import { MaintenanceComponent } from "./maintenance/maintenance.component";
 import { AssessmentTaxesComponent } from "./assessment-taxes/assessment-taxes.component";
 import { UsersComponent } from "./management/users/users.component";
 import { FaqsComponent } from "./management/faqs/faqs.component";
+import { AdvertisementComponent } from "./management/advertisement/advertisement.component";
 import { RebatesComponent } from "./rebates/rebates.component";
 import { CarbonEmissionFactorsComponent } from "./carbon-emission-factors/carbon-emission-factors.component";
 
@@ -82,6 +83,10 @@ export const UserRoutes: Routes = [
           {
             path: "audit",
             component: AuditComponent,
+          },
+          {
+            path: "advertisement",
+            component: AdvertisementComponent,
           },
         ],
       },

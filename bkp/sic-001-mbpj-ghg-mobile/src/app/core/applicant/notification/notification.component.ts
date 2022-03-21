@@ -41,6 +41,8 @@ export class NotificationComponent implements OnInit {
             "YYYY-MM-DD"
           ).format("DD-MM-YYYY");
         });
+
+        console.log("this.notifications: ", this.notifications);
         if (this.notifications.length > 0) this.isGotNotification = true;
       },
       (err) => {

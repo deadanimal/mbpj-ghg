@@ -234,6 +234,54 @@ export class ReportComponent implements OnInit {
       );
   }
 
+  initChartCategoryAnalysis(chartData) {
+    this.chartCategory = am4core.create("appdiv", am4charts.XYChart);
+
+    // Add data
+    this.chartCategory.data = chartData;
+
+    // Create axes
+
+    let categoryAxis = this.chartCategory.xAxes.push(
+      new am4charts.CategoryAxis()
+    );
+    categoryAxis.dataFields.category = "year";
+    categoryAxis.renderer.grid.template.location = 0;
+    categoryAxis.renderer.minGridDistance = 10;
+
+    categoryAxis.renderer.labels.template.adapter.add(
+      "dy",
+      function (dy, target) {
+        if (target.dataItem && target.dataItem.index && 2 == 2) {
+          return dy + 25;
+        }
+        return dy;
+      }
+    );
+
+    let valueAxis = this.chartCategory.yAxes.push(new am4charts.ValueAxis());
+
+    // Create series
+    let series = this.chartCategory.series.push(new am4charts.ColumnSeries());
+    series.dataFields.valueY = "value";
+    series.dataFields.categoryX = "year";
+    series.name = "Value";
+    series.columns.template.tooltipText = "{year}: [bold]{valueY}[/]";
+    series.columns.template.fillOpacity = 0.8;
+
+    let columnTemplate = series.columns.template;
+    columnTemplate.strokeWidth = 2;
+    columnTemplate.strokeOpacity = 1;
+
+    this.chartCategory.scrollbarX = new am4core.Scrollbar();
+
+    this.chartCategory.exporting.menu = new am4core.ExportMenu();
+    this.chartCategory.exporting.menu.align = "right";
+    this.chartCategory.exporting.menu.verticalAlign = "top";
+    this.chartCategory.exporting.filePrefix = "Total_Application_Analysis_"+moment().format("YYYY-MM-DD_hh_mm_ss");
+  }
+
+
   initChartCategory(chartData) {
     this.chartCategory = am4core.create("categorydiv", am4charts.XYChart);
 
@@ -293,7 +341,9 @@ export class ReportComponent implements OnInit {
             value: item.value,
           };
         });
-        this.initChartApp(chartData);
+        chartData.sort((a,b)=> (a.year>b.year)?1:-1);
+
+        this.initChartCategoryAnalysis(chartData);
       },
       (err) => {
         console.error("err", err);

@@ -14,6 +14,8 @@ import { ApplicationsService } from "src/app/shared/services/applications/applic
 import { AuthService } from "src/app/shared/services/auth/auth.service";
 import { House } from "src/app/shared/services/houses/houses.model";
 import { HousesService } from "src/app/shared/services/houses/houses.service";
+import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
+
 
 import * as moment from "moment";
 
@@ -26,6 +28,7 @@ import { Areas } from "src/assets/data/area";
 })
 export class HouseDetailComponent implements OnInit {
   checkHouseApplication: boolean = false;
+  checkDraft: boolean = false;
 
   houseCredentials = new FormGroup({
     id: new FormControl(""),
@@ -33,7 +36,9 @@ export class HouseDetailComponent implements OnInit {
     address: new FormControl(""),
     postcode: new FormControl(""),
     area: new FormControl(""),
+    save_as_draft: new FormControl(),
     assessment_tax_account: new FormControl(""),
+    tax_amount: new FormControl(""),
     assessment_tax_doc: new FormControl(""),
     building_type: new FormControl(""),
     staying_duration_years: new FormControl(""),
@@ -109,6 +114,7 @@ export class HouseDetailComponent implements OnInit {
     public loadingController: LoadingController,
     public router: Router,
     public base64: Base64,
+    private photoViewer: PhotoViewer,
     private camera: Camera,
     public translate: TranslateService
   ) {}
@@ -116,15 +122,17 @@ export class HouseDetailComponent implements OnInit {
   ngOnInit() {
     this.tempHouse = this.router.getCurrentNavigation().extras;
 
+    if (this.tempHouse.save_as_draft == true) {
+      this.checkDraft = true;
+    }
+
     this.applicationService
       .filter("applied_house=" + this.tempHouse.id)
       .subscribe(
         (res) => {
           // console.log("res", res);
           if (res.length > 0) {
-            if (res[0].status == 'CR') {
               this.checkHouseApplication = true;
-            }
           }
         },
         (err) => {
@@ -134,6 +142,18 @@ export class HouseDetailComponent implements OnInit {
   }
 
   async updateHouse() {
+
+    if(this.houseCredentials.valid == true) {
+      // if form valid update status draft to false
+      this.houseCredentials.value.save_as_draft = false;
+    }
+
+    else {
+      this.houseCredentials.value.save_as_draft = true;
+    }
+
+    console.log("this.houseCredentials.value.save_as_draft",this.houseCredentials.value.save_as_draft)
+
     this.loadingMessage = await this.loadingController.create({
       message: "Loading...",
     });
@@ -292,6 +312,7 @@ export class HouseDetailComponent implements OnInit {
           });
         },
         (err) => {
+          let validation_array = this.checkValidation();
           console.log("Update house unsuccessful");
           this.loadingMessage.dismiss();
           this.unsuccessfulUpdateMessage();
@@ -299,6 +320,7 @@ export class HouseDetailComponent implements OnInit {
         () => {}
       );
   }
+
 
   async successfulUpdateMessage() {
     const alert = await this.alertController.create({
@@ -430,5 +452,24 @@ export class HouseDetailComponent implements OnInit {
         console.log(err);
       }
     );
+  }
+
+  checkValidation() {
+    let invalid = [];
+    for(let name in this.houseCredentials.controls) {
+      if (this.houseCredentials.controls[name].invalid) {
+        invalid.push(name);
+      }
+    }
+    console.log("invalid input", invalid);
+    return invalid;
+  }
+
+  detailViewPhoto(target) {
+    this.photoViewer.show(target.target.src);
+  }
+
+  detailViewPhotoTax() {
+    this.photoViewer.show("https://pipeline-project.sgp1.digitaloceanspaces.com/ghg-image/ghg-image/17eead1f_1.png")
   }
 }

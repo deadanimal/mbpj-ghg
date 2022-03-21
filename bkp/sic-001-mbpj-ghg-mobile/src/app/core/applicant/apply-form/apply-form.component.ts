@@ -24,6 +24,8 @@ import { AssessmentAspect } from "src/app/shared/services/assessment-aspects/ass
 import { AssessmentAspectsService } from "src/app/shared/services/assessment-aspects/assessment-aspects.service";
 import { NotificationsService } from "src/app/shared/services/notifications/notifications.service";
 import { NotifyService } from "src/app/shared/handler/notify/notify.service";
+import { HousesService } from "src/app/shared/services/houses/houses.service";
+import { House } from "src/app/shared/services/houses/houses.model";
 
 import * as moment from "moment";
 
@@ -36,8 +38,11 @@ export class ApplyFormComponent implements OnInit {
   public formGroup: FormGroup;
   public form: FormArray;
 
+  draf_assessment_aspects :any[] = [];
+
   past_application: boolean = false;
   past_application_number: string = "";
+  continue_draft = false;
 
   applicationForm = new FormGroup({
     date_submitted: new FormControl(""),
@@ -46,6 +51,7 @@ export class ApplyFormComponent implements OnInit {
     past_application: new FormControl(false),
     past_application_number: new FormControl(""),
     year_application: new FormControl(""),
+    status: new FormControl(""),
   });
 
   public tempImageData: string[] = [];
@@ -73,11 +79,17 @@ export class ApplyFormComponent implements OnInit {
     public router: Router,
     private formBuilder: FormBuilder,
     private camera: Camera,
-    public translate: TranslateService
+    public translate: TranslateService,
+    public houseService: HousesService
   ) {
     this.tempSelectedHouse = this.router.getCurrentNavigation().extras;
     this.tempAssessmentAspects =
       this.assessmentAspectService.retrievedAssessmentAspects;
+
+    if (this.tempSelectedHouse.application_status == "DF") {
+      this.continue_draft = true;
+      this.setValueToForm();
+    }
   }
 
   ngOnInit() {
@@ -109,11 +121,34 @@ export class ApplyFormComponent implements OnInit {
     });
   }
 
+  // initAssessmentWithVal() {
+  //   return this.formBuilder.group({
+  //     application: new FormControl(""),
+  //     assessment_aspect: new FormControl("A1", Validators.required),
+  //     assessment_name: new FormControl("A3"),
+  //     assessment_type: new FormControl("EN"),
+  //     remarks: new FormControl("test"),
+  //     supporting_doc: new FormControl(""),
+  //     total_led: new FormControl(3),
+  //     total_lamp: new FormControl(3),
+  //     energy_saving: new FormControl(3),
+  //   });
+  // }
+
+
+
   addAssessment() {
     this.form = this.formGroup.get("form") as FormArray;
     this.form.push(this.initAssessment());
     console.log(this.form.value);
   }
+
+  // addAssessmentTest() {
+  //   let subform = this.initAssessmentWithVal();
+  //   this.form = this.formGroup.get("form") as FormArray;
+  //   this.form.push(subform);
+  //   console.log(this.form.value);
+  // }
 
   removeAssessment(ind: number) {
     this.form.removeAt(ind);
@@ -210,31 +245,65 @@ export class ApplyFormComponent implements OnInit {
     );
   }
 
-  submitApplication() {
-    this.applicationForm.patchValue({
-      date_submitted: moment().format("YYYY-MM-DD"),
-      past_application: this.past_application,
-      past_application_number: this.past_application_number,
-      year_application: moment(new Date()).format("YYYY"),
-    });
+  submitApplication(mode=null) {
+    if (mode == "DRAFT") {
+      this.applicationForm.patchValue({
+        date_submitted: moment().format("YYYY-MM-DD"),
+        past_application: this.past_application,
+        past_application_number: this.past_application_number,
+        year_application: moment(new Date()).format("YYYY"),
+        status: "DF"
+      });
+    }
+    else {
+      this.applicationForm.patchValue({
+        date_submitted: moment().format("YYYY-MM-DD"),
+        past_application: this.past_application,
+        past_application_number: this.past_application_number,
+        year_application: moment(new Date()).format("YYYY"),
+        status: "CR"
+      });
+    }
+
     this.applicationService.create(this.applicationForm.value).subscribe(
       (data) => {
         this.tempApplication = data;
-        let body = {
-          title: "Created",
-          message: "Your application was successfully submitted",
-          date_sent: moment().format("YYYY-MM-DD"),
-          to_user: this.authService.userID,
-        };
-        this.notificationService.register(body).subscribe(
+
+        this.houseService.filter(`id=${this.applicationForm.value.applied_house}`).subscribe(
           (res) => {
-            // console.log("res", res);
+            let address = res[0].address;
+            let assessment_tax_account = res[0].assessment_tax_account;
+
+
+            let body = {
+              title: "Created",
+              message: `Your application was successfully submitted for house address: ${address} and tax number: ${assessment_tax_account}`,
+              date_sent: moment().format("YYYY-MM-DD"),
+              to_user: this.authService.userID,
+            };
+
+            if (mode!="DRAFT") {
+              this.notificationService.register(body).subscribe(
+                (res) => {
+                  // console.log("res", res);
+                },
+                (err) => {
+                  console.error("err", err);
+                }
+              );
+            }
+            
+            this.submitAssessment(mode);
           },
-          (err) => {
-            console.error("err", err);
+          () => {
+
+          },
+          () => {
+
           }
         );
-        this.submitAssessment();
+
+        
       },
       () => {
         this.notifyService.openToastrError(
@@ -245,7 +314,7 @@ export class ApplyFormComponent implements OnInit {
     );
   }
 
-  submitAssessment() {
+  submitAssessment(mode=null) {
     console.log(this.formGroup);
     this.formGroup.value.form.forEach((singleForm, ind, arr) => {
       //element.supporting_doc = this.imageSrc[calc]
@@ -262,9 +331,19 @@ export class ApplyFormComponent implements OnInit {
         },
         () => {
           if (ind === arr.length - 1) {
-            this.notifyService.openToastr(
-              this.translate.instant("APPLYFORM.successMessage")
-            );
+
+            if (mode == "DRAFT") {
+              this.notifyService.openToastr(
+                this.translate.instant("Your application have been saved.")
+              );
+            } else {
+              this.notifyService.openToastr(
+                this.translate.instant("APPLYFORM.successMessage")
+              );
+            }
+
+            // if mode == draft => send toastr message for draft
+           
             this.formGroup.reset();
             this.applicationForm.reset();
             this.router.navigate(["/applicant/home"]);
@@ -338,6 +417,75 @@ export class ApplyFormComponent implements OnInit {
         assessment_name: result.name,
         assessment_type: result.aspect_type,
       });
+    }
+  }
+
+  saveAsDraft() {
+    // create but with different status
+    this.submitApplication("DRAFT");
+  }
+
+  setValueToForm() {
+    this.applicationService.filter(`applied_house=${this.tempSelectedHouse.id}&status=DF`).subscribe(
+      (res) => {
+        let application_id = res[0].id;
+        this.applicationAssessmentService.filter(`application=${application_id}`).subscribe(
+          (res) => {
+            let assessment = res;
+
+            // create builder form
+            let assessment_aspects_id = [];
+            for (let i = 0; i < res.length; i++) {
+              if (res[i].assessment_aspect != null) {
+                assessment_aspects_id.push(res[i].assessment_aspect)
+              }
+            }
+            let body = {
+              "array_id": assessment_aspects_id
+            }
+
+            this.applicationAssessmentService.getArrayOfAspects(body).subscribe(
+              (res) => {
+                this.draf_assessment_aspects = res.res;
+              },
+              (err) => {},
+              ()=> {
+                this.buildForm(assessment);
+              }
+            )
+          },
+          (err) => {
+          }
+        )
+      },
+      (err) => {
+        console.log(err);
+        
+      }
+    );
+    // q3.how to set assessment data into form? => get aspect list first
+
+
+
+  }
+
+  buildForm(assessment) {
+    console.log("assessment", assessment);
+    assessment = assessment.reverse();
+    console.log("assessment aspect", this.draf_assessment_aspects);
+    for (let i=0; i < this.draf_assessment_aspects.length; i++) {
+      let formObj = this.initAssessment();
+      formObj.patchValue({
+        assessment_aspect: assessment[i].assessment_aspect,
+        assessment_name: this.draf_assessment_aspects[i].name,
+        assessment_type: this.draf_assessment_aspects[i].aspect_type,
+        remarks: assessment[i].remarks,
+        total_led: assessment[i].total_led,
+        total_lamp: assessment[i].total_lamp,
+      })
+
+      this.form = this.formGroup.get("form") as FormArray;
+      this.form.push(formObj);
     }
   }
 }

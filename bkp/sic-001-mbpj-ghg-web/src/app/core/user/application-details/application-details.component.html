@@ -129,6 +129,18 @@
                   readonly
                 />
               </div>
+              <!-- Notes: For this field no field yet on the API 11/2/22 -->
+              <div class="form-group" *ngIf="tempHouse">
+                <label class="form-control-label"
+                  >Tax Amount</label
+                >
+                <input
+                  class="form-control form-control-sm"
+                  type="text"
+                  [(ngModel)]="tempHouse.tax_amount"
+                  readonly
+                />
+              </div>
               <div class="row">
                 <div class="col">
                   <div class="form-group" *ngIf="tempHouse">
@@ -431,6 +443,68 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col">
+          <div class="card">
+            <div class="card-header py-2 bg-info">
+              <div class="row align-items-center">
+                <div class="col">
+                  <h4 class="text-uppercase text-white mb-0">
+                    Tax Calculator
+                  </h4>
+                </div>
+              </div>
+            </div>
+            <div class="card-body">
+              <!--<div id="chartdiv" style="width: 100%; height: 500px"></div>-->
+              <div class="row">
+                <div class="col">
+                  <div class="row">
+                    <div class="col-6">
+                      <div class="form-group">
+                        <label class="form-control-label"> Tax Amount </label>
+                        <input (input)="calculateRebateAmount($event)" type="number" maxlength="3" value="{{tax_amount}}" class="form-control" />
+                      </div>
+                    </div>
+                    <div class="col-1">
+                      <div class="form-group">
+                        <br>
+                        <br>
+                        <h4>X</h4>
+                      </div>
+                    </div>
+                    <div class="col-5">
+                      <div class="form-group">
+                        <label class="form-control-label"> Tax Evaluation Mark </label>
+                        <input  readonly value=" {{ totalAll }}%" class="form-control" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col">
+                  <div class="form-group">
+                    <label class="form-control-label"> Total Rebate (RM) </label>
+                    <input value="{{rebate_amount_calculated}}" class="form-control" />
+                  </div>
+                  <div class="form-group">
+                    <label class="form-control-label"> Total Eligible Rebate (RM) </label>
+                    <input value="{{rebate_amount}}" class="form-control" />
+                  </div>
+
+                </div>
+                
+                
+                <!-- <div class="col">
+                  <div class="form-group">
+                    <label class="form-control-label"> Transportation </label>
+                    <input readonly value="11.1 KgCo2" class="form-control" />
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
     <div class="col-lg-7 col-sm-12">
       <div class="row">
@@ -530,6 +604,7 @@
                 <img
                   style="padding-bottom: 30px; width: 100%"
                   [src]="applicationAssessment.supporting_doc"
+                  (click)="detailViewPhoto(applicationAssessment.supporting_doc)"
                 />
               </div>
               <!-- <img
@@ -633,6 +708,7 @@
               <label class="form-control-label">Rebate amount (RM)</label>
               <input
                 class="form-control"
+                value="{{rebate_amount}}"
                 formControlName="amount_approved"
                 placeholder="Enter rebate amount"
                 type="number"

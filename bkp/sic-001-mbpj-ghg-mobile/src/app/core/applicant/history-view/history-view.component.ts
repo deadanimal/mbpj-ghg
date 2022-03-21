@@ -5,6 +5,8 @@ import { AlertController } from "@ionic/angular";
 import { ApplicationAssessmentsService } from "src/app/shared/services/application-assessments/application-assessments.service";
 import { AssessmentAspectsService } from "src/app/shared/services/assessment-aspects/assessment-aspects.service";
 import { EvaluationsService } from "src/app/shared/services/evaluations/evaluations.service";
+import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
+
 
 @Component({
   selector: "app-history-view",
@@ -46,7 +48,8 @@ export class HistoryViewComponent implements OnInit {
     private router: Router,
     private applicationassessmentService: ApplicationAssessmentsService,
     private assessmentaspectService: AssessmentAspectsService,
-    private evaluationService: EvaluationsService
+    private evaluationService: EvaluationsService,
+    private photoViewer: PhotoViewer,
   ) {
     // To get all assessment aspects
     this.assessmentaspects =
@@ -103,5 +106,9 @@ export class HistoryViewComponent implements OnInit {
     } else {
       return;
     }
+  }
+
+  detailViewPhoto(target) {
+    this.photoViewer.show(target.target.src);
   }
 }

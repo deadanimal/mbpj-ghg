@@ -266,6 +266,11 @@
           <ion-item lines="none">
             <ion-button
               class="btn-green-lg mt-1"
+              (click)="saveAsDraft()"
+              >Save as Draft</ion-button
+            >
+            <ion-button
+              class="btn-green-lg mt-1"
               (click)="confirmationAlert()"
               >{{ "APPLYFORM.submitButton" | translate }}</ion-button
             >

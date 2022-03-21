@@ -51,4 +51,18 @@ export class ApplicationAssessmentsService {
     )
   }
 
+
+  getArrayOfAspects(body): Observable<any> {
+    return this.http.post<any>(this.urlAssessment + 'get_array_of_aspects/', body).pipe(
+      tap((res) => {
+        console.log('Create application assessment response: ', res)
+      })
+    )
+  }
+
+
+  
+
+  
+
 }

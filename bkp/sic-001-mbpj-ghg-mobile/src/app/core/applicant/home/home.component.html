@@ -74,11 +74,14 @@
 
     <ng-template #gotApplication>
       <ion-row *ngFor="let application of applications">
-        <ion-col>
+        <ion-col *ngIf="application.status != 'DF'">
           <ion-card mode="ios">
             <ion-card-content>
               <ion-item lines="none" *ngIf="application.status == 'CM'">
                 <ion-label>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
                   <p>{{'HOME.submissionDate' | translate}}:</p>
                   <h5>{{application.date_submitted}}</h5>
                 </ion-label>
@@ -86,6 +89,9 @@
               </ion-item>
               <ion-item lines="none" *ngIf="application.status == 'CR'">
                 <ion-label>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
                   <p>{{'HOME.submissionDate' | translate}}:</p>
                   <h5>{{application.date_submitted}}</h5>
                 </ion-label>
@@ -93,6 +99,9 @@
               </ion-item>
               <ion-item lines="none" *ngIf="application.status == 'IE'">
                 <ion-label>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
                   <p>{{'HOME.submissionDate' | translate}}:</p>
                   <h5>{{application.date_submitted}}</h5>
                 </ion-label>
@@ -100,13 +109,19 @@
               </ion-item>
               <ion-item lines="none" *ngIf="application.status == 'IP'">
                 <ion-label>
-                  <p>{{'HOME.submissionDate' | translate}}:</p>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
                   <h5>{{application.date_submitted}}</h5>
+                  <p>{{'HOME.submissionDate' | translate}}:</p>
                 </ion-label>
                 <ion-chip class="chip-orange">{{'HOME.inProgress' | translate}}</ion-chip>
               </ion-item>
               <ion-item lines="none" *ngIf="application.status == 'PD'">
                 <ion-label>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
                   <p>{{'HOME.submissionDate' | translate}}:</p>
                   <h5>{{application.date_submitted}}</h5>
                 </ion-label>
@@ -114,13 +129,29 @@
               </ion-item>
               <ion-item lines="none" *ngIf="application.status == 'RJ'">
                 <ion-label>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
                   <p>{{'HOME.submissionDate' | translate}}:</p>
                   <h5>{{application.date_submitted}}</h5>
                 </ion-label>
                 <ion-chip class="chip-red">{{'HOME.rejected' | translate}}</ion-chip>
               </ion-item>
+              <!-- <ion-item lines="none" *ngIf="application.status == 'DF'">
+                <ion-label>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
+                  <p>{{'HOME.submissionDate' | translate}}:</p>
+                  <h5>{{application.date_submitted}}</h5>
+                </ion-label>
+                <ion-chip class="chip-yellow">DRAFT</ion-chip>
+              </ion-item> -->
               <ion-item lines="none" *ngIf="application.status == 'SM'">
                 <ion-label>
+                  <h5>{{application.tax_number}}</h5>
+                  <h5>{{application.address}}</h5>
+                  <br>
                   <p>{{'HOME.submissionDate' | translate}}:</p>
                   <h5>{{application.date_submitted}}</h5>
                 </ion-label>

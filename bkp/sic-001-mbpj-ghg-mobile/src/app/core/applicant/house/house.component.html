@@ -52,7 +52,10 @@
                 </ion-label>
                 <div class="btn-upload-item">
                   <div class="btn-upload ion-activatable">
-                    <button (click)="viewHouseDetail(house)">
+                    <button style="color: white; background: rgb(231, 190, 5);" *ngIf="house.save_as_draft == true" (click)="viewHouseDetail(house)">
+                      <ion-ripple-effect></ion-ripple-effect> DRAFT
+                    </button>
+                    <button *ngIf="house.save_as_draft != true" (click)="viewHouseDetail(house)">
                       <ion-ripple-effect></ion-ripple-effect> {{'HOUSE.view' | translate}}
                     </button>
                   </div>

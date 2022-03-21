@@ -40,6 +40,7 @@
               clearInput 
               type="number"
               formControlName="postcode"
+              max="99999"
               placeholder="{{'HOUSEADD.example' | translate}}: 47820"
             >
             </ion-input>
@@ -58,6 +59,18 @@
               type="text" 
               formControlName="assessment_tax_account"
               placeholder="{{'HOUSEADD.example' | translate}}: T10100020001000"
+            >
+            </ion-input>
+          </ion-item>
+
+          <ion-item lines="inset">
+            <ion-label position="stacked" mode="ios">Tax Amount<span style="color: red">*</span></ion-label>
+            <ion-button (click)="detailViewPhoto()" type="button">Contoh</ion-button>
+            <ion-input 
+              clearInput 
+              type="text" 
+              formControlName="tax_amount"
+              placeholder="RM 20.00"
             >
             </ion-input>
           </ion-item>
@@ -383,6 +396,11 @@
           
         </form>
         <ion-item lines="none">
+          <ion-button 
+            class="btn-green-lg mt-1" 
+            (click)="addNewHouseDraft()">
+              Save
+          </ion-button>
           <ion-button 
             class="btn-green-lg mt-1" 
             [disabled]="!houseForm.valid" 

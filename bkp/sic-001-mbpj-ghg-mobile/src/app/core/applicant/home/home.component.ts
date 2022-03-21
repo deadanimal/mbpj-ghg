@@ -5,6 +5,8 @@ import { AlertController } from "@ionic/angular";
 import { Application } from "src/app/shared/services/applications/applications.model";
 import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
 import { AuthService } from "src/app/shared/services/auth/auth.service";
+import { HousesService } from "src/app/shared/services/houses/houses.service";
+import { House } from "src/app/shared/services/houses/houses.model";
 
 import * as moment from "moment";
 
@@ -21,16 +23,21 @@ export class HomeComponent implements OnInit {
   imgNotFound = "assets/icon/error-404.svg";
 
   // Data
-  applications: Application[] = [];
+  applications: any[] = [];
+  houses: House[] = [];
 
   constructor(
     private authService: AuthService,
     private applicationService: ApplicationsService,
     private alertCtrl: AlertController,
+    private housesService: HousesService,
     private router: Router
   ) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+
+    this.getHouseData();
+  }
 
   ionViewDidEnter() {
     // console.log("ionViewDidEnter HomeComponent");
@@ -39,9 +46,17 @@ export class HomeComponent implements OnInit {
       .getApplicant(this.authService.userID)
       .subscribe((res) => {
         this.applications = res;
+        
+        console.log("this.applications", this.applications);
         if (this.applications.length > 0) this.isGotApplication = true;
 
         this.applications.forEach((application) => {
+         
+          let house = this.houses.find(house => house.id === application.applied_house);
+
+          application.tax_number = house.assessment_tax_account
+          application.address = house.address
+
           application.date_submitted = moment(
             application.date_submitted,
             "YYYY-MM-DD"
@@ -87,5 +102,16 @@ export class HomeComponent implements OnInit {
       ],
     });
     await alert.present();
+  }
+
+  getHouseData() {
+    this.housesService.get().subscribe(
+      (res) => {
+        this.houses = res;
+      },
+      (err) => {
+
+      },
+    );
   }
 }

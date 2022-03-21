@@ -37,6 +37,8 @@ import { OneSignal } from '@ionic-native/onesignal/ngx';
 import { JwtService } from './shared/handler/jwt/jwt.service';
 import { HttpTokenInterceptor } from './shared/interceptor/http.token.interceptor';
 import { NativeStorage } from '@ionic-native/native-storage/ngx';
+import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
+
 
 export function LanguageLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -69,6 +71,7 @@ export function LanguageLoader(http: HttpClient) {
   providers: [
     StatusBar,
     SplashScreen,
+    PhotoViewer,
     Camera,
     File,
     FilePath,

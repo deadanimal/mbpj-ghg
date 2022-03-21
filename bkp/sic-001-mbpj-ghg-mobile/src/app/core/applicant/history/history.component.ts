@@ -6,6 +6,7 @@ import { AlertController } from "@ionic/angular";
 import { HousesService } from "src/app/shared/services/houses/houses.service";
 import { House } from "src/app/shared/services/houses/houses.model";
 import * as moment from "moment";
+import { map } from "rxjs/operators";
 
 @Component({
   selector: "app-history",
@@ -41,7 +42,9 @@ export class HistoryComponent implements OnInit {
   }
 
   getData() {
-    this.applicationService.getApplicantDetail().subscribe(
+
+    // pipe to filter drafted records
+    this.applicationService.getApplicantDetail().pipe(map(x => x.filter(i => i.status != "DF"))).subscribe(
       (res) => {
         this.applications = res;
       },

@@ -49,7 +49,10 @@
                   <select
                     name="datatable_length"
                     aria-controls="datatable"
-                    class="form-control form-control-sm custom-select custom-select-sm"
+                    class="
+                      form-control form-control-sm
+                      custom-select custom-select-sm
+                    "
                     (change)="entriesChange($event)"
                   >
                     <option value="10" [selected]="tableEntries == 5">5</option>
@@ -92,6 +95,16 @@
             [limit]="tableEntries != -1 ? tableEntries : undefined"
             [rows]="tableTemp"
           >
+            <ngx-datatable-column>
+              <ng-template
+                let-rowIndex="rowIndex"
+                let-row="row"
+                ngx-datatable-cell-template
+              >
+                {{ rowIndex + 1}}
+              </ng-template>
+            </ngx-datatable-column>
+
             <ngx-datatable-column>
               <ng-template ngx-datatable-header-template>
                 <span>Assessment Tax Account No.</span>

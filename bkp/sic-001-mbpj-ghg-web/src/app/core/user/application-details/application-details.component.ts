@@ -62,6 +62,13 @@ export class ApplicationDetailsComponent implements OnInit {
   public tempEvaluation: Evaluation[] = [];
   public tempEvaluationSchedule: EvaluationSchedule;
   public statusApproveReject = ["Completed", "Rejected", "Paid"];
+  public dummy_amount = 5000;
+
+  // Tax Calculation Data Holders
+  tax_amount = 0;
+  rebate_amount_calculated = 0;
+  rebate_amount = 0;
+
 
   aspectTypes = [
     {
@@ -163,7 +170,9 @@ export class ApplicationDetailsComponent implements OnInit {
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+  }
+
 
   initEvaluation() {
     return new FormGroup({
@@ -210,6 +219,7 @@ export class ApplicationDetailsComponent implements OnInit {
         (res) => {
           // console.log("res", res);
           this.tempHouse = res[0];
+          console.log("this.tempHouse", this.tempHouse);
           if (this.tempHouse.building_type == "CD") {
             this.tempHouse.building_type = "Condominium";
           } else if (this.tempHouse.building_type == "FL") {
@@ -230,6 +240,17 @@ export class ApplicationDetailsComponent implements OnInit {
           console.error("err", err);
         },
         () => {
+
+          if (this.tempHouse.tax_amount >= 500) {
+            this.tax_amount = 500;
+          }
+
+          else {
+            this.tax_amount = this.tempHouse.tax_amount
+          }
+
+          
+
           let year = this.tempApplication.year_application;
           this.carbonemissionfactorService
             .doRetrieveFilteredCarbonEmissionFactors("year=" + year)
@@ -355,6 +376,7 @@ export class ApplicationDetailsComponent implements OnInit {
                 }
               );
           }
+          
         }
       );
     /* this.applicationAssessmentService.retrievedApplicationAssessments.forEach(
@@ -379,6 +401,13 @@ export class ApplicationDetailsComponent implements OnInit {
       .subscribe((res) => {
         this.tempEvaluationSchedule = res[0];
       });
+
+
+    let that = this;
+    setTimeout(() => {
+      that.initRebateAmount();
+    }, 500);
+
   }
 
   doOpenModal(modalDefault: TemplateRef<any>) {
@@ -421,7 +450,7 @@ export class ApplicationDetailsComponent implements OnInit {
           // send notification IE to evaluator
           let body = {
             title: "Assign",
-            message: `You has been nominated for application ${this.tempHouse.assessment_tax_account} schedule on ${this.scheduleForm.value.date} (${session}) slot`,
+            message: `You has been nominated for application ${this.tempHouse.assessment_tax_account} with address ${this.tempHouse.address} schedule on ${this.scheduleForm.value.date} (${session}) slot`,
             to_user: this.evaluatorForm.value.evaluator_nominated,
             date_sent: moment().format("YYYY-MM-DD"),
           };
@@ -434,10 +463,19 @@ export class ApplicationDetailsComponent implements OnInit {
             }
           );
 
-          // send notification IE to applicant
+
+          let evaluator_fullname = "";
+          for (let i=0; i<this.tempEvaluatorList.length; i++) {
+            if (this.tempEvaluatorList[i].id == this.evaluatorForm.value.evaluator_nominated) {
+              evaluator_fullname = this.tempEvaluatorList[i].full_name;
+            }
+          }
+
+          console.log("fn", evaluator_fullname);
+
           let badan = {
             title: "In Evaluation",
-            message: `Mr/Mrs have been nominated to evaluate your application. Schedule on ${this.scheduleForm.value.date} (${session}) slot. Make sure you are prepared for evaluation purposes.`,
+            message: `Mr/Mrs ${evaluator_fullname} have been nominated to evaluate your application with address ${this.tempHouse.address} and tax number ${this.tempHouse.assessment_tax_account}. Schedule on ${this.scheduleForm.value.date} (${session}) slot. Make sure you are prepared for evaluation purposes.`,
             to_user: this.tempApplicant.id,
             date_sent: moment().format("YYYY-MM-DD"),
           };
@@ -469,6 +507,8 @@ export class ApplicationDetailsComponent implements OnInit {
   }
 
   submitApprovedRebate() {
+    this.rebateForm.value.amount_approved = this.rebate_amount
+    console.log("this.rebateForm.value",this.rebateForm.value);
     this.rebateForm.value.application_id = this.tempApplication.id;
     this.rebateForm.value.payment_date = moment().format("YYYY-MM-DD");
     this.statusForm.value.status = "CM";
@@ -481,7 +521,7 @@ export class ApplicationDetailsComponent implements OnInit {
         // send notification CM to evaluator
         let body = {
           title: "Completed",
-          message: `Your evaluation for application ${this.tempHouse.assessment_tax_account} has been completed`,
+          message: `Your evaluation for application with address ${this.tempHouse.address} and tax number ${this.tempHouse.assessment_tax_account} has been completed`,
           to_user: this.tempEvaluator.id,
           date_sent: moment().format("YYYY-MM-DD"),
         };
@@ -497,13 +537,13 @@ export class ApplicationDetailsComponent implements OnInit {
         // send notification CM to applicant
         let badan = {
           title: "Completed",
-          message: `Your application has been approved. Please contact us at email adminrebat@mbpj.gov.my for more details.`,
+          message: `Your application with address ${this.tempHouse.address} and tax number ${this.tempHouse.assessment_tax_account} has been approved, Rebate amount (RM ${this.rebateForm.value.amount_approved}). Please contact us at email adminrebat@mbpj.gov.my for more details.`,
           to_user: this.tempApplicant.id,
           date_sent: moment().format("YYYY-MM-DD"),
         };
         this.notificationService.register(badan).subscribe(
           (res) => {
-            // console.log("res", res);
+           //console.log("res success approve rebat", res);
           },
           (err) => {
             console.error("err", err);
@@ -524,7 +564,9 @@ export class ApplicationDetailsComponent implements OnInit {
       () => {
         this.loadingBar.complete();
       },
-      () => {}
+      () => {
+        window.location.reload();
+      }
     );
   }
 
@@ -541,7 +583,7 @@ export class ApplicationDetailsComponent implements OnInit {
           // send notification RJ to evaluator
           let body = {
             title: "Rejected",
-            message: `Your evaluation for application ${this.tempHouse.assessment_tax_account} has been rejected`,
+            message: `Your evaluation for application with address ${this.tempHouse.address} and tax number ${this.tempHouse.assessment_tax_account} has been rejected`,
             to_user: this.tempEvaluator.id,
             date_sent: moment().format("YYYY-MM-DD"),
           };
@@ -557,7 +599,7 @@ export class ApplicationDetailsComponent implements OnInit {
           // send notification RJ to applicant
           let badan = {
             title: "Rejected",
-            message: `Your application has been rejected. Please contact us at email adminrebat@mbpj.gov.my for more details.`,
+            message: `Your application with address ${this.tempHouse.address} and tax number ${this.tempHouse.assessment_tax_account} has been rejected. Please contact us at email adminrebat@mbpj.gov.my for more details.`,
             to_user: this.tempApplicant.id,
             date_sent: moment().format("YYYY-MM-DD"),
           };
@@ -758,4 +800,42 @@ export class ApplicationDetailsComponent implements OnInit {
     });
     return result.name + ". " + result.aspect;
   }
+
+  detailViewPhoto(target) {
+    window.open(target, '_blank');
+
+  }
+
+  calculateRebateAmount(event) {
+    this.tax_amount = event.target.value
+    this.rebate_amount = +(this.tax_amount * this.totalAll/100).toFixed(2);
+    this.rebate_amount_calculated = this.rebate_amount;
+
+    if (this.rebate_amount > 500) {
+      this.rebate_amount = 500;
+      this.toastr.show(
+        '<span class="alert-icon fas fa-check-circle" data-notify="icon"></span> <div class="alert-text"</div> <span class="alert-title" data-notify="title">Warning</span> <span data-notify="message">Rebate amount is capped at RM500</span></div>',
+        "",
+        {
+          timeOut: 3000,
+          closeButton: true,
+          enableHtml: true,
+          tapToDismiss: true,
+          titleClass: "alert-title",
+          positionClass: "toast-top-right",
+          toastClass:
+            "ngx-toastr alert alert-dismissible alert-success alert-notify",
+        }
+      );
+      this.defaultModal.hide();
+    }
+  }
+
+  initRebateAmount() {
+    this.rebate_amount = this.tax_amount * this.totalAll/100
+  }
+
+  
+
+  
 }

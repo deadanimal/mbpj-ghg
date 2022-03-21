@@ -9,6 +9,8 @@ import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { TranslateService } from '@ngx-translate/core';
 import { Areas } from '../../../../assets/data/area';
+import { PhotoViewer } from '@awesome-cordova-plugins/photo-viewer/ngx';
+
 
 @Component({
   selector: 'app-house-add-new',
@@ -47,7 +49,9 @@ export class HouseAddNewComponent implements OnInit {
     private router: Router,
     private base64: Base64,
     private camera: Camera,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private photoViewer: PhotoViewer,
+
   ) { }
 
   ngOnInit() {
@@ -58,32 +62,34 @@ export class HouseAddNewComponent implements OnInit {
       area: new FormControl('', Validators.required),
       assessment_tax_account: new FormControl('', Validators.required),
       assessment_tax_doc: new FormControl(''),
+      tax_amount: new FormControl(''),
       building_type: new FormControl('', Validators.required),
-      staying_duration_years: new FormControl('', Validators.required),
-      staying_duration_months: new FormControl('', Validators.required),
-      permanent_occupant: new FormControl('', Validators.required),
-      vehicle_car: new FormControl('', Validators.required),
-      vehicle_motorcycle: new FormControl('', Validators.required),
-      vehicle_bicycle: new FormControl('', Validators.required),
-      vehicle_other: new FormControl('', Validators.required),
+      staying_duration_years: new FormControl(0, Validators.required),
+      staying_duration_months: new FormControl(0, Validators.required),
+      permanent_occupant: new FormControl(0, Validators.required),
+      vehicle_car: new FormControl(0, Validators.required),
+      vehicle_motorcycle: new FormControl(0, Validators.required),
+      vehicle_bicycle: new FormControl(0, Validators.required),
+      vehicle_other: new FormControl(0, Validators.required),
       electricity_bill_1_month: new FormControl('', Validators.required),
-      electricity_bill_1_usage: new FormControl('', Validators.required),
+      electricity_bill_1_usage: new FormControl(0, Validators.required),
       electricity_bill_1_doc: new FormControl(''),
       electricity_bill_2_month: new FormControl('', Validators.required),
-      electricity_bill_2_usage: new FormControl('', Validators.required),
+      electricity_bill_2_usage: new FormControl(0, Validators.required),
       electricity_bill_2_doc: new FormControl(''),
       electricity_bill_3_month: new FormControl('', Validators.required),
-      electricity_bill_3_usage: new FormControl('', Validators.required),
+      electricity_bill_3_usage: new FormControl(0, Validators.required),
       electricity_bill_3_doc: new FormControl(''),
       water_bill_1_month: new FormControl('', Validators.required),
-      water_bill_1_usage: new FormControl('', Validators.required),
+      water_bill_1_usage: new FormControl(0, Validators.required),
       water_bill_1_doc: new FormControl(''),
       water_bill_2_month: new FormControl('', Validators.required),
-      water_bill_2_usage: new FormControl('', Validators.required),
+      water_bill_2_usage: new FormControl(0, Validators.required),
       water_bill_2_doc: new FormControl(''),
       water_bill_3_month: new FormControl('', Validators.required),
-      water_bill_3_usage: new FormControl('', Validators.required),
+      water_bill_3_usage: new FormControl(0, Validators.required),
       water_bill_3_doc: new FormControl(''),
+      save_as_draft: new FormControl(''),
     })
   }
   
@@ -95,6 +101,37 @@ export class HouseAddNewComponent implements OnInit {
 
     this.houseForm.value.applicant = this.authService.userID
     console.log(this.houseForm.value)
+    this.houseService.register(this.houseForm.value).subscribe(
+      (res) => {
+        console.log('House registration success')
+        this.houseService.getUser(this.authService.userID).subscribe(
+          () => {
+            this.loadingMessage.dismiss();
+            this.successfulAddMessage()
+            this.router.navigate(['/applicant/house'])
+          }
+        )
+      },
+      (err) => {
+        this.loadingMessage.dismiss();
+        console.log('House registration not success')
+        this.unsuccessfulAddMessage()
+      },
+      () => {
+      }
+    )
+  }
+
+  async addNewHouseDraft() {
+    this.loadingMessage = await this.loadingCtrl.create({
+      message: 'Loading...'
+    });
+    await this.loadingMessage.present();
+
+    this.houseForm.value.applicant = this.authService.userID
+    console.log(this.houseForm.value)
+
+    this.houseForm.value.save_as_draft = true;
     this.houseService.register(this.houseForm.value).subscribe(
       (res) => {
         console.log('House registration success')
@@ -273,5 +310,9 @@ export class HouseAddNewComponent implements OnInit {
     }, (err) => {
       console.log(err);
     });
+  }
+
+  detailViewPhoto() {
+    this.photoViewer.show("https://pipeline-project.sgp1.digitaloceanspaces.com/ghg-image/ghg-image/17eead1f_1.png")
   }
 }

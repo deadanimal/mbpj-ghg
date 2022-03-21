@@ -39,13 +39,40 @@
         <div class="card-header bg-info py-2">
           <div class="row">
             <div class="col my-auto">
+              <h4 class="text-white m-0">Applications Control</h4>
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          <h4  *ngIf="isApplicationEnabled == true" class="m-0">Rebate Application Current Status&nbsp;&nbsp;<a class="badge badge-success text-dark">Open</a></h4>
+          <h4  *ngIf="isApplicationEnabled == false" class="m-0">Rebate Application Current Status&nbsp;&nbsp;<a class="badge badge-danger text-dark">Closed</a></h4>
+          <br>
+          <div *ngIf="isApplicationEnabled == true">
+            <h5 class="m-0 text-red">*Click disable button to disable rebate application</h5>
+            <br>
+            <a class="btn btn-danger text-white" (click)="toggleApplication(false)">Close Application</a>
+          </div>
+
+          <div *ngIf="isApplicationEnabled == false">
+            <h5 class="m-0 text-red">*Click enable button to enable rebate application</h5>
+            <br>
+            <a class="btn btn-primary text-white" (click)="toggleApplication(true)">Open Application</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card">
+        <div class="card-header bg-info py-2">
+          <div class="row">
+            <div class="col my-auto">
               <h4 class="text-white m-0">Applications List</h4>
             </div>
           </div>
         </div>
         <div class="dataTables_wrapper py-4">
           <div class="row">
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-3">
               <div class="dataTables_length" id="datatable_length">
                 <label>
                   Show
@@ -74,7 +101,7 @@
               </div>
             </div>
 
-            <div class="col-sm-12 col-md-6">
+            <div class="col-sm-12 col-md-9">
               <div id="datatable_filter" class="dataTables_filter">
                 <label>
                   <input
@@ -84,6 +111,65 @@
                     aria-controls="datatable"
                     (keyup)="filterTable($event)"
                   />
+                </label>
+              </div>
+
+              
+
+              <div id="datatable_filter" class="dataTables_filter">
+                <label>
+                  <select
+                    name="status_filter"
+                    aria-controls="datatable"
+                    class="
+                      form-control form-control-sm
+                      custom-select custom-select-sm
+                    "
+                    (change)="entriesChangeYear($event)"
+                  >
+                    <option disabled hidden>Year</option>
+                    <!--surprise-->
+                    <option *ngFor="let year of yearlist" value="{{year}}">{{year}}</option>
+                  </select>
+                </label>
+              </div>
+
+              
+              <div id="datatable_filter" class="dataTables_filter">
+                <label>
+                  <select
+                    name="status_filter"
+                    aria-controls="datatable"
+                    class="
+                      form-control form-control-sm
+                      custom-select custom-select-sm
+                    "
+                    (change)="entriesChangeStatus($event)"
+                  >
+                    <option disabled hidden>Status</option>
+                    <option value="CR">Created</option>
+                    <option value="IE">In Evaluation</option>
+                    <option value="IP">In Progress</option>
+                    <option value="SM">Submitted</option>
+                    <option value="CM">Completed</option>
+                    <option value="PD">Paid</option>
+                    <option value="RJ">Rejected</option>
+                  </select>
+                </label>
+              </div>
+              <div id="datatable_filter" class="dataTables_filter">
+                <label>
+                  <button (click)="generateEXCEL()" class="btn btn-sm btn-primary"><i class="fas fa-arrow-down">&nbsp;</i>EXCEL</button>
+                </label>
+              </div>
+              <div id="datatable_filter" class="dataTables_filter">
+                <label>
+                  <button (click)="generatePDF()" class="btn btn-sm btn-primary"><i class="fas fa-arrow-down">&nbsp;</i>PDF</button>
+                </label>
+              </div>
+              <div id="datatable_filter" class="dataTables_filter">
+                <label>
+                  <button (click)="resetButton()" class="btn btn-sm btn-primary"><i class="fas fa-arrows-rotate">&nbsp;</i>Reset</button>
                 </label>
               </div>
             </div>
@@ -98,6 +184,15 @@
             [limit]="tableEntries != -1 ? tableEntries : undefined"
             [rows]="tableTemp"
           >
+            <ngx-datatable-column>
+              <ng-template
+                let-rowIndex="rowIndex"
+                let-row="row"
+                ngx-datatable-cell-template
+              >
+                {{ rowIndex + 1}}
+              </ng-template>
+            </ngx-datatable-column>
             <ngx-datatable-column>
               <ng-template ngx-datatable-header-template>
                 <span>Applicant</span>
@@ -128,8 +223,8 @@
               </ng-template>
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div *ngIf="row.evaluator_nominated_name == 'Not assigned'">
-                  <span><i class="fas fa-info-circle mr-1"></i></span
-                  >{{ row.evaluator_nominated_name }}
+                  <span><i class="fas fa-info-circle mr-1"></i></span>{{
+                  row.evaluator_nominated_name }}
                 </div>
                 <div *ngIf="row.evaluator_nominated_name != 'Not assigned'">
                   {{ row.evaluator_nominated_name }}
@@ -182,6 +277,7 @@
                   ></span>
                 </button>
                 <button
+                  *ngIf="row.status != 'CM' && row.status != 'RJ' && row.status != 'PD'"
                   class="btn btn-icon btn-2 btn-danger btn-sm"
                   type="button"
                   (click)="deleteApplication(row)"

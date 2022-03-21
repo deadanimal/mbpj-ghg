@@ -3,17 +3,23 @@ import { Router } from "@angular/router";
 import { LoadingBarService } from "@ngx-loading-bar/core";
 import { ToastrService } from "ngx-toastr";
 import swal from "sweetalert2";
+import * as FileSaver from 'file-saver';
+import * as XLSX from 'xlsx';
+import { map, tap, catchError } from "rxjs/operators";
 
 import {
   Application,
   MergedApplication,
 } from "src/app/shared/services/applications/applications.model";
 import { ApplicationsService } from "src/app/shared/services/applications/applications.service";
+import { NotificationsService } from "src/app/shared/services/notifications/notifications.service";
 import { House } from "src/app/shared/services/houses/houses.model";
 import { HousesService } from "src/app/shared/services/houses/houses.service";
 import { NotifyService } from "src/app/shared/handler/notify/notify.service";
 import { User } from "src/app/shared/services/auth/auth.model";
 import { UsersService } from "src/app/shared/services/users/users.service";
+import { environment } from "src/environments/environment";
+
 
 import * as moment from "moment";
 import * as am4core from "@amcharts/amcharts4/core";
@@ -40,6 +46,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   public tempUsers: User[] = [];
   public mergedApplications: MergedApplication[] = [];
 
+
   applicationCM;
   applicationCR;
   applicationIE;
@@ -47,6 +54,10 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   applicationPD;
   applicationRJ;
   applicationSM;
+
+  // Applications toggle
+  isApplicationEnabled: boolean;
+  isApplicationEnabledId: string;
 
   // Table
   tableEntries: number = 5;
@@ -56,6 +67,12 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
   tableRows: any[] = [];
   SelectionType = SelectionType;
 
+  // Date
+  today;
+
+  // year
+  yearlist = [];
+
   public pieChart;
 
   constructor(
@@ -64,11 +81,17 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
     private houseService: HousesService,
     private userService: UsersService,
     private loadingBar: LoadingBarService,
+    private notificationService: NotificationsService,
     private notifyService: NotifyService,
     public toastr: ToastrService,
-    public router: Router
+    public router: Router,
   ) {
     this.getData();
+    var today = new Date();
+    var dd = String(today.getDate()).padStart(2, '0');
+    var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = today.getFullYear();
+    this.today = yyyy + '-' + mm + '-' + dd;
   }
 
   ngOnInit() {
@@ -103,6 +126,9 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
         this.initChart();
       }
     );
+
+    this.populateYearList()
+    this.getApplicationStatus();
   }
 
   ngOnDestroy() {
@@ -115,7 +141,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
 
   mergeData() {
     this.mergedApplications = [];
-    this.applicationService.doRetrieveAllApplications().subscribe(
+    this.applicationService.doRetrieveAllApplications().pipe(map(x => x.filter(i => i.status != "DF"))).subscribe(
       (resApp) => {
         this.tempApplications = resApp;
       },
@@ -299,6 +325,44 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
     this.tableEntries = $event.target.value;
   }
 
+  entriesChangeStatus($event) {
+    let val = $event.target.value;
+    this.tableTemp = this.tableRows.filter(function (d) {
+      for (var key in d) {
+        if (d["status"].indexOf(val) !== -1) {
+          return true;
+        }
+      }
+      return false;
+    });
+
+  }
+
+  entriesChangeYear($event) {
+    let val = $event.target.value;
+    console.log("A", val);
+    this.tableTemp = this.tableRows.filter(function (d) {
+      for (var key in d) {
+        if (d["date_submitted"].slice(6,10) >= val && d["date_submitted"].slice(6,10) < +val+1) {
+          return true;
+
+        };
+        //if (d["date_submitted"].slice(7,10) >= val) {
+        //  return true;
+        //}
+        
+        //if (d["date_submitted"].indexOf(val) !== -1) {
+        //  return true;
+        //}
+      }
+      return false;
+    });
+
+  }
+
+
+
+
   filterTable($event) {
     let val = $event.target.value;
     this.tableTemp = this.tableRows.filter(function (d) {
@@ -344,6 +408,7 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
         if (result.value) {
           this.applicationService.doDeleteScript(row.id).subscribe(
             () => {
+              this.sendDeleteNotification(row);
               this.loadingBar.complete();
               this.successMessage("delete");
             },
@@ -373,4 +438,84 @@ export class ApplicationsComponent implements OnInit, OnDestroy {
       this.notifyService.openToastr(title, message);
     }
   }
+
+  sendDeleteNotification(row) {
+
+    this.houseService.filter(`id=${row.applied_house_id}`).subscribe(
+      (res) => {
+        let body = {
+          'title': 'Deleted',
+          'message': `Your application for house: ${res[0].address} and tax number: ${res[0].assessment_tax_account} has been deleted by admin`,
+          'date_sent': this.today,
+          'to_user': row.applicant_id
+    
+        };
+    
+        this.notificationService.register(body).subscribe(
+          (res) => {
+            //console.log("delete notification server - success", res);
+          },
+          (err) => {
+            //console.log("delete notification server - error", err);
+          }
+        );
+      }
+    );
+    
+  }
+
+  populateYearList() {
+    var currentYear= new Date().getFullYear(); 
+    let range = currentYear - 2011;
+    for(let i=0; 2011 + i<currentYear + 1; i++) {
+      let j = 2011 + i;
+      this.yearlist.push(j);
+    }
+    console.log("YL", this.yearlist);
+    
+  }
+
+  toggleApplication(state) {
+    this.isApplicationEnabled = state;
+    this.applicationService.doUpdateApplicationStatus(this.isApplicationEnabledId, {"enable_application": state}).subscribe(
+      ()=> {},
+      ()=> {},
+      ()=> {}
+    )
+  }
+
+  getApplicationStatus() {
+    this.applicationService.doGetApplicationStatus().subscribe(
+      (res) => {
+        this.isApplicationEnabled = res['0']['enable_application']
+        this.isApplicationEnabledId = res['0']['id']
+      },
+      (err) => {
+
+      }
+    );
+  }
+  generateEXCEL() {
+    const myworksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.tableTemp);
+    const myworkbook: XLSX.WorkBook = { Sheets: { 'data': myworksheet }, SheetNames: ['data'] };
+    const excelBuffer: any = XLSX.write(myworkbook, { bookType: 'xlsx', type: 'array' });
+    this.saveAsExcelFile(excelBuffer, "Laporan Tahunan");
+  }
+
+  saveAsExcelFile(buffer: any, fileName: string): void {
+    const data: Blob = new Blob([buffer], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+    });
+    FileSaver.saveAs(data, fileName + '_exported'+ '.xlsx');
+  }
+
+  generatePDF() {
+    window.open(environment.baseUrl + "v1/reports/report_yearly/");
+  }
+
+  resetButton() {
+    window.location.reload();
+  }
+
+  
 }

@@ -40,6 +40,7 @@ import { FaqsComponent } from './management/faqs/faqs.component';
 import { AssessmentTaxesComponent } from './assessment-taxes/assessment-taxes.component';
 import { RebatesComponent } from './rebates/rebates.component';
 import { CarbonEmissionFactorsComponent } from './carbon-emission-factors/carbon-emission-factors.component';
+import { AdvertisementComponent } from './management/advertisement/advertisement.component';
 
 
 @NgModule({
@@ -63,6 +64,7 @@ import { CarbonEmissionFactorsComponent } from './carbon-emission-factors/carbon
     AssessmentTaxesComponent,
     RebatesComponent,
     CarbonEmissionFactorsComponent,
+    AdvertisementComponent,
     
   ],
   imports: [
